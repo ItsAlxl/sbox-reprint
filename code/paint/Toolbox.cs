@@ -6,6 +6,7 @@ namespace Reprint;
 
 public sealed class Toolbox : Component
 {
+	const float CHILD_SPACING = 30.0f;
 
 	public class Tool
 	{
@@ -16,9 +17,12 @@ public sealed class Toolbox : Component
 		new(){ title = "Line", prefab = GameObject.GetPrefab("prefabs/StepLine.prefab")},
 	];
 
+	public static float LeftBound { get => 0.0f; }
+	public float RightBound { get => GameObject.Children.Count * CHILD_SPACING; }
+
 	public void AddStep( GameObject prefab )
 	{
-		prefab.Clone(GameObject, Vector3.Zero, Rotation.Identity, Vector3.One);
+		prefab.Clone( GameObject, Vector3.Zero, Rotation.Identity, Vector3.One );
 		AdjustChildrenLayout();
 	}
 
@@ -27,7 +31,7 @@ public sealed class Toolbox : Component
 		for ( var i = 0; i < GameObject.Children.Count; i++ )
 		{
 			var child = GameObject.Children[i];
-			child.LocalPosition = child.LocalPosition.WithY( i * 30 );
+			child.LocalPosition = child.LocalPosition.WithY( i * CHILD_SPACING );
 		}
 	}
 }

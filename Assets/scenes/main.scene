@@ -79,7 +79,7 @@
         },
         {
           "__type": "Reprint.CameraController",
-          "__guid": "39b43956-c3d8-4712-bc89-f7a2efa42633",
+          "__guid": "5f0e5322-d77f-437b-82d7-7bc51c79ee0f",
           "__enabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
@@ -126,6 +126,58 @@
         {
           "__type": "Reprint.HUD",
           "__guid": "6a725f30-5e0f-4466-aaba-92b40ad44588",
+          "__enabled": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "beb07944-21bc-4749-9e1d-9c1600dd4e90",
+      "__version": 1,
+      "Flags": 0,
+      "Name": "Start",
+      "Position": "0,-30,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.WorldPanel",
+          "__guid": "a6d6d847-dec9-41e6-bdd3-ec5df8b06b03",
+          "__enabled": true,
+          "HorizontalAlign": "Center",
+          "InteractionRange": 1000,
+          "LookAtCamera": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PanelSize": "512,512",
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderScale": 1,
+          "VerticalAlign": "Center"
+        },
+        {
+          "__type": "Reprint.PnlLine",
+          "__guid": "26aa5d09-2ea4-40a4-a0a1-653fca92df3c",
           "__enabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
