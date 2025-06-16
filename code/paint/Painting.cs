@@ -15,9 +15,11 @@ public sealed class Painting
 		width = w;
 		height = h;
 		pixels = new Pixel[h * w];
+
+		Random rng = new();
 		for ( var i = 0; i < width * height; i++ )
 		{
-			pixels[i] = new Pixel();
+			pixels[i] = new Pixel( (Pixel.ColorLookup)rng.Next( Pixel.Colors.Length ) );
 		}
 	}
 
@@ -86,6 +88,6 @@ public sealed class Painting
 		Random rng = new();
 		for ( var x = 0; x < width; x++ )
 			for ( var y = 0; y < height; y++ )
-				PixelAt( x, y ).Randomize(rng);
+				PixelAt( x, y ).Randomize( rng );
 	}
 }

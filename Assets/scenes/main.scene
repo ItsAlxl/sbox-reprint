@@ -42,7 +42,7 @@
       "__version": 1,
       "Flags": 0,
       "Name": "Camera",
-      "Position": "125,-15,-7.5",
+      "Position": "100,-15,-7.5",
       "Rotation": "0,0,1,-0.00000004371139",
       "Scale": "1,1,1",
       "Tags": "maincamera",

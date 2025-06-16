@@ -32,17 +32,11 @@ public sealed class Pixel
 	public int desatLevel = 0;
 	public int darkenLevel = 0;
 
-	public Pixel( ColorLookup? clr = null )
+	public Pixel( ColorLookup clr, int desat = (int)MAX_LEVEL, int darken = 0 )
 	{
-		if ( clr is ColorLookup cl )
-		{
-			_baseColor = cl;
-		}
-		else
-		{
-			_baseColor = ColorLookup.Red;
-			desatLevel = (int)MAX_LEVEL;
-		}
+		_baseColor = clr;
+		desatLevel = desat;
+		darkenLevel = darken;
 	}
 
 	public Pixel( Pixel p )
