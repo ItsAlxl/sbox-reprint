@@ -1,0 +1,34 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace Reprint
+@inherits PanelComponent
+
+<root>
+	@{
+		float side = 256.0f / (paint.width > paint.height ? paint.width : paint.height);
+		string sidePx = (int)side + "px";
+		string fontPx = (int)(side) + "px";
+		for(var x = 0; x < paint.width; x++)
+		{
+			<div class="row">
+			@for(var y = 0; y < paint.height; y++)
+			{
+				var pxl = paint.PixelAt(x, y);
+				<div style="background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; border: 1px solid @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @fontPx">@((x == paint.cursorX && y == paint.cursorY) ? "⯏" : "")</div>
+			}
+			</div>
+		}
+	}
+</root>
+
+@code
+{
+	public Painting paint;
+
+	protected override void OnStart()
+	{
+		paint = new(4, 4);
+		paint.Randomize();
+	}
+	protected override int BuildHash() => System.HashCode.Combine( paint );
+}

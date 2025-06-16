@@ -80,4 +80,12 @@ public sealed class Painting
 	{
 		return pixels[y * width + x];
 	}
+
+	public void Randomize()
+	{
+		Random rng = new();
+		for ( var x = 0; x < width; x++ )
+			for ( var y = 0; y < height; y++ )
+				PixelAt( x, y ).Randomize(rng);
+	}
 }

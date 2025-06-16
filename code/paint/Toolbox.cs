@@ -17,8 +17,8 @@ public sealed class Toolbox : Component
 		new(){ title = "Line", prefab = GameObject.GetPrefab("prefabs/StepLine.prefab")},
 	];
 
-	public static float LeftBound { get => 0.0f; }
-	public float RightBound { get => GameObject.Children.Count * CHILD_SPACING; }
+	public static float LeftBound { get => -15.0f; }
+	public float RightBound { get => (GameObject.Children.Count - 0.5f) * CHILD_SPACING; }
 
 	public void AddStep( GameObject prefab )
 	{

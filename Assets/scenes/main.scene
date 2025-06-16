@@ -176,8 +176,8 @@
           "VerticalAlign": "Center"
         },
         {
-          "__type": "Reprint.PnlLine",
-          "__guid": "26aa5d09-2ea4-40a4-a0a1-653fca92df3c",
+          "__type": "Reprint.Canvas",
+          "__guid": "91a5f177-025c-4908-9b84-83e7dbefbc42",
           "__enabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
