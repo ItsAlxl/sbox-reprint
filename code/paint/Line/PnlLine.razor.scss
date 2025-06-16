@@ -1,0 +1,85 @@
+PnlLine {
+	flex-direction: column;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #223;
+	justify-content: flex-start;
+	align-items: center;
+	font-family: Poppins;
+	color: #fff;
+	pointer-events: all;
+		font-size: 20px;
+
+	.menu {
+		flex-direction: row;
+		width: 100%;
+		justify-content: flex-start;
+		align-items: center;
+		background-color: #334;
+		gap: 0;
+		border-bottom: 2px solid #000;
+	}
+
+	.menu button {
+		background-color: #112;
+		width: 40px;
+		height: 100%;
+		flex-shrink: 1;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.dragbar {
+		border-left: 4px solid #000;
+		flex-grow: 1;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.config {
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
+	.color-dropdown {
+		z-index: 10;
+	}
+
+	.color-dropdown button {
+		letter-spacing: -5px;
+		padding-left: 5px;
+		padding-right: 10px;
+		font-size: 25px;
+	}
+
+	.drop-btn {
+		background-color: #000;
+		border: 1px solid #fff;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.drop-options {
+		background-color: #000;
+		border: 1px solid #fff;
+		position: absolute;
+		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	}
+
+	.drop-options-hidden {
+		display: none;
+	}
+
+	.drop-options-visible {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.drop-options button {
+		color: #fff;
+	}
+}

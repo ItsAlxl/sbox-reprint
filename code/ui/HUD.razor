@@ -1,0 +1,26 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace Reprint
+@inherits PanelComponent
+
+<root>
+	<div class="toolbox">
+	@if (toolbox is not null)
+	{
+		foreach (var t in toolbox.tools)
+		{
+			<button class="tool" @onclick=@(() => toolbox.AddStep(t.prefab))>@t.title</button>
+		}
+	}
+	</div>
+</root>
+
+@code
+{
+	private Toolbox toolbox;
+
+	protected override void OnStart()
+	{
+		toolbox = Scene.Get<Toolbox>();
+	}
+}

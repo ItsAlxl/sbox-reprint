@@ -1,0 +1,58 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@namespace Reprint
+@inherits FactoryPanel
+
+<root>
+	<div class="menu">
+		<button>X</button>
+		<span class="dragbar">ⵓ ⵓ ⵓ ⵓ</span>
+	</div>
+	<div class="title">Draw Line</div>
+	<div class="config">
+		<div class="color-dropdown">
+			<button @onclick=@ShowColorDropdown class="drop-btn" style="color: @Pixel.GetColor(Fact.color).color.Hex">■■■■■</button>
+			<div class="drop-options @(showColorDrop ? "drop-options-visible" : "drop-options-hidden")">
+			@foreach ( Pixel.ColorLookup clr in Enum.GetValues<Pixel.ColorLookup>() )
+			{
+				if ((int)clr < 2)
+				{
+					<button @onclick=@(() => SelectColor(clr)) style="color: @Pixel.GetColor(clr).color.Hex">■■■■■</button>
+				}
+			}
+			</div>
+		</div>
+		<div class="title">Draw Line</div>
+	</div>
+</root>
+
+@code
+{
+	private bool showColorDrop = false;
+	private FactoryLine Fact { get => factory as FactoryLine; }
+
+	private void ToggleColorDropdown()
+	{
+		showColorDrop = !showColorDrop;
+	}
+
+	private void ShowColorDropdown()
+	{
+		showColorDrop = true;
+	}
+
+	private void HideColorDropdown()
+	{
+		showColorDrop = false;
+	}
+
+	private void SelectColor(Pixel.ColorLookup sel)
+	{
+		Fact.color = sel;
+		HideColorDropdown();
+	}
+
+	protected override FactoryStep CreateFactory() => new FactoryLine();
+	protected override int BuildHash() => HashCode.Combine( showColorDrop );
+}
