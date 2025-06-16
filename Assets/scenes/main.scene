@@ -42,7 +42,7 @@
       "__version": 1,
       "Flags": 0,
       "Name": "Camera",
-      "Position": "125,0,-7.5",
+      "Position": "125,-15,-7.5",
       "Rotation": "0,0,1,-0.00000004371139",
       "Scale": "1,1,1",
       "Tags": "maincamera",
@@ -177,7 +177,7 @@
         },
         {
           "__type": "Reprint.Canvas",
-          "__guid": "91a5f177-025c-4908-9b84-83e7dbefbc42",
+          "__guid": "ba589fcc-318c-49c3-b646-6e353606fc4f",
           "__enabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,

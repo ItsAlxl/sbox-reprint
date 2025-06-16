@@ -9,10 +9,10 @@
 		float side = (256.0f - limit - 16) / limit;
 		string sidePx = (int)side + "px";
 		string fontPx = (int)(side) + "px";
-		for(var x = 0; x < paint.width; x++)
+		for(var y = 0; y < paint.height; y++)
 		{
 			<div class="row">
-			@for(var y = 0; y < paint.height; y++)
+			@for(var x = 0; x < paint.width; x++)
 			{
 				var pxl = paint.PixelAt(x, y);
 				<div style="background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; border-color: @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @fontPx">@((x == paint.cursorX && y == paint.cursorY) ? "⯏" : "")</div>
@@ -29,7 +29,6 @@
 	protected override void OnStart()
 	{
 		paint = new(4, 4);
-		paint.Randomize();
 	}
 	protected override int BuildHash() => System.HashCode.Combine( paint );
 }
