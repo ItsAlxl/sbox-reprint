@@ -32,6 +32,14 @@ public sealed class Painting
 			pixels[i] = new Pixel( p.pixels[i] );
 	}
 
+	public Painting( string serial )
+	{
+		var comps = serial.Split( ':' );
+		width = int.Parse( comps[0] );
+		height = int.Parse( comps[1] );
+		DeserializePixels( comps[2] );
+	}
+
 	private void MoveCursor( bool isX, int amt, CursorMoveMode mode )
 	{
 		var curs = isX ? cursorX : cursorY;
@@ -89,5 +97,30 @@ public sealed class Painting
 		for ( var x = 0; x < width; x++ )
 			for ( var y = 0; y < height; y++ )
 				PixelAt( x, y ).Randomize( rng );
+	}
+
+	public string Serialize()
+	{
+		var serial = width + ":" + height + ":";
+		for ( var i = 0; i < pixels.Length; i++ )
+			serial += pixels[i].Serialize();
+		return serial;
+	}
+
+	private void DeserializePixels( string pxSerial )
+	{
+		for ( var i = 0; i < pxSerial.Length; i += 2 )
+		{
+			pixels[i / 2].Deserialize( pxSerial.Substring( i, 2 ) );
+		}
+	}
+
+	public void Deserialize( string serial )
+	{
+		var comps = serial.Split( ':' );
+		if ( int.Parse( comps[0] ) == width && int.Parse( comps[1] ) == height )
+		{
+			DeserializePixels( comps[2] );
+		}
 	}
 }

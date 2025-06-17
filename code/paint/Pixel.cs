@@ -57,4 +57,19 @@ public sealed class Pixel
 		desatLevel = rng.Next( (int)MAX_LEVEL );
 		darkenLevel = rng.Next( (int)MAX_LEVEL );
 	}
+
+	public string Serialize()
+	{
+		var levels = 4 * darkenLevel + desatLevel;
+		return "" + (char)('0' + _baseColor) + (char)('a' + levels);
+	}
+
+	public void Deserialize( string serial )
+	{
+		_baseColor = (ColorLookup)(serial[0] - '0');
+
+		int levels = serial[1] - 'a';
+		darkenLevel = levels / 4;
+		desatLevel = levels - (4 * darkenLevel);
+	}
 }
