@@ -19,7 +19,7 @@ public sealed class Painting
 		Random rng = new();
 		for ( var i = 0; i < width * height; i++ )
 		{
-			pixels[i] = new Pixel( Pixel.ColorLookup.Red );
+			pixels[i] = new Pixel( Pixel.ColorLookup.Cyan );
 		}
 	}
 
@@ -28,8 +28,7 @@ public sealed class Painting
 		width = p.width;
 		height = p.height;
 		pixels = new Pixel[width * height];
-		for ( var i = 0; i < width * height; i++ )
-			pixels[i] = new Pixel( p.pixels[i] );
+		Copy(p);
 	}
 
 	public Painting( string serial )
@@ -38,6 +37,12 @@ public sealed class Painting
 		width = int.Parse( comps[0] );
 		height = int.Parse( comps[1] );
 		DeserializePixels( comps[2] );
+	}
+
+	public void Copy( Painting p )
+	{
+		for ( var i = 0; i < width * height; i++ )
+			pixels[i] = new Pixel( p.pixels[i] );
 	}
 
 	private void MoveCursor( bool isX, int amt, CursorMoveMode mode )

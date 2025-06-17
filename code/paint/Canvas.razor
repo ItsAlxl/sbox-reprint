@@ -6,7 +6,7 @@
 <root>
 	@{
 		int limit = paint.width > paint.height ? paint.width : paint.height;
-		float side = (256.0f - limit - 16) / limit;
+		float side = (0.5f * size - limit) / limit;
 		string sidePx = (int)side + "px";
 		string fontPx = (int)side + "px";
 		for(var y = 0; y < paint.height; y++)
@@ -25,6 +25,7 @@
 @code
 {
 	[Property] public bool isScratch = false;
+	[Property] public float size = 512.0f;
 	public Painting paint;
 
 	protected override void OnStart()

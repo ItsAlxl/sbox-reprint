@@ -6,21 +6,23 @@ namespace Reprint;
 
 public sealed class Toolbox : Component
 {
-	const float CHILD_SPACING = 30.0f;
+	const float CHILD_SPACING = 30.0f / 512.0f;
 
 	public class Tool
 	{
 		public string title;
 		public GameObject prefab;
 	}
+
 	public readonly List<Tool> tools = [
 		new(){ title = "Line", prefab = GameObject.GetPrefab("prefabs/StepLine.prefab")},
 	];
 
 	public static float LeftBound { get => 0.0f; }
-	public float RightBound { get => (sequence.Count - 1) * CHILD_SPACING; }
+	public float RightBound { get => _rightBound; }
+	private float _rightBound = 0.0f;
 
-	public Painting scratchPaint = new( 4, 4 );
+	public Painting scratchPaint = new( 8, 8 );
 	private GameObject scratchPanel;
 	private readonly List<GameObject> sequence = [];
 
@@ -28,6 +30,7 @@ public sealed class Toolbox : Component
 	{
 		scratchPanel = GameObject.Children.Find( ( go ) => go.Name == "Scratch" );
 		sequence.Add( scratchPanel );
+		AdjustSequenceLayout();
 	}
 
 	public void AddStep( GameObject prefab )
@@ -38,10 +41,13 @@ public sealed class Toolbox : Component
 
 	private void AdjustSequenceLayout()
 	{
+		_rightBound = 0;
 		for ( var i = 0; i < sequence.Count; i++ )
 		{
 			var go = sequence[i];
-			go.LocalPosition = go.LocalPosition.WithY( i * CHILD_SPACING );
+			var size = go.GetComponent<WorldPanel>().PanelSize.x * CHILD_SPACING;
+			go.LocalPosition = go.LocalPosition.WithY( _rightBound + size * 0.5f );
+			_rightBound += size;
 		}
 	}
 
