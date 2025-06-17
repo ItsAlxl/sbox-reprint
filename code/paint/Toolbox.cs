@@ -107,7 +107,7 @@ public sealed class Toolbox : Component
 		if ( yPos > sequence[end].WorldPosition.y )
 			return end + 1;
 
-		while ( start < end )
+		while ( start <= end )
 		{
 			int mid = (start + end) / 2;
 
@@ -120,7 +120,7 @@ public sealed class Toolbox : Component
 			else
 				end = mid - 1;
 		}
-		return start == 0 ? 1 : start;
+		return start;
 	}
 
 	protected override void OnUpdate()
