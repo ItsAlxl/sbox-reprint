@@ -8,17 +8,12 @@
 	<FactoryStepPanel Fact=@(this)>
 		<Name>Draw Line</Name>
 		<Config>
-			<div class="color-dropdown">
-				<button @onclick=@ShowColorDropdown class="drop-btn" style="color: @Pixel.GetColor(Fact.color).color.Hex">■■■■■</button>
-				<div class="drop-options @(showColorDrop ? "drop-options-visible" : "drop-options-hidden")">
+			<div class="sel group">
 				@foreach ( Pixel.ColorLookup clr in Enum.GetValues<Pixel.ColorLookup>() )
 				{
-					if ((int)clr < 2)
-					{
-						<button @onclick=@(() => SelectColor(clr)) style="color: @Pixel.GetColor(clr).color.Hex">■■■■■</button>
-					}
+					var sel = Fact.color == clr;
+					<button @onclick=@(() => SelectColor(clr)) class="sm @(sel ? "pressed" : "")" style="color: @Pixel.GetColor(clr).color.Hex">radio_button_@(sel ? "" : "un")checked</button>
 				}
-				</div>
 			</div>
 		</Config>
 	</FactoryStepPanel>

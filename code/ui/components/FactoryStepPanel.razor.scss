@@ -52,6 +52,14 @@ FactoryStepPanel {
 			text-overflow: clip;
 		}
 
+		.group {
+			flex-direction: row;
+			gap: 1.5rem;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+		}
+
 		.row {
 			flex-direction: row;
 			gap: 1.5rem;
@@ -70,6 +78,7 @@ FactoryStepPanel {
 				font-family: Material Icons;
 				font-size: 40px;
 				border: 1px solid #444;
+				border-radius: 8px;
 			}
 
 			button.txt {
