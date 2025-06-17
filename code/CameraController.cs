@@ -14,6 +14,8 @@ public sealed class CameraController : Component
 	private readonly Sandbox.UI.WorldInput worldInput = new();
 	private Toolbox toolbox;
 
+	public Vector3 MouseWorldPosition { get => Camera.ScreenPixelToRay( Mouse.Position ).Project( Camera.WorldPosition.x ); }
+
 	protected override void OnStart()
 	{
 		worldInput.Enabled = true;
