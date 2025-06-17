@@ -1,0 +1,30 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@namespace Reprint
+@inherits FactoryPanel
+
+<root>
+	<FactoryStepPanel Fact=@(this)>
+		<Name>Flip</Name>
+		<Config>
+			<div class="sel row">
+				<button class="@(Fact.vertical ? "" : "pressed")" @onclick=@(() => SelectFlip(false))>swap_horiz</button>
+				<button class="@(Fact.vertical ? "pressed" : "")" @onclick=@(() => SelectFlip(true))>swap_vert</button>
+			</div>
+		</Config>
+	</FactoryStepPanel>
+</root>
+
+@code
+{
+	private FactoryFlip Fact { get => factory as FactoryFlip; }
+
+	private void SelectFlip(bool v)
+	{
+		Fact.vertical = v;
+	}
+
+	protected override FactoryStep CreateFactory() => new FactoryFlip();
+	protected override int BuildHash() => HashCode.Combine( Fact.vertical );
+}

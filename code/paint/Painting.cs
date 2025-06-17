@@ -10,13 +10,16 @@ public sealed class Painting
 	public readonly int width, height;
 	public readonly Pixel[] pixels;
 
+	private enum TransKey { NegY = -2, NegX = -1, PosX = 1, PosY = 2 }
+	private TransKey transX = TransKey.PosX;
+	private TransKey transY = TransKey.PosY;
+
 	public Painting( int w, int h )
 	{
 		width = w;
 		height = h;
 		pixels = new Pixel[h * w];
 
-		Random rng = new();
 		for ( var i = 0; i < width * height; i++ )
 		{
 			pixels[i] = new Pixel( Pixel.ColorLookup.Cyan );
@@ -28,7 +31,7 @@ public sealed class Painting
 		width = p.width;
 		height = p.height;
 		pixels = new Pixel[width * height];
-		Copy(p);
+		Copy( p );
 	}
 
 	public Painting( string serial )
@@ -41,6 +44,10 @@ public sealed class Painting
 
 	public void Copy( Painting p )
 	{
+		cursorX = p.cursorX;
+		cursorY = p.cursorY;
+		transX = p.transX;
+		transY = p.transY;
 		for ( var i = 0; i < width * height; i++ )
 			pixels[i] = new Pixel( p.pixels[i] );
 	}
@@ -91,9 +98,49 @@ public sealed class Painting
 		MoveCursor( false, y, mode );
 	}
 
+	private int TransformCoord( int x, int y, TransKey trans )
+	{
+		return trans switch
+		{
+			TransKey.PosX => x,
+			TransKey.NegX => width - x - 1,
+			TransKey.PosY => y,
+			TransKey.NegY => height - y - 1,
+			_ => -1,
+		};
+	}
+
+	public void RotateCW()
+	{
+		(transX, transY) = (transY, (TransKey)(-(int)transX));
+	}
+
+	public void RotateCCW()
+	{
+		(transX, transY) = ((TransKey)(-(int)transY), transX);
+	}
+
+	private void Flip( TransKey posAxis, TransKey negAxis )
+	{
+		if ( transX == posAxis || transX == negAxis )
+			transX = (TransKey)(-(int)transX);
+		else
+			transY = (TransKey)(-(int)transY);
+	}
+
+	public void FlipH()
+	{
+		Flip( TransKey.PosX, TransKey.NegX );
+	}
+
+	public void FlipV()
+	{
+		Flip( TransKey.PosY, TransKey.NegY );
+	}
+
 	public Pixel PixelAt( int x, int y )
 	{
-		return pixels[y * width + x];
+		return pixels[TransformCoord( x, y, transY ) * width + TransformCoord( x, y, transX )];
 	}
 
 	public void Randomize()
@@ -110,6 +157,11 @@ public sealed class Painting
 		for ( var i = 0; i < pixels.Length; i++ )
 			serial += pixels[i].Serialize();
 		return serial;
+	}
+
+	public int BuildHash()
+	{
+		return HashCode.Combine( Serialize(), cursorX, cursorY, transX, transY );
 	}
 
 	private void DeserializePixels( string pxSerial )

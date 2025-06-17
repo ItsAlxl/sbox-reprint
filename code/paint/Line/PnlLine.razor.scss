@@ -1,17 +1,8 @@
 PnlLine {
-	flex-direction: column;
-	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #223;
-	justify-content: flex-start;
-	align-items: center;
-	font-family: Poppins;
-	color: #fff;
-	pointer-events: all;
-	font-size: 20px;
 
 	.color-dropdown {
 		z-index: 10;

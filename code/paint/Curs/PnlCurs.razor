@@ -1,0 +1,79 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@namespace Reprint
+@inherits FactoryPanel
+
+<root>
+	<FactoryStepPanel Fact=@(this)>
+		<Name>Move Cursor</Name>
+		<Config>
+			<div class="row" style="gap: 4rem">
+				<div class="sel col">
+					<span>X</span>
+					<div class="row">
+						<button class="sm pressed" @onclick=@ToggleModeX>@(Fact.setX ? "drag_handle" : (Fact.amtX < 0 ? "arrow_back" : "arrow_forward"))</button>
+						<span class="fixed-num">@(Fact.amtX < 0 ? -Fact.amtX : Fact.amtX)</span>
+					</div>
+					<div style="flex-direction: row; gap: 0">
+						<button class="sm" @onclick=@DecrX>chevron_left</button>
+						<button class="sm" @onclick=@IncrX>chevron_right</button>
+					</div>
+				</div>
+				<div class="sel col">
+					<span>Y</span>
+					<div class="row">
+						<button class="sm pressed" @onclick=@ToggleModeY>@(Fact.setY ? "drag_handle" : (Fact.amtY < 0 ? "arrow_upward" : "arrow_downward"))</button>
+						<span class="fixed-num">@(Fact.amtY < 0 ? -Fact.amtY : Fact.amtY)</span>
+					</div>
+					<div style="flex-direction: row; gap: 0">
+						<button class="sm" @onclick=@DecrY>expand_less</button>
+						<button class="sm" @onclick=@IncrY>expand_more</button>
+					</div>
+				</div>
+			</div>
+		</Config>
+	</FactoryStepPanel>
+</root>
+
+@code
+{
+	private FactoryCurs Fact { get => factory as FactoryCurs; }
+
+	private void ToggleModeX()
+	{
+		Fact.setX = !Fact.setX;
+	}
+
+	private void ToggleModeY()
+	{
+		Fact.setY = !Fact.setY;
+	}
+
+	private void IncrX()
+	{
+		if (Fact.amtX < 16)
+			Fact.amtX++;
+	}
+
+	private void DecrX()
+	{
+		if (!Fact.setX || Fact.amtX > 0)
+			Fact.amtX--;
+	}
+
+	private void IncrY()
+	{
+		if (Fact.amtY < 16)
+			Fact.amtY++;
+	}
+
+	private void DecrY()
+	{
+		if (!Fact.setY || Fact.amtY > 0)
+			Fact.amtY--;
+	}
+
+	protected override FactoryStep CreateFactory() => new FactoryCurs();
+	protected override int BuildHash() => HashCode.Combine( Fact.setX, Fact.amtX, Fact.setY, Fact.amtY );
+}

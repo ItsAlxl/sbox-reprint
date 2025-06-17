@@ -205,7 +205,7 @@
             },
             {
               "__type": "Reprint.Canvas",
-              "__guid": "ba589fcc-318c-49c3-b646-6e353606fc4f",
+              "__guid": "4da03856-d555-4d0d-be93-528281f6f6b1",
               "__enabled": true,
               "isScratch": true,
               "OnComponentDestroy": null,

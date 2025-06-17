@@ -33,5 +33,5 @@
 		paint = isScratch ? Scene.Get<Toolbox>().scratchPaint : new(4, 4);
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine( paint.Serialize() );
+	protected override int BuildHash() => System.HashCode.Combine( paint.BuildHash() );
 }

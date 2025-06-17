@@ -42,7 +42,49 @@ FactoryStepPanel {
 	.config {
 		flex-direction: column;
 		justify-content: center;
+		gap: 1rem;
 		flex-grow: 1;
 		align-items: center;
+
+		.fixed-num {
+			width: 20px;
+			max-height: 50px;
+			text-overflow: clip;
+		}
+
+		.row {
+			flex-direction: row;
+			gap: 1.5rem;
+			align-items: center;
+		}
+
+		.col {
+			flex-direction: column;
+			gap: 1.5rem;
+			align-items: center;
+		}
+
+		.sel {
+			button {
+				padding: 1rem;
+				font-family: Material Icons;
+				font-size: 40px;
+				border: 1px solid #444;
+			}
+
+			button.txt {
+				font-family: Poppins;
+				font-weight: bold;
+			}
+
+			button.sm {
+				font-size: 20px;
+			}
+
+			button.pressed {
+				border: 1px solid #aaa;
+				background-color: #111;
+			}
+		}
 	}
 }

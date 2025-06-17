@@ -16,6 +16,9 @@ public sealed class Toolbox : Component
 
 	public readonly List<Tool> tools = [
 		new(){ title = "Line", prefab = GameObject.GetPrefab("prefabs/StepLine.prefab")},
+		new(){ title = "Rotate", prefab = GameObject.GetPrefab("prefabs/StepRot.prefab")},
+		new(){ title = "Flip", prefab = GameObject.GetPrefab("prefabs/StepFlip.prefab")},
+		new(){ title = "Cursor", prefab = GameObject.GetPrefab("prefabs/StepCurs.prefab")},
 	];
 
 	public static float LeftBound { get => 0.0f; }
