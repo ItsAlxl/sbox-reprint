@@ -19,7 +19,7 @@ public sealed class Painting
 		Random rng = new();
 		for ( var i = 0; i < width * height; i++ )
 		{
-			pixels[i] = new Pixel( (Pixel.ColorLookup)rng.Next( Pixel.Colors.Length ) );
+			pixels[i] = new Pixel( Pixel.ColorLookup.Red );
 		}
 	}
 

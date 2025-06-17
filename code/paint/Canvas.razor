@@ -24,11 +24,13 @@
 
 @code
 {
+	[Property] public bool isScratch = false;
 	public Painting paint;
 
 	protected override void OnStart()
 	{
-		paint = new(4, 4);
+		paint = isScratch ? Scene.Get<Toolbox>().scratchPaint : new(4, 4);
 	}
-	protected override int BuildHash() => System.HashCode.Combine( paint );
+
+	protected override int BuildHash() => System.HashCode.Combine( paint.Serialize() );
 }

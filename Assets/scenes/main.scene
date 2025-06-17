@@ -42,7 +42,7 @@
       "__version": 1,
       "Flags": 0,
       "Name": "Camera",
-      "Position": "100,-15,-7.5",
+      "Position": "100,0,-7.5",
       "Rotation": "0,0,1,-0.00000004371139",
       "Scale": "1,1,1",
       "Tags": "maincamera",
@@ -138,58 +138,6 @@
       "Children": []
     },
     {
-      "__guid": "beb07944-21bc-4749-9e1d-9c1600dd4e90",
-      "__version": 1,
-      "Flags": 0,
-      "Name": "Start",
-      "Position": "0,-30,0",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkInterpolation": true,
-      "NetworkOrphaned": 0,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.WorldPanel",
-          "__guid": "a6d6d847-dec9-41e6-bdd3-ec5df8b06b03",
-          "__enabled": true,
-          "HorizontalAlign": "Center",
-          "InteractionRange": 1000,
-          "LookAtCamera": false,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "PanelSize": "512,512",
-          "RenderOptions": {
-            "GameLayer": true,
-            "OverlayLayer": false,
-            "BloomLayer": false,
-            "AfterUILayer": false
-          },
-          "RenderScale": 1,
-          "VerticalAlign": "Center"
-        },
-        {
-          "__type": "Reprint.Canvas",
-          "__guid": "ba589fcc-318c-49c3-b646-6e353606fc4f",
-          "__enabled": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "cc36d154-7cf2-4afb-9446-301f68040ec1",
       "__version": 1,
       "Flags": 0,
@@ -216,7 +164,61 @@
           "OnComponentUpdate": null
         }
       ],
-      "Children": []
+      "Children": [
+        {
+          "__guid": "beb07944-21bc-4749-9e1d-9c1600dd4e90",
+          "__version": 1,
+          "Flags": 0,
+          "Name": "Scratch",
+          "Position": "0,0,0",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkInterpolation": true,
+          "NetworkOrphaned": 0,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.WorldPanel",
+              "__guid": "a6d6d847-dec9-41e6-bdd3-ec5df8b06b03",
+              "__enabled": true,
+              "HorizontalAlign": "Center",
+              "InteractionRange": 1000,
+              "LookAtCamera": false,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "PanelSize": "500,500",
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderScale": 1,
+              "VerticalAlign": "Center"
+            },
+            {
+              "__type": "Reprint.Canvas",
+              "__guid": "ba589fcc-318c-49c3-b646-6e353606fc4f",
+              "__enabled": true,
+              "isScratch": true,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null
+            }
+          ],
+          "Children": []
+        }
+      ]
     }
   ],
   "SceneProperties": {
