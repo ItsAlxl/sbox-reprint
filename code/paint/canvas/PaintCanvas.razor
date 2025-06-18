@@ -13,17 +13,19 @@
 		string fontPx = (int)side + "px";
 		for(var y = 0; y < paint.height; y++)
 		{
+			var unique_y = y;
 			<div class="row">
 			@for(var x = 0; x < paint.width; x++)
 			{
-				var pxl = paint.PixelAt(x, y);
+				var unique_x = x;
+				var pxl = paint.PixelAt(unique_x, unique_y);
 				<div
-					@onmouseover=@(() => EmitHover(pxl, x, y))
-					@onclick=@(() => EmitLClick(pxl, x, y))
-					@onrightclick=@(() => EmitRClick(pxl, x, y))
+					@onmouseover=@(() => EmitHover(pxl, unique_x, unique_y))
+					@onclick=@(() => EmitLClick(pxl, unique_x, unique_y))
+					@onrightclick=@(() => EmitRClick(pxl, unique_x, unique_y))
 					style="background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; border-color: @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @fontPx"
 				>
-					@((cursor && x == paint.cursorX && y == paint.cursorY) ? "⯏" : "")
+					@((cursor && unique_x == paint.cursorX && unique_y == paint.cursorY) ? "⯏" : "")
 				</div>
 			}
 			</div>

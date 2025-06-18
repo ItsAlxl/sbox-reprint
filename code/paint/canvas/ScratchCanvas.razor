@@ -4,16 +4,31 @@
 @inherits PanelComponent
 
 <root>
-	<PaintCanvas @paint=@p @size=@size></PaintCanvas>
+	<div class="top menu">
+		<span @onmousedown=@DragMe class="dragbar">ⵓ ⵓ ⵓ ⵓ</span>
+	</div>
+	<PaintCanvas @listener=@insp @paint=@(workspace.scratchPaint) @size=@size></PaintCanvas>
+	<div class="bot menu">
+		<div><span class="ficon">⯏</span>@(workspace.scratchPaint.CursorReadout)</div>
+		<div><span class="icon">pan_tool</span>@(insp.CreateHoverReadout(workspace.scratchPaint))</div>
+	</div>
 </root>
 
 @code
 {
 	[Property] public float size = 256.0f;
-	private Painting p;
+	private Workspace workspace;
+	private PaintingInspector insp = new();
 
 	protected override void OnStart()
 	{
-		p = Scene.Get<Workspace>().scratchPaint;
+		workspace = Scene.Get<Workspace>();
 	}
+
+	private void DragMe()
+	{
+		workspace.StartDragScratch();
+	}
+
+	protected override int BuildHash() => System.HashCode.Combine( insp.obvX, insp.obvY, workspace.scratchPaint.BuildHash() );
 }

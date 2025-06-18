@@ -42,6 +42,11 @@ public sealed class Pixel
 	public int darkenLevel = 0;
 	public int desatLevel = 0;
 
+	public int LightLevel { get => (int)MAX_LEVEL - darkenLevel; }
+	public int SatLevel { get => (int)MAX_LEVEL - desatLevel; }
+
+	public string Readout { get => $"C:{GetColor( _baseColor ).Initial} S:{SatLevel} L:{LightLevel}"; }
+
 	public Pixel( ColorLookup clr, int desat = (int)MAX_LEVEL, int darken = 0 )
 	{
 		_baseColor = clr;

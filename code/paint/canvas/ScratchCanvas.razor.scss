@@ -3,4 +3,63 @@ ScratchCanvas {
 	left: 0;
 	right: 0;
 	bottom: 0;
+	flex-direction: column;
+
+	.menu {
+		font-size: 20px;
+		color: #fff;
+		width: 100%;
+		gap: 0;
+		flex-grow: 1;
+		background-color: #223;
+		pointer-events: all;
+
+		button {
+			background-color: #112;
+			width: 40px;
+			height: 100%;
+			flex-shrink: 1;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.dragbar {
+			font-size: 20px;
+			flex-grow: 1;
+			align-items: center;
+			justify-content: center;
+			background-color: #334;
+		}
+	}
+
+	.menu.top {
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: stretch;
+	}
+
+	.menu.bot {
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 6px;
+		flex-grow: 3;
+		font-size: 12px;
+	}
+
+	PaintCanvas {
+		position: relative;
+	}
+
+	.icon {
+		font-family: Material Icons;
+		width: 14px;
+	}
+
+	.ficon {
+		font-weight: bold;
+		font-size: 17px;
+		line-height: 10px;
+		width: 14px;
+	}
 }

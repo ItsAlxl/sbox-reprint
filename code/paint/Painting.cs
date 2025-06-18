@@ -14,6 +14,8 @@ public sealed class Painting
 	private TransKey transX = TransKey.PosX;
 	private TransKey transY = TransKey.PosY;
 
+	public string CursorReadout { get => CreateReadout( cursorX, cursorY ); }
+
 	public Painting( int w, int h )
 	{
 		width = w;
@@ -149,6 +151,11 @@ public sealed class Painting
 		for ( var x = 0; x < width; x++ )
 			for ( var y = 0; y < height; y++ )
 				PixelAt( x, y ).Randomize( rng );
+	}
+
+	public string CreateReadout( int x, int y )
+	{
+		return $"({x},{y}) = {PixelAt( x, y ).Readout}";
 	}
 
 	public string Serialize()

@@ -13,7 +13,7 @@ public sealed class Workspace : Component
 	private float _rightBound = 0.0f;
 
 	public Painting scratchPaint = new( 4, 4 );
-	private GameObject scratchPanel;
+	private GameObject scratchGo;
 	private readonly List<GameObject> sequence = [];
 
 	private bool Dragging { get => dragGo is not null; }
@@ -26,8 +26,8 @@ public sealed class Workspace : Component
 	protected override void OnStart()
 	{
 		camCont = Scene.Get<CameraController>();
-		scratchPanel = GameObject.Children.Find( ( go ) => go.Name == "Scratch" );
-		sequence.Add( scratchPanel );
+		scratchGo = GameObject.Children.Find( ( go ) => go.Name == "Scratch" );
+		sequence.Add( scratchGo );
 		AdjustSequenceLayout();
 	}
 
@@ -72,16 +72,26 @@ public sealed class Workspace : Component
 
 	private int GetScratchIdx()
 	{
-		return sequence.FindIndex( ( go ) => go == scratchPanel );
+		return sequence.FindIndex( ( go ) => go == scratchGo );
 	}
 
-	public void BeginDragging( FactoryPanel pnl )
+	private void StartDrag( GameObject go )
 	{
-		dragGo = pnl.GameObject;
+		dragGo = go;
 		dragIdx = sequence.FindIndex( ( go ) => go == dragGo );
 		sequence.RemoveAt( dragIdx );
-		dragOffset = pnl.GameObject.WorldPosition - camCont.MouseWorldPosition + new Vector3( 5.0f, 0.0f, 0.0f );
+		dragOffset = go.WorldPosition - camCont.MouseWorldPosition + new Vector3( 5.0f, 0.0f, 0.0f );
 		AdjustSequenceLayout();
+	}
+
+	public void StartDragFactory( FactoryPanel pnl )
+	{
+		StartDrag( pnl.GameObject );
+	}
+
+	public void StartDragScratch()
+	{
+		StartDrag( scratchGo );
 	}
 
 	private int FindDragIndex( float yPos )

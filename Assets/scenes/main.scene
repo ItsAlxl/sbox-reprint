@@ -193,7 +193,7 @@
               "OnComponentFixedUpdate": null,
               "OnComponentStart": null,
               "OnComponentUpdate": null,
-              "PanelSize": "256,256",
+              "PanelSize": "256,400",
               "RenderOptions": {
                 "GameLayer": true,
                 "OverlayLayer": false,
