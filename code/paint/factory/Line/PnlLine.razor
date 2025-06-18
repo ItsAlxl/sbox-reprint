@@ -12,7 +12,8 @@
 				@foreach ( Pixel.ColorLookup clr in Enum.GetValues<Pixel.ColorLookup>() )
 				{
 					var sel = Fact.color == clr;
-					<button @onclick=@(() => SelectColor(clr)) class="sm @(sel ? "pressed" : "")" style="color: @Pixel.GetColor(clr).color.Hex">radio_button_@(sel ? "" : "un")checked</button>
+					var color = Pixel.GetColor(clr);
+					<button @onclick=@(() => SelectColor(clr)) class="sm @(sel ? "pressed" : "")" style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(color.Initial)</span></button>
 				}
 			</div>
 		</Config>

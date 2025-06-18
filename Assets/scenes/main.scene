@@ -125,7 +125,7 @@
         },
         {
           "__type": "Reprint.HUD",
-          "__guid": "6a725f30-5e0f-4466-aaba-92b40ad44588",
+          "__guid": "fc51e9ca-a16f-4f3c-97a8-2c3ad629307b",
           "__enabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
@@ -204,10 +204,9 @@
               "VerticalAlign": "Center"
             },
             {
-              "__type": "Reprint.Canvas",
-              "__guid": "4da03856-d555-4d0d-be93-528281f6f6b1",
+              "__type": "Reprint.ScratchCanvas",
+              "__guid": "d1e30dd9-5c54-409e-b9c7-2d19f4563f81",
               "__enabled": true,
-              "isScratch": true,
               "OnComponentDestroy": null,
               "OnComponentDisabled": null,
               "OnComponentEnabled": null,

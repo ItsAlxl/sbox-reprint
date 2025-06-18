@@ -4,23 +4,90 @@
 @inherits PanelComponent
 
 <root>
-	<div class="toolbox">
-	@if (toolbox is not null)
-	{
-		foreach (var t in toolbox.tools)
+	<div class="main view @RegisterView("main")">
+		<div class="title">Fauxto Shop</div>
+		<div class="subtitle">a game by alxl</div>
+		<div class="gap"></div>
+		<div class="menu-list">
+			<button>play gam</button>
+			<button>Designer</button>
+		</div>
+	</div>
+
+	<div class="view @RegisterView("ingame")">
+		<div class="ingame brief open">
+			<div>Finish it!</div>
+		</div>
+		<div class="toolbox">
+		@if (toolbox is not null)
 		{
-			<button class="tool" @onclick=@(() => toolbox.AddStep(t.prefab))>@t.title</button>
+			foreach (var t in toolbox.tools)
+			{
+				<button class="tool" @onclick=@(() => toolbox.AddStep(t.prefab))>@t.title</button>
+			}
 		}
-	}
+		</div>
+	</div>
+
+	<div class="view @RegisterView("design")">
+		<div class="design-up">
+			<div class="brief open">
+				<div class="title">Design a Challenge</div>
+				<TextEntry Multiline="@true" />
+				<button>Save</button>
+			</div>
+			<div class="design-work">
+				<PaintCanvas @listener=@designer class="big" @cursor=@false @paint=@(designer.paint) @size=@(1024.0f)></PaintCanvas>
+			</div>
+		</div>
+		<div class="toolbox">
+			<div class="group">
+			@foreach ( Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>() )
+			{
+				var sel = designer.brushColor == clr;
+				var color = Pixel.GetColor(clr);
+				<button @onclick=@(() => designer.brushColor = clr) class="clr @(sel ? "pressed" : "")" style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(color.Initial)</span></button>
+			}
+			</div>
+			<div class="group">
+			@for (int i = 0; i <= Pixel.MAX_LEVEL; i++)
+			{
+				var sel = designer.brushDesat == i;
+				var color = Pixel.CalculateColor(designer.brushColor, 0, i);
+				var unique_i = i;
+				<button @onclick=@(() => designer.brushDesat = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(i)</span></button>
+			}
+			</div>
+			<div class="group">
+			@for (int i = 0; i <= Pixel.MAX_LEVEL; i++)
+			{
+				var sel = designer.brushDarken == i;
+				var color = Pixel.CalculateColor(designer.brushColor, i, 0);
+				var unique_i = i;
+				<button @onclick=@(() => designer.brushDarken = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(i)</span></button>
+			}
+			</div>
+			<div style="width: 64px; height: 64px; background-color: @(designer.CalculateColor().Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)"></div>
+		</div>
 	</div>
 </root>
 
 @code
 {
+	private PaintingDesigner designer = new();
+
 	private Toolbox toolbox;
+	private string view = "design";
+
+	private string RegisterView(string m)
+	{
+		return m == view ? "" : "hidden";
+	}
 
 	protected override void OnStart()
 	{
 		toolbox = Scene.Get<Toolbox>();
 	}
+
+	protected override int BuildHash() => System.HashCode.Combine( view, designer.brushColor, designer.brushDarken, designer.brushDesat );
 }

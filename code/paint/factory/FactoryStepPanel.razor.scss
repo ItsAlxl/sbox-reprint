@@ -95,5 +95,18 @@ FactoryStepPanel {
 				background-color: #111;
 			}
 		}
+
+		.clr {
+			justify-content: center;
+			align-items: center;
+			font-family: Material Icons;
+
+			.lbl {
+				font-family: Poppins;
+				color: #fff;
+				padding-left: 8px;
+				padding-top: 4px;
+			}
+		}
 	}
 }

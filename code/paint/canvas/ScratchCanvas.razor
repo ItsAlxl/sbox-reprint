@@ -1,0 +1,19 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace Reprint
+@inherits PanelComponent
+
+<root>
+	<PaintCanvas @paint=@p @size=@size></PaintCanvas>
+</root>
+
+@code
+{
+	[Property] public float size = 256.0f;
+	private Painting p;
+
+	protected override void OnStart()
+	{
+		p = Scene.Get<Toolbox>().scratchPaint;
+	}
+}

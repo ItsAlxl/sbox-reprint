@@ -8,6 +8,7 @@ public sealed class Pixel
 	{
 		public string name;
 		public Color color;
+		public char Initial { get => char.ToUpper( name[0] ); }
 	}
 
 	public static readonly PrimeColor[] Colors = [
@@ -22,15 +23,24 @@ public sealed class Pixel
 	public enum ColorLookup { Red, Orange, Yellow, Green, Cyan, Blue, Purple }
 	public static PrimeColor GetColor( ColorLookup lookup ) => Colors[(int)lookup];
 
-	const float MAX_LEVEL = 3.0f;
+	public const float MAX_LEVEL = 3.0f;
 
-	private Color BaseColor { get => Colors[(int)_baseColor].color; }
-	public Color FinalColor { get => BaseColor.Desaturate( desatLevel / MAX_LEVEL ).Darken( darkenLevel / MAX_LEVEL ); }
-	public Color ContrastGray { get => Color.White.Darken( (MAX_LEVEL - darkenLevel) / MAX_LEVEL ); }
+	public static Color CalculateColor( ColorLookup clr, int darken, int desat )
+	{
+		return Colors[(int)clr].color.Desaturate( desat / MAX_LEVEL ).Darken( darken / MAX_LEVEL );
+	}
+
+	public static Color CalculateContrastColor( int darken )
+	{
+		return Color.White.Darken( (MAX_LEVEL - darken) / MAX_LEVEL );
+	}
+
+	public Color FinalColor { get => CalculateColor( _baseColor, darkenLevel, desatLevel ); }
+	public Color ContrastGray { get => CalculateContrastColor( darkenLevel ); }
 
 	private ColorLookup _baseColor;
-	public int desatLevel = 0;
 	public int darkenLevel = 0;
+	public int desatLevel = 0;
 
 	public Pixel( ColorLookup clr, int desat = (int)MAX_LEVEL, int darken = 0 )
 	{
@@ -49,6 +59,11 @@ public sealed class Pixel
 		desatLevel = 0;
 		darkenLevel = 0;
 		_baseColor = clr;
+	}
+
+	public ColorLookup GetColorLookup()
+	{
+		return _baseColor;
 	}
 
 	public void Randomize( Random rng )
