@@ -59,6 +59,13 @@ public sealed class Pixel
 		_baseColor = p._baseColor;
 	}
 
+	public void Reset()
+	{
+		_baseColor = ColorLookup.Red;
+		desatLevel = (int)MAX_LEVEL;
+		darkenLevel = 0;
+	}
+
 	public void PaintOver( ColorLookup clr )
 	{
 		desatLevel = 0;

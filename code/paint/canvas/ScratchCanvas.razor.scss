@@ -16,11 +16,10 @@ ScratchCanvas {
 
 		button {
 			background-color: #112;
-			width: 40px;
-			height: 100%;
 			flex-shrink: 1;
 			align-items: center;
 			justify-content: center;
+			padding: 5px;
 		}
 
 		.dragbar {
@@ -53,13 +52,15 @@ ScratchCanvas {
 
 	.icon {
 		font-family: Material Icons;
-		width: 14px;
 	}
 
 	.ficon {
 		font-weight: bold;
 		font-size: 17px;
 		line-height: 10px;
+	}
+
+	.readout-pfx {
 		width: 14px;
 	}
 }

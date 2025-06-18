@@ -120,23 +120,30 @@ public sealed class Workspace : Component
 		return start;
 	}
 
+	public void AdvanceScratch()
+	{
+		var scratchIdx = GetScratchIdx();
+		if ( scratchIdx < sequence.Count - 1 )
+		{
+			GetFactoryStep( scratchIdx + 1 ).ApplyTo( scratchPaint );
+			MoveInSequence( scratchIdx, scratchIdx + 1 );
+			AdjustSequenceLayout();
+		}
+	}
+
+	public void ResetScratch()
+	{
+		MoveInSequence( GetScratchIdx(), 0 );
+		scratchPaint.Reset();
+		AdjustSequenceLayout();
+	}
+
 	protected override void OnUpdate()
 	{
 		if ( Input.Pressed( "AdvScratch" ) )
-		{
-			var scratchIdx = GetScratchIdx();
-			if ( scratchIdx < sequence.Count - 1 )
-			{
-				GetFactoryStep( scratchIdx + 1 ).ApplyTo( scratchPaint );
-				MoveInSequence( scratchIdx, scratchIdx + 1 );
-				AdjustSequenceLayout();
-			}
-		}
+			AdvanceScratch();
 		if ( Input.Pressed( "RstScratch" ) )
-		{
-			MoveInSequence( GetScratchIdx(), 0 );
-			AdjustSequenceLayout();
-		}
+			ResetScratch();
 
 		if ( Dragging )
 		{

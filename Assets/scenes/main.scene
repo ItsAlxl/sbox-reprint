@@ -205,7 +205,7 @@
             },
             {
               "__type": "Reprint.ScratchCanvas",
-              "__guid": "d1e30dd9-5c54-409e-b9c7-2d19f4563f81",
+              "__guid": "20fc8d85-b9e2-4eeb-bea0-70b24c3e8ea4",
               "__enabled": true,
               "OnComponentDestroy": null,
               "OnComponentDisabled": null,

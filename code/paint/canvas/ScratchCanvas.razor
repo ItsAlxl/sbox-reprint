@@ -5,12 +5,14 @@
 
 <root>
 	<div class="top menu">
+		<button @onclick=@(workspace.ResetScratch) class="icon">replay</button>
 		<span @onmousedown=@DragMe class="dragbar">ⵓ ⵓ ⵓ ⵓ</span>
+		<button @onclick=@(workspace.AdvanceScratch) class="icon">play_arrow</button>
 	</div>
 	<PaintCanvas @listener=@insp @paint=@(workspace.scratchPaint) @size=@size></PaintCanvas>
 	<div class="bot menu">
-		<div><span class="ficon">⯏</span>@(workspace.scratchPaint.CursorReadout)</div>
-		<div><span class="icon">pan_tool</span>@(insp.CreateHoverReadout(workspace.scratchPaint))</div>
+		<div><span class="readout-pfx ficon">⯏</span>@(workspace.scratchPaint.CursorReadout)</div>
+		<div><span class="readout-pfx icon">pan_tool</span>@(insp.CreateHoverReadout(workspace.scratchPaint))</div>
 	</div>
 </root>
 

@@ -6,7 +6,7 @@ public sealed class Painting
 {
 	public enum CursorMoveMode { Set, Clamp, Wrap, Return }
 
-	public int cursorX, cursorY;
+	public int cursorX = 0, cursorY = 0;
 	public readonly int width, height;
 	public readonly Pixel[] pixels;
 
@@ -21,11 +21,8 @@ public sealed class Painting
 		width = w;
 		height = h;
 		pixels = new Pixel[h * w];
-
 		for ( var i = 0; i < width * height; i++ )
-		{
 			pixels[i] = new Pixel( Pixel.ColorLookup.Red );
-		}
 	}
 
 	public Painting( Painting p )
@@ -42,6 +39,14 @@ public sealed class Painting
 		width = int.Parse( comps[0] );
 		height = int.Parse( comps[1] );
 		DeserializePixels( comps[2] );
+	}
+
+	public void Reset()
+	{
+		cursorX = 0;
+		cursorY = 0;
+		for ( var i = 0; i < width * height; i++ )
+			pixels[i].Reset();
 	}
 
 	public void Copy( Painting p )
