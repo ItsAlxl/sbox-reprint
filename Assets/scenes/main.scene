@@ -153,8 +153,8 @@
       "OwnerTransfer": 1,
       "Components": [
         {
-          "__type": "Reprint.Toolbox",
-          "__guid": "a1b57730-8c30-4ad3-9dbc-a8b4fe969ed9",
+          "__type": "Reprint.Workspace",
+          "__guid": "a19da6b4-c1a4-46a8-b727-1e8b3f64e609",
           "__enabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,

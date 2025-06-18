@@ -12,14 +12,14 @@ public sealed class CameraController : Component
 
 	[RequireComponent] public CameraComponent Camera { get; set; }
 	private readonly Sandbox.UI.WorldInput worldInput = new();
-	private Toolbox toolbox;
+	private Workspace workspace;
 
 	public Vector3 MouseWorldPosition { get => Camera.ScreenPixelToRay( Mouse.Position ).Project( Camera.WorldPosition.x ); }
 
 	protected override void OnStart()
 	{
 		worldInput.Enabled = true;
-		toolbox = Scene.Get<Toolbox>();
+		workspace = Scene.Get<Workspace>();
 	}
 
 	protected override void OnUpdate()
@@ -30,11 +30,11 @@ public sealed class CameraController : Component
 
 		if ( Input.Down( "ScrollL" ) )
 		{
-			WorldPosition = WorldPosition.WithY( Math.Max( WorldPosition.y - SCROLL_SPEED, Toolbox.LeftBound ) );
+			WorldPosition = WorldPosition.WithY( Math.Max( WorldPosition.y - SCROLL_SPEED, Workspace.LeftBound ) );
 		}
 		if ( Input.Down( "ScrollR" ) )
 		{
-			WorldPosition = WorldPosition.WithY( Math.Min( WorldPosition.y + SCROLL_SPEED, toolbox.RightBound ) );
+			WorldPosition = WorldPosition.WithY( Math.Min( WorldPosition.y + SCROLL_SPEED, workspace.RightBound ) );
 		}
 	}
 }

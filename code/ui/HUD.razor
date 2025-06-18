@@ -24,12 +24,9 @@
 					<div>Finish it!</div>
 				</div>
 				<div class="toolbox">
-				@if (toolbox is not null)
+				@foreach (var t in Toolbox.tools)
 				{
-					foreach (var t in toolbox.tools)
-					{
-						<button class="tool" @onclick=@(() => toolbox.AddStep(t.prefab))>@t.title</button>
-					}
+					<button class="tool" @onclick=@(() => workspace.AddStep(t.prefab))>@t.title</button>
 				}
 				</div>
 			</div>
@@ -89,15 +86,15 @@
 {
 	private PaintingDesigner designer = new();
 
-	private Toolbox toolbox;
-	private string view = "design";
+	private Workspace workspace;
+	private string view = "ingame";
 	private string DesignerTitle { get; set; } = "Title";
 	private string DesignerDesc { get; set; } = "Description";
 	private string DesignerIO { get; set; } = "import/export code";
 
 	protected override void OnStart()
 	{
-		toolbox = Scene.Get<Toolbox>();
+		workspace = Scene.Get<Workspace>();
 	}
 
 	private void DesignerExport()

@@ -7,7 +7,7 @@ public abstract class FactoryStep
 
 public abstract class FactoryPanel : PanelComponent
 {
-	public Toolbox toolbox;
+	public Workspace workspace;
 	public readonly FactoryStep factory;
 	abstract protected FactoryStep CreateFactory();
 
@@ -18,6 +18,6 @@ public abstract class FactoryPanel : PanelComponent
 
 	protected override void OnStart()
 	{
-		toolbox = Scene.Get<Toolbox>();
+		workspace = Scene.Get<Workspace>();
 	}
 }

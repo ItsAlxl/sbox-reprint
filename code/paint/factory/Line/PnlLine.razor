@@ -13,7 +13,7 @@
 				{
 					var sel = Fact.color == clr;
 					var color = Pixel.GetColor(clr);
-					<button @onclick=@(() => SelectColor(clr)) class="sm @(sel ? "pressed" : "")" style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(color.Initial)</span></button>
+					<button @onclick=@(() => SelectColor(clr)) class="clr sm @(sel ? "pressed" : "")" style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(color.Initial)</span></button>
 				}
 			</div>
 		</Config>

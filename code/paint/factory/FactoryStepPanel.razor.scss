@@ -101,11 +101,15 @@ FactoryStepPanel {
 			align-items: center;
 			font-family: Material Icons;
 
+			span {
+				font-size: 15px;
+			}
+
 			.lbl {
 				font-family: Poppins;
 				color: #fff;
-				padding-left: 8px;
-				padding-top: 4px;
+				padding-left: 1px;
+				padding-right: 1px;
 			}
 		}
 	}
