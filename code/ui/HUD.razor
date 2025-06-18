@@ -58,21 +58,21 @@
 					}
 					</div>
 					<div class="group">
-					@for (int i = 0; i <= Pixel.MAX_LEVEL; i++)
+					@for (int i = (int)Pixel.MAX_LEVEL; i >= 0; i--)
 					{
 						var sel = designer.brushDesat == i;
 						var color = Pixel.CalculateColor(designer.brushColor, 0, i);
 						var unique_i = i;
-						<button @onclick=@(() => designer.brushDesat = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(i)</span></button>
+						<button @onclick=@(() => designer.brushDesat = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@((int)Pixel.MAX_LEVEL - i)</span></button>
 					}
 					</div>
 					<div class="group">
-					@for (int i = 0; i <= Pixel.MAX_LEVEL; i++)
+					@for (int i = (int)Pixel.MAX_LEVEL; i >= 0; i--)
 					{
 						var sel = designer.brushDarken == i;
 						var color = Pixel.CalculateColor(designer.brushColor, i, 0);
 						var unique_i = i;
-						<button @onclick=@(() => designer.brushDarken = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(i)</span></button>
+						<button @onclick=@(() => designer.brushDarken = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@((int)Pixel.MAX_LEVEL - i)</span></button>
 					}
 					</div>
 					<div style="width: 64px; height: 64px; background-color: @(designer.CalculateColor().Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)"></div>
@@ -87,7 +87,8 @@
 	private PaintingDesigner designer = new();
 
 	private Workspace workspace;
-	private string view = "ingame";
+	private string view = "design";
+
 	private string DesignerTitle { get; set; } = "Title";
 	private string DesignerDesc { get; set; } = "Description";
 	private string DesignerIO { get; set; } = "import/export code";
