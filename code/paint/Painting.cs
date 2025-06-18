@@ -22,7 +22,7 @@ public sealed class Painting
 
 		for ( var i = 0; i < width * height; i++ )
 		{
-			pixels[i] = new Pixel( Pixel.ColorLookup.Cyan );
+			pixels[i] = new Pixel( Pixel.ColorLookup.Red );
 		}
 	}
 

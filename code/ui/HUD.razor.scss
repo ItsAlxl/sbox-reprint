@@ -53,15 +53,19 @@ HUD {
 		TextEntry {
 			width: 100%;
 			border: 1px solid #aaa;
+		}
+
+		TextEntry.tall {
 			flex-grow: 1;
 		}
 
 		button {
 			background-color: #124;
-			width: 100%;
 			justify-content: center;
 			border: 1px solid #333;
 			padding: 5px;
+			padding-left: 25px;
+			padding-right: 25px;
 		}
 
 		.title {
@@ -76,7 +80,7 @@ HUD {
 	}
 
 	.brief.open {
-		width: 20%;
+		width: 25%;
 	}
 
 	.design-up {
@@ -86,7 +90,6 @@ HUD {
 
 	.design-work {
 		position: relative;
-		background-color: red;
 		flex-grow: 1;
 
 		PaintCanvas {

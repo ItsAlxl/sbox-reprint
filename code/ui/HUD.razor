@@ -4,72 +4,85 @@
 @inherits PanelComponent
 
 <root>
-	<div class="main view @RegisterView("main")">
-		<div class="title">Fauxto Shop</div>
-		<div class="subtitle">a game by alxl</div>
-		<div class="gap"></div>
-		<div class="menu-list">
-			<button>play gam</button>
-			<button>Designer</button>
-		</div>
-	</div>
+	@switch (view)
+	{
+		case "main":
+			<div class="main view">
+				<div class="title">Fauxto Shop</div>
+				<div class="subtitle">a game by alxl</div>
+				<div class="gap"></div>
+				<div class="menu-list">
+					<button>play gam</button>
+					<button>Designer</button>
+				</div>
+			</div>
+			break;
 
-	<div class="view @RegisterView("ingame")">
-		<div class="ingame brief open">
-			<div>Finish it!</div>
-		</div>
-		<div class="toolbox">
-		@if (toolbox is not null)
-		{
-			foreach (var t in toolbox.tools)
-			{
-				<button class="tool" @onclick=@(() => toolbox.AddStep(t.prefab))>@t.title</button>
-			}
-		}
-		</div>
-	</div>
+		case "ingame":
+			<div class="view">
+				<div class="ingame brief open">
+					<div>Finish it!</div>
+				</div>
+				<div class="toolbox">
+				@if (toolbox is not null)
+				{
+					foreach (var t in toolbox.tools)
+					{
+						<button class="tool" @onclick=@(() => toolbox.AddStep(t.prefab))>@t.title</button>
+					}
+				}
+				</div>
+			</div>
+			break;
 
-	<div class="view @RegisterView("design")">
-		<div class="design-up">
-			<div class="brief open">
-				<div class="title">Design a Challenge</div>
-				<TextEntry Multiline="@true" />
-				<button>Save</button>
+		case "design":
+			<div class="view">
+				<div class="design-up">
+					<div class="brief open">
+						<TextEntry Value:bind=@DesignerTitle />
+						<TextEntry class="tall" Multiline="@true" Value:bind=@DesignerDesc />
+						<div style="flex-direction: row; gap: 4px; width: 100%; justify-content: space-evenly;">
+							<button @onclick=@DesignerImport>Import</button>
+							<button @onclick=@DesignerExport>Export</button>
+						</div>
+						<TextEntry class="tall" Multiline="@true" Value:bind=@DesignerIO />
+					</div>
+					<div class="design-work">
+						<PaintCanvas @listener=@designer class="big" @cursor=@false @paint=@(designer.paint) @size=@(1024.0f)></PaintCanvas>
+					</div>
+				</div>
+				<div class="toolbox">
+					<div class="group">
+					@foreach ( Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>() )
+					{
+						var sel = designer.brushColor == clr;
+						var color = Pixel.GetColor(clr);
+						<button @onclick=@(() => designer.brushColor = clr) class="clr @(sel ? "pressed" : "")" style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(color.Initial)</span></button>
+					}
+					</div>
+					<div class="group">
+					@for (int i = 0; i <= Pixel.MAX_LEVEL; i++)
+					{
+						var sel = designer.brushDesat == i;
+						var color = Pixel.CalculateColor(designer.brushColor, 0, i);
+						var unique_i = i;
+						<button @onclick=@(() => designer.brushDesat = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(i)</span></button>
+					}
+					</div>
+					<div class="group">
+					@for (int i = 0; i <= Pixel.MAX_LEVEL; i++)
+					{
+						var sel = designer.brushDarken == i;
+						var color = Pixel.CalculateColor(designer.brushColor, i, 0);
+						var unique_i = i;
+						<button @onclick=@(() => designer.brushDarken = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(i)</span></button>
+					}
+					</div>
+					<div style="width: 64px; height: 64px; background-color: @(designer.CalculateColor().Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)"></div>
+				</div>
 			</div>
-			<div class="design-work">
-				<PaintCanvas @listener=@designer class="big" @cursor=@false @paint=@(designer.paint) @size=@(1024.0f)></PaintCanvas>
-			</div>
-		</div>
-		<div class="toolbox">
-			<div class="group">
-			@foreach ( Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>() )
-			{
-				var sel = designer.brushColor == clr;
-				var color = Pixel.GetColor(clr);
-				<button @onclick=@(() => designer.brushColor = clr) class="clr @(sel ? "pressed" : "")" style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(color.Initial)</span></button>
-			}
-			</div>
-			<div class="group">
-			@for (int i = 0; i <= Pixel.MAX_LEVEL; i++)
-			{
-				var sel = designer.brushDesat == i;
-				var color = Pixel.CalculateColor(designer.brushColor, 0, i);
-				var unique_i = i;
-				<button @onclick=@(() => designer.brushDesat = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(i)</span></button>
-			}
-			</div>
-			<div class="group">
-			@for (int i = 0; i <= Pixel.MAX_LEVEL; i++)
-			{
-				var sel = designer.brushDarken == i;
-				var color = Pixel.CalculateColor(designer.brushColor, i, 0);
-				var unique_i = i;
-				<button @onclick=@(() => designer.brushDarken = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(i)</span></button>
-			}
-			</div>
-			<div style="width: 64px; height: 64px; background-color: @(designer.CalculateColor().Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)"></div>
-		</div>
-	</div>
+			break;
+	}
 </root>
 
 @code
@@ -78,15 +91,30 @@
 
 	private Toolbox toolbox;
 	private string view = "design";
-
-	private string RegisterView(string m)
-	{
-		return m == view ? "" : "hidden";
-	}
+	private string DesignerTitle { get; set; } = "Title";
+	private string DesignerDesc { get; set; } = "Description";
+	private string DesignerIO { get; set; } = "import/export code";
 
 	protected override void OnStart()
 	{
 		toolbox = Scene.Get<Toolbox>();
+	}
+
+	private void DesignerExport()
+	{
+		DesignerIO = StringCompressor.Compress(
+			System.Net.WebUtility.UrlEncode(DesignerTitle) + ":" +
+			System.Net.WebUtility.UrlEncode(DesignerDesc) + ":" +
+			System.Net.WebUtility.UrlEncode(designer.paint.Serialize())
+		);
+	}
+
+	private void DesignerImport()
+	{
+		var comps = StringCompressor.Decompress(DesignerIO).Split(":");
+		DesignerTitle = System.Net.WebUtility.UrlDecode(comps[0]);
+		DesignerDesc = System.Net.WebUtility.UrlDecode(comps[1]);
+		designer.paint.Deserialize(System.Net.WebUtility.UrlDecode(comps[2]));
 	}
 
 	protected override int BuildHash() => System.HashCode.Combine( view, designer.brushColor, designer.brushDarken, designer.brushDesat );
