@@ -21,7 +21,7 @@ public sealed class PaintingDesigner : ICanvasListener
 
 	public void OnPxlRClick( Pixel p, int x, int y )
 	{
-		brushColor = p.GetColorLookup();
+		brushColor = p.BaseColor;
 		brushDarken = p.darkenLevel;
 		brushDesat = p.desatLevel;
 	}

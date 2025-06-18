@@ -14,7 +14,7 @@ public sealed class Workspace : Component
 
 	public Painting scratchPaint = new( 4, 4 );
 	private GameObject scratchGo;
-	private readonly List<GameObject> sequence = [];
+	private int ScratchIdx { get => sequence.FindIndex( ( go ) => go == scratchGo ); }
 
 	private bool Dragging { get => dragGo is not null; }
 	private int dragIdx = -1;
@@ -22,6 +22,7 @@ public sealed class Workspace : Component
 	private GameObject dragGo = null;
 
 	private CameraController camCont;
+	private readonly List<GameObject> sequence = [];
 
 	protected override void OnStart()
 	{
@@ -68,11 +69,6 @@ public sealed class Workspace : Component
 		sequence.Remove( pnl.GameObject );
 		pnl.GameObject.Destroy();
 		AdjustSequenceLayout();
-	}
-
-	private int GetScratchIdx()
-	{
-		return sequence.FindIndex( ( go ) => go == scratchGo );
 	}
 
 	private void StartDrag( GameObject go )
@@ -122,7 +118,7 @@ public sealed class Workspace : Component
 
 	public void AdvanceScratch()
 	{
-		var scratchIdx = GetScratchIdx();
+		var scratchIdx = ScratchIdx;
 		if ( scratchIdx < sequence.Count - 1 )
 		{
 			GetFactoryStep( scratchIdx + 1 ).ApplyTo( scratchPaint );
@@ -133,7 +129,7 @@ public sealed class Workspace : Component
 
 	public void ResetScratch()
 	{
-		MoveInSequence( GetScratchIdx(), 0 );
+		MoveInSequence( ScratchIdx, 0 );
 		scratchPaint.Reset();
 		AdjustSequenceLayout();
 	}

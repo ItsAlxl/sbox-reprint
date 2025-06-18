@@ -38,6 +38,7 @@ public sealed class Pixel
 	public Color FinalColor { get => CalculateColor( _baseColor, darkenLevel, desatLevel ); }
 	public Color ContrastGray { get => CalculateContrastColor( darkenLevel ); }
 
+	public ColorLookup BaseColor { get => _baseColor; }
 	private ColorLookup _baseColor;
 	public int darkenLevel = 0;
 	public int desatLevel = 0;
@@ -71,11 +72,6 @@ public sealed class Pixel
 		desatLevel = 0;
 		darkenLevel = 0;
 		_baseColor = clr;
-	}
-
-	public ColorLookup GetColorLookup()
-	{
-		return _baseColor;
 	}
 
 	public void Randomize( Random rng )
