@@ -54,7 +54,7 @@
 					<PaintCanvas class="medium" @cursor=@false @paint=@(workspace.targetPaint) @size=@(512.0f)></PaintCanvas>
 				</div>
 				<div class="toolbox">
-				@foreach (var t in workspace.currentScene.GetTools())
+				@foreach (var t in workspace.currentScene.Tools)
 				{
 					<button class="tool" @onclick=@(() => workspace.AddStep(t.Prefab))>@t.Title</button>
 				}
