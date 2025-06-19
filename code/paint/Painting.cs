@@ -181,15 +181,25 @@ public sealed class Painting
 
 	public float ScoreAgainst( Painting p )
 	{
-		var score = 0.0f;
+		var scores = new float[8];
+		var half = scores.Length / 2;
 		for ( var x = 0; x < width; x++ )
 		{
 			for ( var y = 0; y < height; y++ )
 			{
-				score += PixelAt( x, y ).ScoreAgainst( p.PixelAt( x, y ) );
+				var negX = width - x - 1;
+				var negY = width - y - 1;
+				var testPxl = p.PixelAt( x, y );
+				for ( var i = 0; i < half; i++ )
+				{
+					var stepX = i / 2 == 0 ? x : negX;
+					var stepY = i % 2 == 0 ? y : negY;
+					scores[i] += PixelAt( stepX, stepY ).ScoreAgainst( testPxl );
+					scores[i + half] += PixelAt( stepY, stepX ).ScoreAgainst( testPxl );
+				}
 			}
 		}
-		return score / pixels.Length;
+		return scores.Max() / pixels.Length;
 	}
 
 	public string Serialize()
