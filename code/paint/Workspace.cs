@@ -7,6 +7,7 @@ namespace Reprint;
 public sealed class Workspace : Component
 {
 	const float CHILD_SPACING = 30.0f / 512.0f;
+	const float SCRATCH_SPACING = CHILD_SPACING * 128.0f;
 
 	public static float LeftBound { get => 0.0f; }
 	public float RightBound { get => _rightBound; }
@@ -15,6 +16,8 @@ public sealed class Workspace : Component
 	public Painting scratchPaint = new( 4, 4 );
 	private GameObject scratchGo;
 	private int ScratchIdx { get => sequence.FindIndex( ( go ) => go == scratchGo ); }
+	private Vector3 ScratchLeft { get => scratchGo.WorldPosition - new Vector3( 0, SCRATCH_SPACING, 0 ); }
+	private Vector3 ScratchRight { get => scratchGo.WorldPosition + new Vector3( 0, SCRATCH_SPACING, 0 ); }
 
 	private TimeSince addStart;
 	private int dragIdx = -1;
@@ -42,7 +45,7 @@ public sealed class Workspace : Component
 		for ( var i = 1; i < sequence.Count; i++ )
 			sequence[i].Destroy();
 		if ( sequence.Count > 1 )
-			sequence.RemoveRange( 1, sequence.Count );
+			sequence.RemoveRange( 1, sequence.Count - 1 );
 		camCont.ResetPosition();
 		targetPaint = null;
 	}
@@ -154,6 +157,12 @@ public sealed class Workspace : Component
 		return start;
 	}
 
+	private void PutScratchInView()
+	{
+		camCont.PutInView( ScratchLeft );
+		camCont.PutInView( ScratchRight );
+	}
+
 	public void AdvanceScratch()
 	{
 		var scratchIdx = ScratchIdx;
@@ -162,6 +171,7 @@ public sealed class Workspace : Component
 			GetFactoryStep( scratchIdx + 1 ).ApplyTo( scratchPaint );
 			MoveInSequence( scratchIdx, scratchIdx + 1 );
 			AdjustSequenceLayout();
+			PutScratchInView();
 		}
 	}
 
@@ -170,6 +180,7 @@ public sealed class Workspace : Component
 		MoveInSequence( ScratchIdx, 0 );
 		scratchPaint.Reset();
 		AdjustSequenceLayout();
+		PutScratchInView();
 	}
 
 	protected override void OnUpdate()

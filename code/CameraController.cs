@@ -15,6 +15,7 @@ public sealed class CameraController : Component
 	private Workspace workspace;
 
 	public Vector3 MouseWorldPosition { get => Camera.ScreenPixelToRay( Mouse.Position ).Project( Camera.WorldPosition.x ); }
+	public Frustum ScreenFrustum { get => Camera.GetFrustum( new Rect( 0, 0, Screen.Width, Screen.Height ) ); }
 
 	protected override void OnStart()
 	{
@@ -38,8 +39,33 @@ public sealed class CameraController : Component
 		}
 	}
 
+	public void SnapTo( float y )
+	{
+		WorldPosition = WorldPosition.WithY( y );
+	}
+
 	public void ResetPosition()
 	{
-		WorldPosition = WorldPosition.WithY(0.0f);
+		SnapTo( 0.0f );
+	}
+
+	public bool PutInView( Vector3 p, float padding = 38.0f )
+	{
+		var moved = !IsInCameraBounds( p );
+		if ( moved )
+			SnapTo( p.y + (WorldPosition.y > p.y ? 1 : -1) * padding );
+		return moved;
+	}
+
+	public bool PutInView( Vector3 left, Vector3 right, float padding = 38.0f )
+	{
+		if ( !PutInView( left, padding ) )
+			return PutInView( right, padding );
+		return true;
+	}
+
+	public bool IsInCameraBounds( Vector3 pos )
+	{
+		return ScreenFrustum.IsInside( pos );
 	}
 }
