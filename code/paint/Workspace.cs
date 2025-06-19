@@ -16,7 +16,9 @@ public sealed class Workspace : Component
 	private GameObject scratchGo;
 	private int ScratchIdx { get => sequence.FindIndex( ( go ) => go == scratchGo ); }
 
+	private TimeSince addStart;
 	private int dragIdx = -1;
+	private bool showFirstDragGap = false;
 	private Vector3 dragOffset = Vector3.Zero;
 	private GameObject dragGo = null;
 	public bool Dragging { get => dragGo is not null; }
@@ -59,7 +61,7 @@ public sealed class Workspace : Component
 		{
 			var go = sequence[i];
 			var size = go.GetComponent<WorldPanel>().PanelSize.x * CHILD_SPACING;
-			if ( i == dragIdx )
+			if ( i == dragIdx && (showFirstDragGap || i > 0) )
 				_rightBound += 128 * CHILD_SPACING;
 			go.LocalPosition = Vector3.Zero.WithY( _rightBound + size * 0.5f );
 			_rightBound += size;
@@ -89,7 +91,8 @@ public sealed class Workspace : Component
 	{
 		dragGo = go;
 		dragIdx = sequence.FindIndex( ( go ) => go == dragGo );
-		if ( dragIdx >= 0 )
+		showFirstDragGap = dragIdx >= 0;
+		if ( showFirstDragGap )
 			sequence.RemoveAt( dragIdx );
 		dragOffset = go.WorldPosition - camCont.MouseWorldPosition + new Vector3( 5.0f, 0.0f, 0.0f );
 		AdjustSequenceLayout();
@@ -108,14 +111,15 @@ public sealed class Workspace : Component
 	public void AddStep( string prefabPath )
 	{
 		var go = GameObject.GetPrefab( prefabPath ).Clone();
-		var pnl = go.Components.Get<WorldPanel>();
-		go.WorldPosition = camCont.MouseWorldPosition + new Vector3( 0.0f, 0.0f, -0.025f * pnl.PanelSize.y );
+		go.WorldPosition = camCont.MouseWorldPosition + new Vector3( 0.0f, 0.0f, -0.025f * go.Components.Get<WorldPanel>().PanelSize.y );
+		addStart = 0;
 		StartDrag( go );
 	}
 
 	public void EndDrag()
 	{
-		sequence.Insert( dragIdx, dragGo );
+		Log.Info( addStart );
+		sequence.Insert( addStart < 0.5f ? sequence.Count : dragIdx, dragGo );
 		dragIdx = -1;
 		dragGo = null;
 		dragOffset = Vector3.Zero;
@@ -190,6 +194,7 @@ public sealed class Workspace : Component
 				if ( dragIdx != newIdx )
 				{
 					dragIdx = newIdx;
+					showFirstDragGap = showFirstDragGap || newIdx > 0;
 					AdjustSequenceLayout();
 				}
 			}
