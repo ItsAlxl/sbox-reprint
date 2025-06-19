@@ -11,9 +11,7 @@ public sealed class Painting
 	public readonly int width, height;
 	public readonly Pixel[] pixels;
 
-	private enum TransKey { NegY = -2, NegX = -1, PosX = 1, PosY = 2 }
-	private TransKey transX = TransKey.PosX;
-	private TransKey transY = TransKey.PosY;
+	private readonly int[] transform2D = [1, 0, 0, 1];
 
 	public string CursorReadout { get => CreateReadout( cursorX, cursorY ); }
 
@@ -57,8 +55,8 @@ public sealed class Painting
 	{
 		cursorX = p.cursorX;
 		cursorY = p.cursorY;
-		transX = p.transX;
-		transY = p.transY;
+		for ( var i = 0; i < transform2D.Length; i++ )
+			transform2D[i] = p.transform2D[i];
 		for ( var i = 0; i < width * height; i++ )
 			pixels[i] = new Pixel( p.pixels[i] );
 	}
@@ -109,49 +107,65 @@ public sealed class Painting
 		MoveCursor( false, y, mode );
 	}
 
-	private int TransformCoord( int x, int y, TransKey trans )
+	private int[] MatrixMultiply2x2( int[] a, int[] b )
 	{
-		return trans switch
-		{
-			TransKey.PosX => x,
-			TransKey.NegX => width - x - 1,
-			TransKey.PosY => y,
-			TransKey.NegY => height - y - 1,
-			_ => -1,
-		};
+		var ans = new int[b.Length];
+		for ( var i = 0; i <= 2; i += 2 )
+			for ( var j = 0; j < 2; j++ )
+				ans[i + j] = a[i] * b[j] + a[i + 1] * b[j + 2];
+		return ans;
+	}
+
+	private int[] MatrixMultiply2x1( int[] a, int[] b )
+	{
+		var ans = new int[b.Length];
+		for ( var i = 0; i < 2; i++ )
+			ans[i] = a[2 * i] * b[0] + a[2 * i + 1] * b[1];
+		return ans;
+	}
+
+	private int[] MatrixMultiply( int[] a, int[] b ) => b.Length == 2 ? MatrixMultiply2x1( a, b ) : MatrixMultiply2x2( a, b );
+
+	private void SetTransform2D( int[] matrix )
+	{
+		for ( var i = 0; i < transform2D.Length; i++ )
+			transform2D[i] = matrix[i];
 	}
 
 	public void RotateCW()
 	{
-		(transX, transY) = (transY, (TransKey)(-(int)transX));
+		SetTransform2D( MatrixMultiply( transform2D, [0, 1, -1, 0] ) );
 	}
 
 	public void RotateCCW()
 	{
-		(transX, transY) = ((TransKey)(-(int)transY), transX);
-	}
-
-	private void Flip( TransKey posAxis, TransKey negAxis )
-	{
-		if ( transX == posAxis || transX == negAxis )
-			transX = (TransKey)(-(int)transX);
-		else
-			transY = (TransKey)(-(int)transY);
+		SetTransform2D( MatrixMultiply( transform2D, [0, -1, 1, 0] ) );
 	}
 
 	public void FlipH()
 	{
-		Flip( TransKey.PosX, TransKey.NegX );
+		transform2D[0] = -transform2D[0];
+		transform2D[2] = -transform2D[2];
 	}
 
 	public void FlipV()
 	{
-		Flip( TransKey.PosY, TransKey.NegY );
+		transform2D[1] = -transform2D[1];
+		transform2D[3] = -transform2D[3];
+	}
+
+	private int[] TransformCoords( int x, int y )
+	{
+		var t = MatrixMultiply( transform2D, [x + 1, y + 1] );
+		t[0] = t[0] < 0 ? t[0] + width : (t[0] - 1);
+		t[1] = t[1] < 0 ? t[1] + height : (t[1] - 1);
+		return t;
 	}
 
 	public Pixel PixelAt( int x, int y )
 	{
-		return pixels[TransformCoord( x, y, transY ) * width + TransformCoord( x, y, transX )];
+		var coords = TransformCoords( x, y );
+		return pixels[coords[1] * width + coords[0]];
 	}
 
 	public void Randomize()
@@ -175,7 +189,7 @@ public sealed class Painting
 
 	public int BuildHash()
 	{
-		return HashCode.Combine( Serialize(), cursorX, cursorY, transX, transY );
+		return HashCode.Combine( Serialize(), cursorX, cursorY, transform2D[0], transform2D[1], transform2D[2], transform2D[3] );
 	}
 
 	private void DeserializePixels( string pxSerial )
