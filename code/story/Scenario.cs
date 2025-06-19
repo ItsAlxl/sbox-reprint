@@ -9,6 +9,18 @@ public sealed class Scenario
 	public static IEnumerable<ScenarioData> Order { get => _order ??= ResourceLibrary.Get<StoryData>( "story/main.pzstory" ).Scenarios.Select( ResourceLibrary.Get<ScenarioData> ); }
 	private static IEnumerable<ScenarioData> _order = null;
 
+	public static ScenarioData GetNext( ScenarioData sdata )
+	{
+		var isNext = false;
+		foreach ( var s in Order )
+		{
+			if ( isNext )
+				return s;
+			isNext = s == sdata;
+		}
+		return null;
+	}
+
 	public string title;
 	public string desc;
 	public string paint;

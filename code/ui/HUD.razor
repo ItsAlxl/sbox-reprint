@@ -40,43 +40,62 @@
 
 		case "ingame":
 			<div class="view @(workspace.Dragging ? "dragging" : "")" @onmouseup=@EndDrag>
-				<div class="ingame brief open">
-					<div class="title">@(workspace.currentScene.title)</div>
-					<div class="desc">
-					@{
-						var lines = workspace.currentScene.desc.Split('\n');
-						foreach (var line in lines)
-						{
-							<p>@line</p>
-						}
-					}
+				@if (workspace.IsCompleted)
+				{
+					<div class="view score">
+						<div class="subtitle">Nice work!</div>
+						<div class="gap"></div>
+						<PaintCanvas class="large" @cursor=@false @paint=@(workspace.targetPaint) @size=@(768.0f)></PaintCanvas>
+						<div class="gap"></div>
+						<div class="menu-list">
+							<button class="roundy" @onclick=@ClickRefine>One more tweak...</button>
+							<button class="roundy" @onclick=@ClickNextLevel>Next Level</button>
+							<button class="roundy" @onclick=@ClickQuitLevel>Level Select</button>
+						</div>
 					</div>
-					<div class="goal">
-						<PaintCanvas class="medium" @listener=@goalInsp @cursor=@false @paint=@(workspace.targetPaint) @size=@(512.0f)></PaintCanvas>
-						<div class="readout">@(goalInsp.CreateHoverReadoutVerbose(workspace.targetPaint))</div>
+				}
+				else
+				{
+					<div class="sidebars">
+						<div class="brief">
+							<div class="title">@(workspace.currentScene.title)</div>
+							<div class="desc">
+							@{
+								var lines = workspace.currentScene.desc.Split('\n');
+								foreach (var line in lines)
+								{
+									<p>@line</p>
+								}
+							}
+							</div>
+							<div class="goal">
+								<PaintCanvas class="medium" @listener=@goalInsp @cursor=@false @paint=@(workspace.targetPaint) @size=@(512.0f)></PaintCanvas>
+								<div class="readout">@(goalInsp.CreateHoverReadoutVerbose(workspace.targetPaint))</div>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="toolbox">
-					<div class="group">
-						<button @onclick=@ClickQuitLevel>Quit</button>
+					<div class="toolbox">
+						<div class="group">
+							<button @onclick=@ClickQuitLevel>Quit</button>
+						</div>
+						<div class="group right">
+							@foreach (var t in workspace.currentScene.Tools)
+							{
+								<button class="tool" @onmousedown=@(() => workspace.AddStep(t.Prefab))>@t.Title</button>
+							}
+						</div>
+						<div class="group">
+							<button @onclick=@SubmitSequence>Submit</button>
+						</div>
 					</div>
-					<div class="group right">
-						@foreach (var t in workspace.currentScene.Tools)
-						{
-							<button class="tool" @onmousedown=@(() => workspace.AddStep(t.Prefab))>@t.Title</button>
-						}
-					</div>
-					<div class="group">
-						<button @onclick=@SubmitSequence>Submit</button>
-					</div>
-				</div>
+				}
 			</div>
 			break;
 
 		case "design":
 			<div class="view">
 				<div class="design-up">
-					<div class="brief open">
+					<div class="brief">
 						<TextEntry Value:bind=@DesignerTitle />
 						<TextEntry class="tall" Multiline="@true" Value:bind=@DesignerDesc />
 						<div style="flex-direction: row; gap: 4px; width: 100%; justify-content: space-evenly;">
@@ -163,6 +182,20 @@
 	{
 		workspace.ResetLevel();
 		view = "levels";
+	}
+
+	private void ClickNextLevel()
+	{
+		var next = workspace.NextSceneData;
+		if (next is null)
+			ClickQuitLevel();
+		else
+			ClickLevel( next );
+	}
+
+	private void ClickRefine()
+	{
+		workspace.BeginRetry();
 	}
 
 	private void SubmitSequence()

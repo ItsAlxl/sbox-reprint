@@ -27,9 +27,14 @@ public sealed class Workspace : Component
 	public bool Dragging { get => dragGo is not null; }
 
 	private CameraController camCont;
+	private ScenarioData currentSceneData;
 	public Scenario currentScene;
 	public Painting targetPaint;
+	public ScenarioData NextSceneData { get => Scenario.GetNext( currentSceneData ); }
+
 	private readonly List<GameObject> sequence = [];
+	public float sequenceScore = float.NaN;
+	public bool IsCompleted { get => sequenceScore.AlmostEqual( 1.0f ); }
 
 	protected override void OnStart()
 	{
@@ -50,10 +55,15 @@ public sealed class Workspace : Component
 		scratchGo = null;
 		targetPaint = null;
 		scratchPaint = null;
+		sequenceScore = float.NaN;
 	}
 
 	public void BeginScenario( ScenarioData scene )
 	{
+		if ( scratchGo is not null )
+			ResetLevel();
+
+		currentSceneData = scene;
 		currentScene = new( scene );
 		targetPaint = new( currentScene.paint );
 		scratchPaint = new( targetPaint.width, targetPaint.height );
@@ -219,13 +229,33 @@ public sealed class Workspace : Component
 		}
 	}
 
+	private void SnapToEndScratch()
+	{
+		MoveInSequence( ScratchIdx, sequence.Count - 1 );
+		AdjustSequenceLayout();
+		camCont.SnapTo( scratchGo.WorldPosition.y );
+	}
+
 	public void SubmitSequence()
 	{
 		scratchPaint.Reset();
 		for ( var i = 0; i < sequence.Count; i++ )
 			if ( i != ScratchIdx )
 				GetFactoryStep( i ).ApplyTo( scratchPaint );
-		MoveInSequence( ScratchIdx, sequence.Count - 1 );
-		AdjustSequenceLayout();
+		sequenceScore = scratchPaint.ScoreAgainst( targetPaint );
+		if ( IsCompleted )
+		{
+			// TODO: leaderboard
+		}
+		else
+		{
+			SnapToEndScratch();
+		}
+	}
+
+	public void BeginRetry()
+	{
+		SnapToEndScratch();
+		sequenceScore = float.NaN;
 	}
 }

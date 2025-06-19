@@ -52,6 +52,15 @@ HUD {
 		pointer-events: all;
 	}
 
+	.view.score {
+		background-color: #012;
+
+		PaintCanvas {
+			position: relative;
+			align-self: center;
+		}
+	}
+
 	button.roundy {
 		border: 2px solid #888;
 		border-radius: 8px;
@@ -101,7 +110,7 @@ HUD {
 		background-color: #000c;
 		color: #fff;
 		pointer-events: all;
-		width: 0%;
+		width: 25%;
 		overflow: visible;
 		font-size: 21px;
 		padding: 0 15px;
@@ -158,13 +167,19 @@ HUD {
 		}
 	}
 
-	.brief.ingame {
+	.sidebars {
+		flex-direction: row;
 		flex-grow: 1;
 		align-self: flex-start;
-	}
+		width: 100%;
 
-	.brief.open {
-		width: 25%;
+		.brief {
+			height: 100%;
+		}
+
+		.right {
+			align-self: flex-end;
+		}
 	}
 
 	.design-up {
