@@ -37,4 +37,9 @@ public sealed class CameraController : Component
 			WorldPosition = WorldPosition.WithY( Math.Min( WorldPosition.y + SCROLL_SPEED, workspace.RightBound ) );
 		}
 	}
+
+	public void ResetPosition()
+	{
+		WorldPosition = WorldPosition.WithY(0.0f);
+	}
 }

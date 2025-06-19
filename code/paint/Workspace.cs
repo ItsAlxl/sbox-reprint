@@ -16,12 +16,14 @@ public sealed class Workspace : Component
 	private GameObject scratchGo;
 	private int ScratchIdx { get => sequence.FindIndex( ( go ) => go == scratchGo ); }
 
-	private bool Dragging { get => dragGo is not null; }
 	private int dragIdx = -1;
 	private Vector3 dragOffset = Vector3.Zero;
 	private GameObject dragGo = null;
+	private bool Dragging { get => dragGo is not null; }
 
 	private CameraController camCont;
+	public Scenario currentScene;
+	public Painting targetPaint;
 	private readonly List<GameObject> sequence = [];
 
 	protected override void OnStart()
@@ -30,6 +32,24 @@ public sealed class Workspace : Component
 		scratchGo = GameObject.Children.Find( ( go ) => go.Name == "Scratch" );
 		sequence.Add( scratchGo );
 		AdjustSequenceLayout();
+	}
+
+	public void ResetLevel()
+	{
+		ResetScratch();
+		for (var i = 1; i < sequence.Count; i++)
+			sequence[i].Destroy();
+		if (sequence.Count > 1)
+			sequence.RemoveRange(1, sequence.Count);
+		camCont.ResetPosition();
+		targetPaint = null;
+	}
+
+	public void BeginScenario(Scenario scene)
+	{
+		ResetLevel();
+		currentScene = scene;
+		targetPaint = new(scene.paint);
 	}
 
 	public void AddStep( GameObject prefab )

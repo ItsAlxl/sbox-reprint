@@ -6,9 +6,13 @@ HUD {
 	bottom: 0;
 	justify-content: flex-start;
 	align-items: flex-end;
-	font-size: 3vh;
+	font-size: 36px;
 	font-family: Poppins;
 	color: #fff;
+
+	button {
+		pointer-events: all;
+	}
 
 	.view {
 		width: 100%;
@@ -20,10 +24,57 @@ HUD {
 
 	.view.main {
 		background-color: #124;
+		.subtitle {
+			margin-top: -50px;
+		}
 	}
 
-	.hidden {
-		display: none;
+	.view.levels {
+		background-color: #124;
+
+		.level-list {
+			flex-direction: row;
+			gap: 1.5rem;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+			overflow: scroll;
+			margin: 0 50px;
+			padding: 10px;
+			border: 4px solid #013;
+			border-radius: 32px;
+			flex-grow: 1;
+			align-self: stretch;
+		}
+	}
+
+	button.roundy {
+		border: 2px solid #888;
+		border-radius: 8px;
+		padding-left: 8px;
+		padding-right: 8px;
+		background-color: #8881;
+	}
+
+	button.roundy:hover {
+		border-color: #bbb;
+		background-color: #0008;
+	}
+
+	button.stealth {
+		color: #ba8;
+		padding: 0.25rem;
+	}
+
+	button.stealth:hover {
+		color: #fc4;
+	}
+
+	.gutter {
+		flex-direction: row;
+		padding: 15px 50px;
+		align-self: stretch;
+		justify-content: flex-start;
 	}
 
 	.title {
@@ -34,7 +85,6 @@ HUD {
 
 	.subtitle {
 		font-size: 100px;
-		margin-top: -50px;
 	}
 
 	.gap {
@@ -49,6 +99,8 @@ HUD {
 		pointer-events: all;
 		width: 0%;
 		overflow: visible;
+		font-size: 24px;
+		padding: 0 15px;
 
 		TextEntry {
 			width: 100%;
@@ -72,6 +124,18 @@ HUD {
 			font-size: 40px;
 			padding: 5px;
 		}
+
+		.desc {
+			flex-direction: column;
+
+			p {
+				margin: 2px 0;
+			}
+		}
+
+		PaintCanvas {
+			position: relative;
+		}
 	}
 
 	.brief.ingame {
@@ -91,9 +155,11 @@ HUD {
 	.design-work {
 		position: relative;
 		flex-grow: 1;
+		align-items: center;
+		justify-content: center;
 
 		PaintCanvas {
-			flex-grow: 1;
+			position: relative;
 		}
 	}
 
@@ -102,42 +168,30 @@ HUD {
 		align-items: center;
 		padding-bottom: 50px;
 		gap: 25px;
-
-		button {
-			color: #ba8;
-			padding: 0.25rem;
-			width: 100%;
-			pointer-events: all;
-		}
-
-		button:hover {
-			color: #fc4;
-		}
 	}
 
 	.toolbox {
 		pointer-events: all;
-		border-top: 0.1vh solid #333;
+		border-top: 0.1px solid #333;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: 5vh;
+		gap: 50px;
 		background-color: #001;
 		width: 100%;
-		padding: 3vh;
+		padding: 20px;
 		flex-shrink: 1;
+		font-size: 24px;
 
 		.group {
-			gap: 2vh;
+			gap: 10px;
 		}
 
 		button {
-			border: 0.1vh solid #aaa;
+			border: 1px solid #aaa;
 			border-radius: 8px;
 			background-color: #111;
-			padding: 1vh;
-			padding-left: 2vh;
-			padding-right: 2vh;
+			padding: 10px 20px;
 		}
 
 		button.pressed {
@@ -153,8 +207,8 @@ HUD {
 			.lbl {
 				font-family: Poppins;
 				color: #fff;
-				padding-left: 8px;
-				padding-top: 4px;
+				margin-left: 8px;
+				margin-top: -2px;
 			}
 		}
 	}

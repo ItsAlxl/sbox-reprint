@@ -4,6 +4,7 @@ namespace Reprint;
 
 public sealed class Painting
 {
+	const char SERIAL_DELIMITER = ':';
 	public enum CursorMoveMode { Set, Clamp, Wrap, Return }
 
 	public int cursorX = 0, cursorY = 0;
@@ -20,7 +21,7 @@ public sealed class Painting
 	{
 		width = w;
 		height = h;
-		pixels = new Pixel[h * w];
+		pixels = new Pixel[w * h];
 		for ( var i = 0; i < width * height; i++ )
 			pixels[i] = new Pixel( Pixel.ColorLookup.Red );
 	}
@@ -35,9 +36,12 @@ public sealed class Painting
 
 	public Painting( string serial )
 	{
-		var comps = serial.Split( ':' );
+		var comps = serial.Split( SERIAL_DELIMITER );
 		width = int.Parse( comps[0] );
 		height = int.Parse( comps[1] );
+		pixels = new Pixel[width * height];
+		for ( var i = 0; i < width * height; i++ )
+			pixels[i] = new Pixel( Pixel.ColorLookup.Red );
 		DeserializePixels( comps[2] );
 	}
 
@@ -165,7 +169,7 @@ public sealed class Painting
 
 	public string Serialize()
 	{
-		var serial = width + ":" + height + ":";
+		string serial = "" + width + SERIAL_DELIMITER + height + SERIAL_DELIMITER;
 		for ( var i = 0; i < pixels.Length; i++ )
 			serial += pixels[i].Serialize();
 		return serial;
@@ -186,7 +190,7 @@ public sealed class Painting
 
 	public void Deserialize( string serial )
 	{
-		var comps = serial.Split( ':' );
+		var comps = serial.Split( SERIAL_DELIMITER );
 		if ( int.Parse( comps[0] ) == width && int.Parse( comps[1] ) == height )
 		{
 			DeserializePixels( comps[2] );

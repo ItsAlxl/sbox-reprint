@@ -12,8 +12,24 @@
 				<div class="subtitle">a game by alxl</div>
 				<div class="gap"></div>
 				<div class="menu-list">
-					<button>play gam</button>
-					<button>Designer</button>
+					<button class="stealth" @onclick=@ClickLevelSelect>Level Select</button>
+					<button class="stealth" @onclick=@ClickDesigner>Scenario Designer</button>
+				</div>
+			</div>
+			break;
+
+		case "levels":
+			<div class="levels view">
+				<div class="subtitle">level select</div>
+				<div class="level-list">
+				@for(var i = 0; i < Timeline.scenes.Length; i++)
+				{
+					var unique_i = i;
+					<button class="roundy" @onclick=@(() => ClickLevel(unique_i))> #@(i+1) @(Timeline.scenes[i].title)</button>
+				}
+				</div>
+				<div class="gutter">
+					<button class="stealth" @onclick=@ClickMenu>Back</button>
 				</div>
 			</div>
 			break;
@@ -21,7 +37,17 @@
 		case "ingame":
 			<div class="view">
 				<div class="ingame brief open">
-					<div>Finish it!</div>
+					<div class="title">@(workspace.currentScene.title)</div>
+					<div class="desc">
+					@{
+						var lines = workspace.currentScene.desc.Split('\n');
+						foreach (var line in lines)
+						{
+							<p>@line</p>
+						}
+					}
+					</div>
+					<PaintCanvas @cursor=@false @paint=@(workspace.targetPaint) @size=@(512.0f)></PaintCanvas>
 				</div>
 				<div class="toolbox">
 				@foreach (var t in Toolbox.tools)
@@ -41,6 +67,7 @@
 						<div style="flex-direction: row; gap: 4px; width: 100%; justify-content: space-evenly;">
 							<button @onclick=@DesignerImport>Import</button>
 							<button @onclick=@DesignerExport>Export</button>
+							<button @onclick=@DesignerExportPaint>Exp. Paint</button>
 						</div>
 						<TextEntry class="tall" Multiline="@true" Value:bind=@DesignerIO />
 					</div>
@@ -49,6 +76,8 @@
 					</div>
 				</div>
 				<div class="toolbox">
+					<button @onclick=@ClickMenu>Back</button>
+					<div style="width: 64px; height: 64px; background-color: @(designer.CalculateColor().Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)"></div>
 					<div class="group">
 					@foreach ( Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>() )
 					{
@@ -75,7 +104,6 @@
 						<button @onclick=@(() => designer.brushDarken = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@((int)Pixel.MAX_LEVEL - i)</span></button>
 					}
 					</div>
-					<div style="width: 64px; height: 64px; background-color: @(designer.CalculateColor().Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)"></div>
 				</div>
 			</div>
 			break;
@@ -87,32 +115,59 @@
 	private PaintingDesigner designer = new();
 
 	private Workspace workspace;
-	private string view = "design";
+	private string view = "main";
 
 	private string DesignerTitle { get; set; } = "Title";
 	private string DesignerDesc { get; set; } = "Description";
 	private string DesignerIO { get; set; } = "import/export code";
+	private Scenario designScene = new();
 
 	protected override void OnStart()
 	{
 		workspace = Scene.Get<Workspace>();
 	}
 
+	private void ClickMenu()
+	{
+		view = "main";
+	}
+
+	private void ClickLevelSelect()
+	{
+		view = "levels";
+	}
+
+	private void ClickLevel(int idx)
+	{
+		Log.Info(idx);
+		workspace.BeginScenario(Timeline.scenes[idx]);
+		view = "ingame";
+	}
+
+	private void ClickDesigner()
+	{
+		view = "design";
+	}
+
 	private void DesignerExport()
 	{
-		DesignerIO = StringCompressor.Compress(
-			System.Net.WebUtility.UrlEncode(DesignerTitle) + ":" +
-			System.Net.WebUtility.UrlEncode(DesignerDesc) + ":" +
-			System.Net.WebUtility.UrlEncode(designer.paint.Serialize())
-		);
+		designScene.title = DesignerTitle;
+		designScene.desc = DesignerDesc;
+		designScene.BakePainting(designer.paint);
+		DesignerIO = designScene.Export();
+	}
+
+	private void DesignerExportPaint()
+	{
+		DesignerIO = designer.paint.Serialize();
 	}
 
 	private void DesignerImport()
 	{
-		var comps = StringCompressor.Decompress(DesignerIO).Split(":");
-		DesignerTitle = System.Net.WebUtility.UrlDecode(comps[0]);
-		DesignerDesc = System.Net.WebUtility.UrlDecode(comps[1]);
-		designer.paint.Deserialize(System.Net.WebUtility.UrlDecode(comps[2]));
+		designScene.Import(DesignerIO);
+		DesignerTitle = designScene.title;
+		DesignerDesc = designScene.desc;
+		designer.paint.Deserialize(designScene.paint);
 	}
 
 	protected override int BuildHash() => System.HashCode.Combine( view, designer.brushColor, designer.brushDarken, designer.brushDesat );
