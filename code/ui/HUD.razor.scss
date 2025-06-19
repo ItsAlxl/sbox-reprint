@@ -103,7 +103,7 @@ HUD {
 		pointer-events: all;
 		width: 0%;
 		overflow: visible;
-		font-size: 24px;
+		font-size: 21px;
 		padding: 0 15px;
 
 		TextEntry {
@@ -131,6 +131,7 @@ HUD {
 
 		.desc {
 			flex-direction: column;
+			flex-grow: 1;
 
 			p {
 				margin: 4px 0;
@@ -138,20 +139,22 @@ HUD {
 		}
 
 		.goal {
-			flex-grow: 1;
-			flex-direction: row;
+			flex-shrink: 1;
+			flex-direction: column;
+			align-self: stretch;
 
 			.readout {
-				flex-grow: 1;
 				align-items: center;
+				justify-content: center;
 				white-space: pre-line;
-				margin-left: 10px;
-				width: 25%;
+				text-align: center;
+				min-height: 150px;
 			}
-		}
 
-		PaintCanvas {
-			position: relative;
+			PaintCanvas {
+				position: relative;
+				align-self: center;
+			}
 		}
 	}
 
@@ -170,6 +173,7 @@ HUD {
 	}
 
 	.design-work {
+		background-color: #012;
 		position: relative;
 		flex-grow: 1;
 		align-items: center;

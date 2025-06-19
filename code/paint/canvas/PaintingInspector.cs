@@ -4,6 +4,7 @@ public sealed class PaintingInspector : ICanvasListener
 {
 	public int obvX = 0;
 	public int obvY = 0;
+	private bool inside = false;
 
 	public void OnPxlHover( Pixel p, int x, int y )
 	{
@@ -11,7 +12,11 @@ public sealed class PaintingInspector : ICanvasListener
 		obvY = y;
 	}
 
-	public string CreateHoverReadout( Painting p ) =>  p.CreateReadout( obvX, obvY );
-	public string CreateHoverReadoutVerbose( Painting p ) =>  p.CreateReadoutVerbose( obvX, obvY );
-	
+	public void OnMouseCross(bool ins)
+	{
+		inside = ins;
+	}
+
+	public string CreateHoverReadout( Painting p ) => inside ? p.CreateReadout( obvX, obvY ) : "Hover for info";
+	public string CreateHoverReadoutVerbose( Painting p ) => inside ? p.CreateReadoutVerbose( obvX, obvY ) : "Hover over a tile for details";
 }
