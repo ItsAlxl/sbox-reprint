@@ -107,7 +107,7 @@ public sealed class Painting
 		MoveCursor( false, y, mode );
 	}
 
-	private int[] MatrixMultiply2x2( int[] a, int[] b )
+	private static int[] MatrixMultiply2x2( int[] a, int[] b )
 	{
 		var ans = new int[b.Length];
 		for ( var i = 0; i <= 2; i += 2 )
@@ -116,7 +116,7 @@ public sealed class Painting
 		return ans;
 	}
 
-	private int[] MatrixMultiply2x1( int[] a, int[] b )
+	private static int[] MatrixMultiply2x1( int[] a, int[] b )
 	{
 		var ans = new int[b.Length];
 		for ( var i = 0; i < 2; i++ )
@@ -124,7 +124,7 @@ public sealed class Painting
 		return ans;
 	}
 
-	private int[] MatrixMultiply( int[] a, int[] b ) => b.Length == 2 ? MatrixMultiply2x1( a, b ) : MatrixMultiply2x2( a, b );
+	private static int[] MatrixMultiply( int[] a, int[] b ) => b.Length == 2 ? MatrixMultiply2x1( a, b ) : MatrixMultiply2x2( a, b );
 
 	private void SetTransform2D( int[] matrix )
 	{
