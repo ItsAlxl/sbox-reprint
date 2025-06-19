@@ -137,6 +137,19 @@ HUD {
 			}
 		}
 
+		.goal {
+			flex-grow: 1;
+			flex-direction: row;
+
+			.readout {
+				flex-grow: 1;
+				align-items: center;
+				white-space: pre-line;
+				margin-left: 10px;
+				width: 25%;
+			}
+		}
+
 		PaintCanvas {
 			position: relative;
 		}

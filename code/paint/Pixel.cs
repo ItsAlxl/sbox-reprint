@@ -8,17 +8,17 @@ public sealed class Pixel
 	{
 		public string name;
 		public Color color;
-		public char Initial { get => char.ToUpper( name[0] ); }
+		public char Initial { get => name[0]; }
 	}
 
 	public static readonly PrimeColor[] Colors = [
-		new(){name = "red", color = Color.Red},
-		new(){name = "orange", color = Color.Orange},
-		new(){name = "yellow", color = Color.Yellow},
-		new(){name = "green", color = Color.Green},
-		new(){name = "cyan", color = Color.Cyan},
-		new(){name = "blue", color = Color.Blue},
-		new(){name = "purple", color = Color.Magenta},
+		new(){name = "Red", color = Color.Red},
+		new(){name = "Orange", color = Color.Orange},
+		new(){name = "Yellow", color = Color.Yellow},
+		new(){name = "Green", color = Color.Green},
+		new(){name = "Cyan", color = Color.Cyan},
+		new(){name = "Blue", color = Color.Blue},
+		new(){name = "Purple", color = Color.Magenta},
 	];
 	public enum ColorLookup { Red, Orange, Yellow, Green, Cyan, Blue, Purple }
 	public static PrimeColor GetColor( ColorLookup lookup ) => Colors[(int)lookup];
@@ -46,7 +46,8 @@ public sealed class Pixel
 	public int LightLevel { get => (int)MAX_LEVEL - darkenLevel; }
 	public int SatLevel { get => (int)MAX_LEVEL - desatLevel; }
 
-	public string Readout { get => $"C:{GetColor( _baseColor ).Initial} S:{SatLevel} L:{LightLevel}"; }
+	public string Readout { get => $"C:{GetColor( _baseColor ).Initial} S:{SatLevel} V:{LightLevel}"; }
+	public string ReadoutVerbose { get => $"Color: {GetColor( _baseColor ).name}\nSaturation: {SatLevel}\nValue: {LightLevel}"; }
 
 	public Pixel( ColorLookup clr, int desat = (int)MAX_LEVEL, int darken = 0 )
 	{

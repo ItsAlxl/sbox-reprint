@@ -51,7 +51,10 @@
 						}
 					}
 					</div>
-					<PaintCanvas class="medium" @cursor=@false @paint=@(workspace.targetPaint) @size=@(512.0f)></PaintCanvas>
+					<div class="goal">
+						<PaintCanvas class="medium" @listener=@goalInsp @cursor=@false @paint=@(workspace.targetPaint) @size=@(512.0f)></PaintCanvas>
+						<div class="readout">@(goalInsp.CreateHoverReadoutVerbose(workspace.targetPaint))</div>
+					</div>
 				</div>
 				<div class="toolbox">
 				@foreach (var t in workspace.currentScene.Tools)

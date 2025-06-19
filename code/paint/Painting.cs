@@ -162,10 +162,8 @@ public sealed class Painting
 				PixelAt( x, y ).Randomize( rng );
 	}
 
-	public string CreateReadout( int x, int y )
-	{
-		return $"({x},{y}) = {PixelAt( x, y ).Readout}";
-	}
+	public string CreateReadout( int x, int y ) => $"({x},{y}) = {PixelAt( x, y ).Readout}";
+	public string CreateReadoutVerbose( int x, int y ) => $"({x}, {y})\n{PixelAt( x, y ).ReadoutVerbose}";
 
 	public string Serialize()
 	{

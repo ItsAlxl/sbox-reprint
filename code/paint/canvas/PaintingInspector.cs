@@ -11,8 +11,7 @@ public sealed class PaintingInspector : ICanvasListener
 		obvY = y;
 	}
 
-	public string CreateHoverReadout( Painting p )
-	{
-		return p.CreateReadout( obvX, obvY );
-	}
+	public string CreateHoverReadout( Painting p ) =>  p.CreateReadout( obvX, obvY );
+	public string CreateHoverReadoutVerbose( Painting p ) =>  p.CreateReadoutVerbose( obvX, obvY );
+	
 }
