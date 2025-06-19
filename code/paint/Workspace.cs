@@ -118,7 +118,6 @@ public sealed class Workspace : Component
 
 	public void EndDrag()
 	{
-		Log.Info( addStart );
 		sequence.Insert( addStart < 0.5f ? sequence.Count : dragIdx, dragGo );
 		dragIdx = -1;
 		dragGo = null;
