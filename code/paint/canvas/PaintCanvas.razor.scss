@@ -37,3 +37,15 @@ PaintCanvas.big {
 		}
 	}
 }
+
+PaintCanvas.medium {
+	gap: 1px;
+
+	.row {
+		gap: 1px;
+
+		div {
+			border: 2px solid;
+		}
+	}
+}

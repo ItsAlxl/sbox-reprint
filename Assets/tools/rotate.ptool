@@ -1,0 +1,6 @@
+{
+  "Title": "Rotate",
+  "Prefab": "prefabs/steprot.prefab",
+  "__references": [],
+  "__version": 0
+}

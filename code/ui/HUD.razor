@@ -22,10 +22,14 @@
 			<div class="levels view">
 				<div class="subtitle">level select</div>
 				<div class="level-list">
-				@for(var i = 0; i < Timeline.scenes.Length; i++)
-				{
-					var unique_i = i;
-					<button class="roundy" @onclick=@(() => ClickLevel(unique_i))> #@(i+1) @(Timeline.scenes[i].title)</button>
+				@{
+					var order = Scenario.Order;
+					var idx = 1;
+					foreach (var scene in order)
+					{
+						<button class="roundy" @onclick=@(() => ClickLevel(scene))> #@idx @(scene.Title)</button>
+						idx++;
+					}
 				}
 				</div>
 				<div class="gutter">
@@ -47,12 +51,12 @@
 						}
 					}
 					</div>
-					<PaintCanvas @cursor=@false @paint=@(workspace.targetPaint) @size=@(512.0f)></PaintCanvas>
+					<PaintCanvas class="medium" @cursor=@false @paint=@(workspace.targetPaint) @size=@(512.0f)></PaintCanvas>
 				</div>
 				<div class="toolbox">
-				@foreach (var t in Toolbox.tools)
+				@foreach (var t in workspace.currentScene.GetTools())
 				{
-					<button class="tool" @onclick=@(() => workspace.AddStep(t.prefab))>@t.title</button>
+					<button class="tool" @onclick=@(() => workspace.AddStep(t.Prefab))>@t.Title</button>
 				}
 				</div>
 			</div>
@@ -113,6 +117,7 @@
 @code
 {
 	private PaintingDesigner designer = new();
+	private PaintingInspector goalInsp = new();
 
 	private Workspace workspace;
 	private string view = "main";
@@ -137,10 +142,9 @@
 		view = "levels";
 	}
 
-	private void ClickLevel(int idx)
+	private void ClickLevel(ScenarioData scene)
 	{
-		Log.Info(idx);
-		workspace.BeginScenario(Timeline.scenes[idx]);
+		workspace.BeginScenario(scene);
 		view = "ingame";
 	}
 

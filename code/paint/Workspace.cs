@@ -37,24 +37,24 @@ public sealed class Workspace : Component
 	public void ResetLevel()
 	{
 		ResetScratch();
-		for (var i = 1; i < sequence.Count; i++)
+		for ( var i = 1; i < sequence.Count; i++ )
 			sequence[i].Destroy();
-		if (sequence.Count > 1)
-			sequence.RemoveRange(1, sequence.Count);
+		if ( sequence.Count > 1 )
+			sequence.RemoveRange( 1, sequence.Count );
 		camCont.ResetPosition();
 		targetPaint = null;
 	}
 
-	public void BeginScenario(Scenario scene)
+	public void BeginScenario( ScenarioData scene )
 	{
 		ResetLevel();
-		currentScene = scene;
-		targetPaint = new(scene.paint);
+		currentScene = new( scene );
+		targetPaint = new( currentScene.paint );
 	}
 
-	public void AddStep( GameObject prefab )
+	public void AddStep( string prefabPath )
 	{
-		sequence.Add( prefab.Clone() );
+		sequence.Add( GameObject.GetPrefab( prefabPath ).Clone() );
 		AdjustSequenceLayout();
 	}
 
@@ -112,6 +112,9 @@ public sealed class Workspace : Component
 
 	private int FindDragIndex( float yPos )
 	{
+		if ( sequence.Count == 0 )
+			return 0;
+
 		var start = 0;
 		if ( yPos < sequence[start].WorldPosition.y )
 			return start;
