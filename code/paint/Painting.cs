@@ -179,6 +179,19 @@ public sealed class Painting
 	public string CreateReadout( int x, int y ) => $"({x},{y}) = {PixelAt( x, y ).Readout}";
 	public string CreateReadoutVerbose( int x, int y ) => $"({x}, {y})\n{PixelAt( x, y ).ReadoutVerbose}";
 
+	public float ScoreAgainst( Painting p )
+	{
+		var score = 0.0f;
+		for ( var x = 0; x < width; x++ )
+		{
+			for ( var y = 0; y < height; y++ )
+			{
+				score += PixelAt( x, y ).ScoreAgainst( p.PixelAt( x, y ) );
+			}
+		}
+		return score / pixels.Length;
+	}
+
 	public string Serialize()
 	{
 		string serial = "" + width + SERIAL_DELIMITER + height + SERIAL_DELIMITER;

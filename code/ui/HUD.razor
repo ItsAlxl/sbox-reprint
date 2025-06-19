@@ -57,10 +57,18 @@
 					</div>
 				</div>
 				<div class="toolbox">
-				@foreach (var t in workspace.currentScene.Tools)
-				{
-					<button class="tool" @onmousedown=@(() => workspace.AddStep(t.Prefab))>@t.Title</button>
-				}
+					<div class="group">
+						<button @onclick=@ClickQuitLevel>Quit</button>
+					</div>
+					<div class="group right">
+						@foreach (var t in workspace.currentScene.Tools)
+						{
+							<button class="tool" @onmousedown=@(() => workspace.AddStep(t.Prefab))>@t.Title</button>
+						}
+					</div>
+					<div class="group">
+						<button @onclick=@SubmitSequence>Submit</button>
+					</div>
 				</div>
 			</div>
 			break;
@@ -149,6 +157,17 @@
 	{
 		workspace.BeginScenario(scene);
 		view = "ingame";
+	}
+
+	private void ClickQuitLevel()
+	{
+		workspace.ResetLevel();
+		view = "levels";
+	}
+
+	private void SubmitSequence()
+	{
+		workspace.SubmitSequence();
 	}
 
 	private void EndDrag()

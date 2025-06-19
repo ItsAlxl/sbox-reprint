@@ -17,6 +17,6 @@ public sealed class PaintingInspector : ICanvasListener
 		inside = ins;
 	}
 
-	public string CreateHoverReadout( Painting p ) => inside ? p.CreateReadout( obvX, obvY ) : "Hover for info";
-	public string CreateHoverReadoutVerbose( Painting p ) => inside ? p.CreateReadoutVerbose( obvX, obvY ) : "Hover over a tile for details";
+	public string CreateHoverReadout( Painting p ) => p is not null && inside ? p.CreateReadout( obvX, obvY ) : "Hover for info";
+	public string CreateHoverReadoutVerbose( Painting p ) => p is not null && inside ? p.CreateReadoutVerbose( obvX, obvY ) : "Hover over a tile for details";
 }

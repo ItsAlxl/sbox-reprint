@@ -11,7 +11,7 @@
 	</div>
 	<PaintCanvas @listener=@insp @paint=@(workspace.scratchPaint) @size=@size></PaintCanvas>
 	<div class="bot menu">
-		<div><span class="readout-pfx ficon">⯏</span>@(workspace.scratchPaint.CursorReadout)</div>
+		<div><span class="readout-pfx ficon">⯏</span>@(workspace.scratchPaint?.CursorReadout ?? "")</div>
 		<div><span class="readout-pfx icon">pan_tool</span>@(insp.CreateHoverReadout(workspace.scratchPaint))</div>
 	</div>
 </root>
@@ -32,5 +32,5 @@
 		workspace.StartDragScratch();
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine( insp.obvX, insp.obvY, workspace.scratchPaint.BuildHash() );
+	protected override int BuildHash() => System.HashCode.Combine( insp.obvX, insp.obvY, workspace.scratchPaint, workspace.scratchPaint?.BuildHash() ?? 0 );
 }

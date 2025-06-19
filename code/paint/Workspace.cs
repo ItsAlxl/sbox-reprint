@@ -13,7 +13,7 @@ public sealed class Workspace : Component
 	public float RightBound { get => _rightBound; }
 	private float _rightBound = 0.0f;
 
-	public Painting scratchPaint = new( 4, 4 );
+	public Painting scratchPaint;
 	private GameObject scratchGo;
 	private int ScratchIdx { get => sequence.FindIndex( ( go ) => go == scratchGo ); }
 	private Vector3 ScratchLeft { get => scratchGo.WorldPosition - new Vector3( 0, SCRATCH_SPACING, 0 ); }
@@ -34,27 +34,32 @@ public sealed class Workspace : Component
 	protected override void OnStart()
 	{
 		camCont = Scene.Get<CameraController>();
-		scratchGo = GameObject.Children.Find( ( go ) => go.Name == "Scratch" );
-		sequence.Add( scratchGo );
-		AdjustSequenceLayout();
+		ResetLevel();
 	}
 
 	public void ResetLevel()
 	{
-		ResetScratch();
-		for ( var i = 1; i < sequence.Count; i++ )
-			sequence[i].Destroy();
-		if ( sequence.Count > 1 )
-			sequence.RemoveRange( 1, sequence.Count - 1 );
+		if ( sequence.Count > 0 )
+		{
+			for ( var i = 0; i < sequence.Count; i++ )
+				sequence[i].Destroy();
+			sequence.RemoveRange( 0, sequence.Count );
+		}
+
 		camCont.ResetPosition();
+		scratchGo = null;
 		targetPaint = null;
+		scratchPaint = null;
 	}
 
 	public void BeginScenario( ScenarioData scene )
 	{
-		ResetLevel();
 		currentScene = new( scene );
 		targetPaint = new( currentScene.paint );
+		scratchPaint = new( targetPaint.width, targetPaint.height );
+		scratchGo = GameObject.GetPrefab( "prefabs/scratchpad.prefab" ).Clone();
+		sequence.Add( scratchGo );
+		AdjustSequenceLayout();
 	}
 
 	private void AdjustSequenceLayout()
@@ -177,10 +182,13 @@ public sealed class Workspace : Component
 
 	public void ResetScratch()
 	{
-		MoveInSequence( ScratchIdx, 0 );
-		scratchPaint.Reset();
-		AdjustSequenceLayout();
-		PutScratchInView();
+		if ( scratchGo is not null )
+		{
+			scratchPaint.Reset();
+			MoveInSequence( ScratchIdx, 0 );
+			AdjustSequenceLayout();
+			PutScratchInView();
+		}
 	}
 
 	protected override void OnUpdate()
@@ -209,5 +217,15 @@ public sealed class Workspace : Component
 				}
 			}
 		}
+	}
+
+	public void SubmitSequence()
+	{
+		scratchPaint.Reset();
+		for ( var i = 0; i < sequence.Count; i++ )
+			if ( i != ScratchIdx )
+				GetFactoryStep( i ).ApplyTo( scratchPaint );
+		MoveInSequence( ScratchIdx, sequence.Count - 1 );
+		AdjustSequenceLayout();
 	}
 }

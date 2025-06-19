@@ -20,6 +20,8 @@ public sealed class Pixel
 		new(){name = "Blue", color = Color.Blue},
 		new(){name = "Purple", color = Color.Magenta},
 	];
+	public static readonly PrimeColor DontcareColor = new() { name = "Neutral", color = Color.Gray };
+
 	public enum ColorLookup { Red, Orange, Yellow, Green, Cyan, Blue, Purple }
 	public static PrimeColor GetColor( ColorLookup lookup ) => Colors[(int)lookup];
 
@@ -46,8 +48,9 @@ public sealed class Pixel
 	public int LightLevel { get => (int)MAX_LEVEL - darkenLevel; }
 	public int SatLevel { get => (int)MAX_LEVEL - desatLevel; }
 
-	public string Readout { get => $"C:{GetColor( _baseColor ).Initial} S:{SatLevel} V:{LightLevel}"; }
-	public string ReadoutVerbose { get => $"Color: {GetColor( _baseColor ).name}\nSaturation: {SatLevel}\nValue: {LightLevel}"; }
+	public PrimeColor DisplayColor { get => darkenLevel == (int)MAX_LEVEL || desatLevel == (int)MAX_LEVEL ? DontcareColor : GetColor( _baseColor ); }
+	public string Readout { get => $"C:{DisplayColor.Initial} S:{SatLevel} V:{LightLevel}"; }
+	public string ReadoutVerbose { get => $"Color: {DisplayColor.name}\nSaturation: {SatLevel}\nValue: {LightLevel}"; }
 
 	public Pixel( ColorLookup clr, int desat = (int)MAX_LEVEL, int darken = 0 )
 	{
@@ -73,6 +76,18 @@ public sealed class Pixel
 		desatLevel = 0;
 		darkenLevel = 0;
 		_baseColor = clr;
+	}
+
+	public float ScoreAgainst( Pixel p )
+	{
+		var score = 0.0f;
+		if ( p.DisplayColor == DisplayColor )
+			score += 0.5f;
+		if ( p.desatLevel == desatLevel )
+			score += 0.25f;
+		if ( p.darkenLevel == darkenLevel )
+			score += 0.25f;
+		return score;
 	}
 
 	public void Randomize( Random rng )

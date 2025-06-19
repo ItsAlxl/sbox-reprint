@@ -208,6 +208,11 @@ HUD {
 			gap: 10px;
 		}
 
+		.group.right {
+			flex-grow: 1;
+			justify-content: flex-end;
+		}
+
 		button {
 			border: 1px solid #aaa;
 			border-radius: 8px;
