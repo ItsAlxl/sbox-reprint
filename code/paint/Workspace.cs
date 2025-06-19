@@ -19,7 +19,7 @@ public sealed class Workspace : Component
 	private int dragIdx = -1;
 	private Vector3 dragOffset = Vector3.Zero;
 	private GameObject dragGo = null;
-	private bool Dragging { get => dragGo is not null; }
+	public bool Dragging { get => dragGo is not null; }
 
 	private CameraController camCont;
 	public Scenario currentScene;
@@ -50,12 +50,6 @@ public sealed class Workspace : Component
 		ResetLevel();
 		currentScene = new( scene );
 		targetPaint = new( currentScene.paint );
-	}
-
-	public void AddStep( string prefabPath )
-	{
-		sequence.Add( GameObject.GetPrefab( prefabPath ).Clone() );
-		AdjustSequenceLayout();
 	}
 
 	private void AdjustSequenceLayout()
@@ -95,7 +89,8 @@ public sealed class Workspace : Component
 	{
 		dragGo = go;
 		dragIdx = sequence.FindIndex( ( go ) => go == dragGo );
-		sequence.RemoveAt( dragIdx );
+		if ( dragIdx >= 0 )
+			sequence.RemoveAt( dragIdx );
 		dragOffset = go.WorldPosition - camCont.MouseWorldPosition + new Vector3( 5.0f, 0.0f, 0.0f );
 		AdjustSequenceLayout();
 	}
@@ -108,6 +103,23 @@ public sealed class Workspace : Component
 	public void StartDragScratch()
 	{
 		StartDrag( scratchGo );
+	}
+
+	public void AddStep( string prefabPath )
+	{
+		var go = GameObject.GetPrefab( prefabPath ).Clone();
+		var pnl = go.Components.Get<WorldPanel>();
+		go.WorldPosition = camCont.MouseWorldPosition + new Vector3( 0.0f, 0.0f, -0.025f * pnl.PanelSize.y );
+		StartDrag( go );
+	}
+
+	public void EndDrag()
+	{
+		sequence.Insert( dragIdx, dragGo );
+		dragIdx = -1;
+		dragGo = null;
+		dragOffset = Vector3.Zero;
+		AdjustSequenceLayout();
 	}
 
 	private int FindDragIndex( float yPos )
@@ -168,11 +180,7 @@ public sealed class Workspace : Component
 		{
 			if ( Input.Released( "ClickL" ) )
 			{
-				sequence.Insert( dragIdx, dragGo );
-				dragIdx = -1;
-				dragGo = null;
-				dragOffset = Vector3.Zero;
-				AdjustSequenceLayout();
+				EndDrag();
 			}
 			else
 			{

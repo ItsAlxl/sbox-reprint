@@ -39,7 +39,7 @@
 			break;
 
 		case "ingame":
-			<div class="view">
+			<div class="view @(workspace.Dragging ? "dragging" : "")" @onmouseup=@EndDrag>
 				<div class="ingame brief open">
 					<div class="title">@(workspace.currentScene.title)</div>
 					<div class="desc">
@@ -56,7 +56,7 @@
 				<div class="toolbox">
 				@foreach (var t in workspace.currentScene.Tools)
 				{
-					<button class="tool" @onclick=@(() => workspace.AddStep(t.Prefab))>@t.Title</button>
+					<button class="tool" @onmousedown=@(() => workspace.AddStep(t.Prefab))>@t.Title</button>
 				}
 				</div>
 			</div>
@@ -146,6 +146,12 @@
 	{
 		workspace.BeginScenario(scene);
 		view = "ingame";
+	}
+
+	private void EndDrag()
+	{
+		if (workspace.Dragging)
+			workspace.EndDrag();
 	}
 
 	private void ClickDesigner()
