@@ -4,17 +4,40 @@ namespace Reprint;
 
 public sealed class FactoryCurs : FactoryStep
 {
-	public bool setX = false;
-	public int amtX = 0;
-	public bool setY = false;
-	public int amtY = 0;
+	private int LimitX { get => Workspace.targetPaint.width - 1; }
+	public int AmtX { get => _amtX; set => _amtX = Math.Clamp( value, _setX ? 0 : -LimitX, LimitX ); }
+	public bool SetX
+	{
+		get => _setX;
+		set
+		{
+			_setX = value;
+			_amtX = _setX ? Math.Abs( _amtX ) : _amtX;
+		}
+	}
+	private bool _setX = false;
+	private int _amtX = 0;
+
+	private int LimitY { get => Workspace.targetPaint.height - 1; }
+	public int AmtY { get => _amtY; set => _amtY = Math.Clamp( value, _setY ? 0 : -LimitY, LimitY ); }
+	public bool SetY
+	{
+		get => _setY;
+		set
+		{
+			_setY = value;
+			_amtY = _setY ? Math.Abs( _amtY ) : _amtY;
+		}
+	}
+	private bool _setY = false;
+	private int _amtY = 0;
 
 	override public (int next, int timeCost, int inkCost) ApplyTo( Painting p )
 	{
-		if ( setX || amtX != 0 )
-			p.MoveCursorX( setX ? Math.Abs(amtX) : amtX, setX ? Painting.CursorMoveMode.Set : Painting.CursorMoveMode.Wrap );
-		if ( setY || amtY != 0 )
-			p.MoveCursorY( setY ? Math.Abs(amtY) : amtY, setY ? Painting.CursorMoveMode.Set : Painting.CursorMoveMode.Wrap );
+		if ( SetX || AmtX != 0 )
+			p.MoveCursorX( AmtX, SetX ? Painting.CursorMoveMode.Set : Painting.CursorMoveMode.Wrap );
+		if ( SetY || AmtY != 0 )
+			p.MoveCursorY( AmtY, SetY ? Painting.CursorMoveMode.Set : Painting.CursorMoveMode.Wrap );
 
 		return (-1, 1, 0);
 	}

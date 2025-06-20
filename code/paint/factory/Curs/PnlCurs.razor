@@ -12,9 +12,9 @@
 				<div class="sel col">
 					<span>X</span>
 					<div class="row">
-						<button class="sm pressed" @onclick=@ToggleModeX>@(Fact.setX ? "drag_handle" : (Fact.amtX < 0 ?
+						<button class="sm pressed" @onclick=@ToggleModeX>@(Fact.SetX ? "drag_handle" : (Fact.AmtX < 0 ?
 							"arrow_back" : "arrow_forward"))</button>
-						<span class="fixed-num">@(Fact.amtX < 0 ? -Fact.amtX : Fact.amtX)</span>
+						<span class="fixed-num">@(Fact.AmtX < 0 ? -Fact.AmtX : Fact.AmtX)</span>
 					</div>
 					<div style="flex-direction: row; gap: 0">
 						<button class="sm" @onclick=@DecrX>chevron_left</button>
@@ -24,9 +24,9 @@
 				<div class="sel col">
 					<span>Y</span>
 					<div class="row">
-						<button class="sm pressed" @onclick=@ToggleModeY>@(Fact.setY ? "drag_handle" : (Fact.amtY < 0 ?
+						<button class="sm pressed" @onclick=@ToggleModeY>@(Fact.SetY ? "drag_handle" : (Fact.AmtY < 0 ?
 							"arrow_upward" : "arrow_downward"))</button>
-						<span class="fixed-num">@(Fact.amtY < 0 ? -Fact.amtY : Fact.amtY)</span>
+						<span class="fixed-num">@(Fact.AmtY < 0 ? -Fact.AmtY : Fact.AmtY)</span>
 					</div>
 					<div style="flex-direction: row; gap: 0">
 						<button class="sm" @onclick=@DecrY>expand_less</button>
@@ -44,38 +44,54 @@
 
 	private void ToggleModeX()
 	{
-		Fact.setX = !Fact.setX;
+		if (Fact.AmtX >= 0)
+		{
+			if (Fact.SetX)
+				Fact.SetX = false;
+			else
+				Fact.AmtX = -Fact.AmtX;
+		}
+		else
+		{
+			Fact.SetX = true;
+		}
 	}
 
 	private void ToggleModeY()
 	{
-		Fact.setY = !Fact.setY;
+		if (Fact.AmtY >= 0)
+		{
+			if (Fact.SetY)
+				Fact.SetY = false;
+			else
+				Fact.AmtY = -Fact.AmtY;
+		}
+		else
+		{
+			Fact.SetY = true;
+		}
 	}
 
 	private void IncrX()
 	{
-		if (Fact.amtX < 16)
-			Fact.amtX++;
+		Fact.AmtX++;
 	}
 
 	private void DecrX()
 	{
-		if (!Fact.setX || Fact.amtX > 0)
-			Fact.amtX--;
+		Fact.AmtX--;
 	}
 
 	private void IncrY()
 	{
-		if (Fact.amtY < 16)
-			Fact.amtY++;
+		Fact.AmtY++;
 	}
 
 	private void DecrY()
 	{
-		if (!Fact.setY || Fact.amtY > 0)
-			Fact.amtY--;
+		Fact.AmtY--;
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryCurs();
-	protected override int BuildHash() => HashCode.Combine(Fact.setX, Fact.amtX, Fact.setY, Fact.amtY);
+	protected override int BuildHash() => HashCode.Combine(Fact.SetX, Fact.AmtX, Fact.SetY, Fact.AmtY);
 }
