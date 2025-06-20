@@ -22,15 +22,15 @@
 			<div class="levels view">
 				<div class="subtitle">level select</div>
 				<div class="level-list">
-				@{
-					var order = Scenario.Order;
-					var idx = 1;
-					foreach (var scene in order)
-					{
-						<button class="roundy" @onclick=@(() => ClickLevel(scene))> #@idx @(scene.Title)</button>
-						idx++;
+					@{
+						var order = Scenario.Order;
+						var idx = 1;
+						foreach (var scene in order)
+						{
+							<button class="roundy" @onclick=@(() => ClickLevel(scene))> #@idx @(scene.Title)</button>
+							idx++;
+						}
 					}
-				}
 				</div>
 				<div class="gutter">
 					<button class="stealth" @onclick=@ClickMenu>Back</button>
@@ -60,16 +60,17 @@
 						<div class="brief">
 							<div class="title">@(workspace.currentScene.title)</div>
 							<div class="desc">
-							@{
-								var lines = workspace.currentScene.desc.Split('\n');
-								foreach (var line in lines)
-								{
-									<p>@line</p>
+								@{
+									var lines = workspace.currentScene.desc.Split('\n');
+									foreach (var line in lines)
+									{
+										<p>@line</p>
+									}
 								}
-							}
 							</div>
 							<div class="goal">
-								<PaintCanvas class="medium" @listener=@goalInsp @cursor=@false @paint=@(workspace.targetPaint) @size=@(512.0f)></PaintCanvas>
+								<PaintCanvas class="medium" @listener=@goalInsp @cursor=@false @paint=@(workspace.targetPaint)
+									@size=@(512.0f)></PaintCanvas>
 								<div class="readout">@(goalInsp.CreateHoverReadoutVerbose(workspace.targetPaint))</div>
 							</div>
 						</div>
@@ -106,37 +107,46 @@
 						<TextEntry class="tall" Multiline="@true" Value:bind=@DesignerIO />
 					</div>
 					<div class="design-work">
-						<PaintCanvas @listener=@designer class="big" @cursor=@false @paint=@(designer.paint) @size=@(1024.0f)></PaintCanvas>
+						<PaintCanvas @listener=@designer class="big" @cursor=@false @paint=@(designer.paint) @size=@(1024.0f)>
+						</PaintCanvas>
 					</div>
 				</div>
 				<div class="toolbox">
 					<button @onclick=@ClickMenu>Back</button>
-					<div style="width: 64px; height: 64px; background-color: @(designer.CalculateColor().Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)"></div>
-					<div class="group">
-					@foreach ( Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>() )
-					{
-						var sel = designer.brushColor == clr;
-						var color = Pixel.GetColor(clr);
-						<button @onclick=@(() => designer.brushColor = clr) class="clr @(sel ? "pressed" : "")" style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(color.Initial)</span></button>
-					}
+					<div
+						style="width: 64px; height: 64px; background-color: @(designer.CalculateColor().Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)">
 					</div>
 					<div class="group">
-					@for (int i = (int)Pixel.MAX_LEVEL; i >= 0; i--)
-					{
-						var sel = designer.brushDesat == i;
-						var color = Pixel.CalculateColor(designer.brushColor, 0, i);
-						var unique_i = i;
-						<button @onclick=@(() => designer.brushDesat = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@((int)Pixel.MAX_LEVEL - i)</span></button>
-					}
+						@foreach (Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>())
+						{
+							var sel = designer.brushColor == clr;
+							var color = Pixel.GetColor(clr);
+							<button @onclick=@(() => designer.brushColor = clr) class="clr @(sel ? "pressed" : "")"
+								style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
+									class="lbl">@(color.Initial)</span></button>
+						}
 					</div>
 					<div class="group">
-					@for (int i = (int)Pixel.MAX_LEVEL; i >= 0; i--)
-					{
-						var sel = designer.brushDarken == i;
-						var color = Pixel.CalculateColor(designer.brushColor, i, 0);
-						var unique_i = i;
-						<button @onclick=@(() => designer.brushDarken = unique_i) class="clr @(sel ? "pressed" : "")" style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@((int)Pixel.MAX_LEVEL - i)</span></button>
-					}
+						@for (int i = (int)Pixel.MAX_LEVEL; i >= 0; i--)
+						{
+							var sel = designer.brushDesat == i;
+							var color = Pixel.CalculateColor(designer.brushColor, 0, i);
+							var unique_i = i;
+							<button @onclick=@(() => designer.brushDesat = unique_i) class="clr @(sel ? "pressed" : "")"
+								style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
+									class="lbl">@((int)Pixel.MAX_LEVEL - i)</span></button>
+						}
+					</div>
+					<div class="group">
+						@for (int i = (int)Pixel.MAX_LEVEL; i >= 0; i--)
+						{
+							var sel = designer.brushDarken == i;
+							var color = Pixel.CalculateColor(designer.brushColor, i, 0);
+							var unique_i = i;
+							<button @onclick=@(() => designer.brushDarken = unique_i) class="clr @(sel ? "pressed" : "")"
+								style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
+									class="lbl">@((int)Pixel.MAX_LEVEL - i)</span></button>
+						}
 					</div>
 				</div>
 			</div>
@@ -190,7 +200,7 @@
 		if (next is null)
 			ClickQuitLevel();
 		else
-			ClickLevel( next );
+			ClickLevel(next);
 	}
 
 	private void ClickRefine()
@@ -235,5 +245,6 @@
 		designer.paint.Deserialize(designScene.paint);
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine( view, designer.brushColor, designer.brushDarken, designer.brushDesat );
+	protected override int BuildHash() => System.HashCode.Combine(view, designer.brushColor, designer.brushDarken,
+	designer.brushDesat);
 }

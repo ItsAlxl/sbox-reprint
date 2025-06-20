@@ -3,7 +3,8 @@
     "tools/line.ptool",
     "tools/cursor.ptool",
     "tools/rotate.ptool",
-    "tools/flip.ptool"
+    "tools/flip.ptool",
+    "tools/loop.ptool"
   ],
   "__references": [],
   "__version": 0

@@ -12,7 +12,8 @@
 				<div class="sel col">
 					<span>X</span>
 					<div class="row">
-						<button class="sm pressed" @onclick=@ToggleModeX>@(Fact.setX ? "drag_handle" : (Fact.amtX < 0 ? "arrow_back" : "arrow_forward"))</button>
+						<button class="sm pressed" @onclick=@ToggleModeX>@(Fact.setX ? "drag_handle" : (Fact.amtX < 0 ?
+							"arrow_back" : "arrow_forward"))</button>
 						<span class="fixed-num">@(Fact.amtX < 0 ? -Fact.amtX : Fact.amtX)</span>
 					</div>
 					<div style="flex-direction: row; gap: 0">
@@ -23,7 +24,8 @@
 				<div class="sel col">
 					<span>Y</span>
 					<div class="row">
-						<button class="sm pressed" @onclick=@ToggleModeY>@(Fact.setY ? "drag_handle" : (Fact.amtY < 0 ? "arrow_upward" : "arrow_downward"))</button>
+						<button class="sm pressed" @onclick=@ToggleModeY>@(Fact.setY ? "drag_handle" : (Fact.amtY < 0 ?
+							"arrow_upward" : "arrow_downward"))</button>
 						<span class="fixed-num">@(Fact.amtY < 0 ? -Fact.amtY : Fact.amtY)</span>
 					</div>
 					<div style="flex-direction: row; gap: 0">
@@ -75,5 +77,5 @@
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryCurs();
-	protected override int BuildHash() => HashCode.Combine( Fact.setX, Fact.amtX, Fact.setY, Fact.amtY );
+	protected override int BuildHash() => HashCode.Combine(Fact.setX, Fact.amtX, Fact.setY, Fact.amtY);
 }

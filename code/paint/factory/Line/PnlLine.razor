@@ -9,11 +9,13 @@
 		<Name>Horizontal Line</Name>
 		<Config>
 			<div class="sel group">
-				@foreach ( Pixel.ColorLookup clr in Enum.GetValues<Pixel.ColorLookup>() )
+				@foreach (Pixel.ColorLookup clr in Enum.GetValues<Pixel.ColorLookup>())
 				{
 					var sel = Fact.color == clr;
 					var color = Pixel.GetColor(clr);
-					<button @onclick=@(() => SelectColor(clr)) class="clr sm @(sel ? "pressed" : "")" style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span class="lbl">@(color.Initial)</span></button>
+					<button @onclick=@(() => SelectColor(clr)) class="clr sm @(sel ? "pressed" : "")"
+						style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
+							class="lbl">@(color.Initial)</span></button>
 				}
 			</div>
 		</Config>
@@ -47,5 +49,5 @@
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryLine();
-	protected override int BuildHash() => HashCode.Combine( showColorDrop );
+	protected override int BuildHash() => HashCode.Combine(showColorDrop);
 }

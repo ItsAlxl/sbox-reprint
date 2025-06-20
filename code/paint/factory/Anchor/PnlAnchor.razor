@@ -1,0 +1,22 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@namespace Reprint
+@inherits FactoryPanel
+
+<root>
+	<FactoryStepPanel Fact=@(this) CanDelete=@false>
+		<Name style="font-family: Material Icons">anchor</Name>
+		<Config>
+			<span>@(Fact.Label)</span>
+		</Config>
+	</FactoryStepPanel>
+</root>
+
+@code
+{
+	private FactoryAnchor Fact { get => factory as FactoryAnchor; }
+
+	protected override FactoryStep CreateFactory() => new FactoryAnchor();
+	protected override int BuildHash() => HashCode.Combine(Fact.Label);
+}

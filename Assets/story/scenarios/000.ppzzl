@@ -1,6 +1,6 @@
 {
   "Title": "Easy Money",
-  "Desc": "Okay, good news! I've received the first few tools for the contraption. We just need to assemble it! I figure we should start simple. How about we use it to make calendars? Those are basically a guaranteed yearly return, right?\nDrag a tool from the toolbox at the bottom to put it into the tool sequence. You can test your sequence using the scratch paper; drag it anywhere you want, then press the arrow at the top of it (or press TAB) to advance it one step.\nMake a sequence that recreates the image below when given a blank paper.",
+  "Desc": "Okay, good news! I've received the first few tools for the contraption. We just need to assemble it! I figure we should start simple. How about we use it to make calendars? Those are basically a guaranteed yearly return, right?\nDrag a tool from the toolbox at the bottom to put it into the tool sequence. You can test your sequence using the scratch paper; drag it anywhere you want, then press the arrow at the top of it (or press TAB) to advance it one step.\nOnce you're happy with the sequence, press Submit in the bottom-right. That will reset the state of your machine, then run a blank paper through it. If it replicates the image below, then we can move on to bigger and better things.",
   "Paint": "4:4:0a0a0a0a0d0d0d0d0d0d0d0d0d0d0d0d",
   "Toolbox": null,
   "__references": [],

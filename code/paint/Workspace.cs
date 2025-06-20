@@ -8,6 +8,7 @@ public sealed class Workspace : Component
 {
 	const float CHILD_SPACING = 30.0f / 512.0f;
 	const float SCRATCH_SPACING = CHILD_SPACING * 128.0f;
+	const float QUICK_ADD_TIME = 0.1f;
 
 	public static float LeftBound { get => 0.0f; }
 	public float RightBound { get => _rightBound; }
@@ -75,20 +76,33 @@ public sealed class Workspace : Component
 	private void AdjustSequenceLayout()
 	{
 		_rightBound = 0;
+		var anchorIdx = 0;
 		for ( var i = 0; i < sequence.Count; i++ )
 		{
 			var go = sequence[i];
-			var size = go.GetComponent<WorldPanel>().PanelSize.x * CHILD_SPACING;
+			var size = go.Components.Get<WorldPanel>().PanelSize.x * CHILD_SPACING;
 			if ( i == dragIdx && (showFirstDragGap || i > 0) )
 				_rightBound += 128 * CHILD_SPACING;
 			go.LocalPosition = Vector3.Zero.WithY( _rightBound + size * 0.5f );
 			_rightBound += size;
+
+			var anchor = GetFactoryStep( go ) as FactoryAnchor;
+			if ( anchor is not null )
+			{
+				anchor.id = anchorIdx;
+				anchorIdx++;
+			}
 		}
+	}
+
+	private FactoryStep GetFactoryStep( GameObject factGo )
+	{
+		return factGo.Components.Get<FactoryPanel>()?.factory;
 	}
 
 	private FactoryStep GetFactoryStep( int idx )
 	{
-		return sequence[idx].Components.Get<FactoryPanel>().factory;
+		return GetFactoryStep( sequence[idx] );
 	}
 
 	private void MoveInSequence( int fromIdx, int toIdx )
@@ -100,8 +114,10 @@ public sealed class Workspace : Component
 
 	public void RemoveFromSquence( FactoryPanel pnl )
 	{
-		sequence.Remove( pnl.GameObject );
-		pnl.GameObject.Destroy();
+		var go = pnl.GameObject;
+		sequence.Remove( go );
+		GetFactoryStep( go )?.Removed();
+		go.Destroy();
 		AdjustSequenceLayout();
 	}
 
@@ -136,7 +152,9 @@ public sealed class Workspace : Component
 
 	public void EndDrag()
 	{
-		sequence.Insert( addStart < 0.5f ? sequence.Count : dragIdx, dragGo );
+		var placeIdx = addStart < QUICK_ADD_TIME ? sequence.Count : dragIdx;
+		sequence.Insert( placeIdx, dragGo );
+		GetFactoryStep( dragGo )?.Placed( placeIdx );
 		dragIdx = -1;
 		dragGo = null;
 		dragOffset = Vector3.Zero;
@@ -183,11 +201,19 @@ public sealed class Workspace : Component
 		var scratchIdx = ScratchIdx;
 		if ( scratchIdx < sequence.Count - 1 )
 		{
-			GetFactoryStep( scratchIdx + 1 ).ApplyTo( scratchPaint );
-			MoveInSequence( scratchIdx, scratchIdx + 1 );
+			var step = ApplyStepToScratch( scratchIdx + 1 );
+			MoveInSequence( scratchIdx, step.next == -1 ? scratchIdx + 1 : step.next );
 			AdjustSequenceLayout();
 			PutScratchInView();
 		}
+	}
+
+	public FactoryPanel CreateAnchor( int idx )
+	{
+		var anchorGo = GameObject.GetPrefab( "prefabs/Anchor.prefab" ).Clone();
+		sequence.Insert( idx, anchorGo );
+		AdjustSequenceLayout();
+		return anchorGo.Components.Get<FactoryPanel>();
 	}
 
 	public void ResetScratch()
@@ -196,6 +222,9 @@ public sealed class Workspace : Component
 		{
 			scratchPaint.Reset();
 			MoveInSequence( ScratchIdx, 0 );
+			for ( var i = 0; i < sequence.Count; i++ )
+				if ( i != ScratchIdx )
+					GetFactoryStep( i ).ResetInternal();
 			AdjustSequenceLayout();
 			PutScratchInView();
 		}
@@ -236,12 +265,34 @@ public sealed class Workspace : Component
 		camCont.SnapTo( scratchGo.WorldPosition.y );
 	}
 
+	public (int next, int timeCost, int inkCost) ApplyStepToScratch( int stepIdx )
+	{
+		return GetFactoryStep( stepIdx )?.ApplyTo( scratchPaint ) ?? (-1, 0, 0);
+	}
+
 	public void SubmitSequence()
 	{
 		scratchPaint.Reset();
-		for ( var i = 0; i < sequence.Count; i++ )
-			if ( i != ScratchIdx )
-				GetFactoryStep( i ).ApplyTo( scratchPaint );
+
+		var stepIdx = 0;
+		var timeCost = 0;
+		var inkCost = 0;
+		var seqLength = sequence.Count( ( go ) => go != scratchGo && GetFactoryStep( go ) is not FactoryAnchor );
+		while ( stepIdx < sequence.Count )
+		{
+			if ( stepIdx == ScratchIdx )
+			{
+				stepIdx++;
+			}
+			else
+			{
+				var step = ApplyStepToScratch( stepIdx );
+				timeCost += step.timeCost;
+				inkCost += step.inkCost;
+				stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
+			}
+		}
+
 		sequenceScore = scratchPaint.ScoreAgainst( targetPaint );
 		if ( IsCompleted )
 		{

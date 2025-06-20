@@ -2,18 +2,22 @@
 
 <root>
 	<div class="menu">
-		<button @onclick=@RemoveMe>X</button>
+		@if (CanDelete)
+		{
+			<button @onclick=@RemoveMe>X</button>
+		}
 		<span @onmousedown=@DragMe class="dragbar">ⵓ ⵓ ⵓ ⵓ</span>
 	</div>
-    <div class="title">@Name</div>
-    <div class="config">@Config</div>
+	<div class="title">@Name</div>
+	<div class="config">@Config</div>
 </root>
 
 @code
 {
-    public RenderFragment Name { get; set; }
-    public RenderFragment Config { get; set; }
+	public RenderFragment Name { get; set; }
+	public RenderFragment Config { get; set; }
 	public FactoryPanel Fact { get; set; }
+	public bool CanDelete { get; set; } = true;
 
 	private void RemoveMe()
 	{

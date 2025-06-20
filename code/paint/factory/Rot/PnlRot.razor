@@ -9,8 +9,10 @@
 		<Name>Rotate</Name>
 		<Config>
 			<div class="sel row">
-				<button class="@(Fact.clockwise ? "" : "pressed")" @onclick=@(() => SelectTurn(false))>rotate_90_degrees_ccw</button>
-				<button class="@(Fact.clockwise ? "pressed" : "")" @onclick=@(() => SelectTurn(true))>rotate_90_degrees_cw</button>
+				<button class="@(Fact.clockwise ? "" : "pressed")" @onclick=@(() =>
+					SelectTurn(false))>rotate_90_degrees_ccw</button>
+				<button class="@(Fact.clockwise ? "pressed" : "")" @onclick=@(() =>
+					SelectTurn(true))>rotate_90_degrees_cw</button>
 			</div>
 		</Config>
 	</FactoryStepPanel>
@@ -26,5 +28,5 @@
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryRot();
-	protected override int BuildHash() => HashCode.Combine( Fact.clockwise );
+	protected override int BuildHash() => HashCode.Combine(Fact.clockwise);
 }

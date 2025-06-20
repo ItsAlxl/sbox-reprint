@@ -1,0 +1,52 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@namespace Reprint
+@inherits FactoryPanel
+
+<root>
+	<FactoryStepPanel Fact=@(this)>
+		<Name>Repeat</Name>
+		<Config>
+			<div class="row">
+				<button class="sm" @onclick=@DecrC>remove</button>
+				<span class="">@(Fact.MaxCount)</span>
+				<button class="sm" @onclick=@IncrC>add</button>
+			</div>
+			<div class="row">
+				<span class="fixed-num">@(Fact.Counter)</span>
+				<button class="sm" @onclick=@ResetCount>replay</button>
+			</div>
+			<span>@(Fact.AnchorLabel)</span>
+		</Config>
+	</FactoryStepPanel>
+</root>
+
+@code
+{
+	private FactoryIter Fact { get => factory as FactoryIter; }
+
+	private void ToggleROC()
+	{
+		Fact.resetOnContinue = !Fact.resetOnContinue;
+	}
+
+	private void DecrC()
+	{
+		Fact.MaxCount--;
+	}
+
+	private void IncrC()
+	{
+		Fact.MaxCount++;
+	}
+
+	private void ResetCount()
+	{
+		Fact.ResetInternal();
+	}
+
+	protected override FactoryStep CreateFactory() => new FactoryIter();
+	protected override int BuildHash() => HashCode.Combine(Fact.resetOnContinue, Fact.MaxCount, Fact.Counter,
+	Fact.AnchorLabel);
+}
