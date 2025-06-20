@@ -32,5 +32,6 @@
 		workspace.StartDragScratch();
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine( insp.obvX, insp.obvY, workspace.scratchPaint, workspace.scratchPaint?.BuildHash() ?? 0 );
+	protected override int BuildHash() => System.HashCode.Combine(insp.obvX, insp.obvY, workspace.scratchPaint,
+	workspace.scratchPaint?.BuildHash() ?? 0);
 }

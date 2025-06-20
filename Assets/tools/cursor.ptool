@@ -1,6 +1,7 @@
 {
   "Title": "Cursor",
   "Prefab": "prefabs/stepcurs.prefab",
+  "ImagePath": "tools/cursor.svg",
   "__references": [],
   "__version": 0
 }

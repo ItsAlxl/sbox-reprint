@@ -79,10 +79,20 @@
 						<div class="group">
 							<button @onclick=@ClickQuitLevel>Quit</button>
 						</div>
-						<div class="group right">
+						<div class="gap"></div>
+						<div class="group">
 							@foreach (var t in workspace.currentScene.Tools)
 							{
-								<button class="tool" @onmousedown=@(() => workspace.AddStep(t.Prefab))>@t.Title</button>
+								<button class="tool" @onmousedown=@(() => workspace.AddStep(t.Prefab))>
+									@if (t.ImagePath is null || t.ImagePath == "")
+									{
+										<span>@(t.Title)</span>
+									}
+									else
+									{
+										<img style="width: 64px; height: 64px" src=@(t.ImagePath) />
+									}
+								</button>
 							}
 						</div>
 						<div class="group">

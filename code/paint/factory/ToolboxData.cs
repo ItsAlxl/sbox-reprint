@@ -6,6 +6,7 @@ public partial class ToolData : GameResource
 	public string Title { get; set; }
 	[ResourceType( "prefab" )]
 	public string Prefab { get; set; }
+	public string ImagePath { get; set; }
 }
 
 [GameResource( "ToolboxData", "ptbox", "A set of painting tools.", Category = "Reprint", Icon = "home_repair_service" )]

@@ -1,6 +1,7 @@
 {
-  "Title": "Loop",
+  "Title": "Goto (Count)",
   "Prefab": "prefabs/stepiter.prefab",
+  "ImagePath": "tools/loop.png",
   "__references": [],
   "__version": 0
 }

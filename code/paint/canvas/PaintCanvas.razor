@@ -11,23 +11,20 @@
 		float side = (0.5f * size - limit) / limit;
 		string sidePx = (int)side + "px";
 		string fontPx = (int)side + "px";
-		for(var y = 0; y < paint.height; y++)
+		for (var y = 0; y < paint.height; y++)
 		{
 			var unique_y = y;
 			<div class="row">
-			@for(var x = 0; x < paint.width; x++)
-			{
-				var unique_x = x;
-				var pxl = paint.PixelAt(unique_x, unique_y);
-				<div
-					@onmouseover=@(() => EmitHover(pxl, unique_x, unique_y))
-					@onclick=@(() => EmitLClick(pxl, unique_x, unique_y))
-					@onrightclick=@(() => EmitRClick(pxl, unique_x, unique_y))
-					style="background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; border-color: @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @fontPx"
-				>
-					@((cursor && unique_x == paint.cursorX && unique_y == paint.cursorY) ? "⯏" : "")
-				</div>
-			}
+				@for (var x = 0; x < paint.width; x++)
+				{
+					var unique_x = x;
+					var pxl = paint.PixelAt(unique_x, unique_y);
+					<div @onmouseover=@(() => EmitHover(pxl, unique_x, unique_y)) @onclick=@(() => EmitLClick(pxl, unique_x,
+			unique_y)) @onrightclick=@(() => EmitRClick(pxl, unique_x, unique_y))
+						style="background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; border-color: @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @fontPx">
+						@((cursor && unique_x == paint.cursorX && unique_y == paint.cursorY) ? "⯏" : "")
+					</div>
+				}
 			</div>
 		}
 	}
@@ -44,17 +41,17 @@
 
 	private void EmitHover(Pixel p, int x, int y)
 	{
-		listener?.OnPxlHover( p, x, y );
+		listener?.OnPxlHover(p, x, y);
 	}
 
 	private void EmitLClick(Pixel p, int x, int y)
 	{
-		listener?.OnPxlLClick( p, x, y );
+		listener?.OnPxlLClick(p, x, y);
 	}
 
 	private void EmitRClick(Pixel p, int x, int y)
 	{
-		listener?.OnPxlRClick( p, x, y );
+		listener?.OnPxlRClick(p, x, y);
 	}
 
 	public override void Tick()
@@ -67,5 +64,5 @@
 		}
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine( paint, paint?.BuildHash() ?? 0 );
+	protected override int BuildHash() => System.HashCode.Combine(paint, paint?.BuildHash() ?? 0);
 }

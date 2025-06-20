@@ -1,6 +1,7 @@
 {
   "Title": "Flip",
   "Prefab": "prefabs/stepflip.prefab",
+  "ImagePath": "tools/flip.svg",
   "__references": [],
   "__version": 0
 }

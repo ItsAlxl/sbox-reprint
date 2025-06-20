@@ -1,6 +1,7 @@
 {
   "Title": "H. Line",
   "Prefab": "prefabs/stepline.prefab",
+  "ImagePath": "tools/line.png",
   "__references": [],
   "__version": 0
 }

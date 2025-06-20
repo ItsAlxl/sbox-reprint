@@ -1,6 +1,7 @@
 {
   "Title": "Rotate",
   "Prefab": "prefabs/steprot.prefab",
+  "ImagePath": "tools/rotate.svg",
   "__references": [],
   "__version": 0
 }
