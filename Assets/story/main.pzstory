@@ -1,6 +1,7 @@
 {
   "Scenarios": [
-    "story/scenarios/000.ppzzl"
+    "story/scenarios/000.ppzzl",
+    "story/scenarios/001.ppzzl"
   ],
   "__references": [],
   "__version": 0
