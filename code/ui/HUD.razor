@@ -2,6 +2,7 @@
 @using Sandbox.UI;
 @namespace Reprint
 @inherits PanelComponent
+@implements ICanvasSource
 
 <root>
 	@switch (view)
@@ -21,16 +22,45 @@
 		case "levels":
 			<div class="levels view">
 				<div class="subtitle">level select</div>
-				<div class="level-list">
-					@{
-						var order = Scenario.Order;
-						var idx = 1;
-						foreach (var scene in order)
-						{
-							<button class="roundy" @onclick=@(() => ClickLevel(scene))> #@idx @(scene.Title)</button>
-							idx++;
+				<div class="sidebars">
+					<div class="level-list">
+						@{
+							var order = Scenario.Order;
+							var idx = 1;
+							foreach (var scene in order)
+							{
+								if (idx == 1 && hoveredScene == null)
+									hoveredScene = scene;
+								<button class="roundy @(hoveredScene == scene ? "pressed" : "")" @onclick=@(() =>
+					ClickLevelInfo(scene))> #@idx @(scene.Title)</button>
+								idx++;
+							}
 						}
-					}
+					</div>
+					<div class="brief">
+						<div class="title">@(hoveredScene.Title)</div>
+						<PaintCanvas class="medium" @cursor=@false @paintSource=@this @size=@(600.0f)>
+						</PaintCanvas>
+						<div class="leader">
+							@foreach (var data in Score.DataFor(hoveredScene))
+							{
+								<div class="col">
+									<div class="head">@(data.name)</div>
+									<div><span class="name">World Best</span><span class="score">@(data.WorldBest)</span></div>
+									<div><span class="name">World Avg</span><span class="score">@(data.WorldAvg)</span></div>
+									<div class="divider-h"></div>
+									@foreach (var entry in data.friends.Entries)
+									{
+										<div>
+											<span class="name">@(entry.DisplayName)</span>
+											<span class="score">@(GetCurrentScore(data, entry))</span>
+										</div>
+									}
+								</div>
+							}
+						</div>
+						<button style="margin-bottom: 16px" class="roundy" @onclick=@ClickPlayHovered>Play</button>
+					</div>
 				</div>
 				<div class="gutter">
 					<button class="stealth" @onclick=@ClickMenu>Back</button>
@@ -44,13 +74,39 @@
 				{
 					<div class="view score">
 						<div class="subtitle">Nice work!</div>
-						<div class="gap"></div>
-						<PaintCanvas class="large" @cursor=@false @paint=@(workspace.targetPaint) @size=@(768.0f)></PaintCanvas>
-						<div class="gap"></div>
-						<div class="menu-list">
-							<button class="roundy" @onclick=@ClickRefine>One more tweak...</button>
-							<button class="roundy" @onclick=@ClickNextLevel>Next Level</button>
-							<button class="roundy" @onclick=@ClickQuitLevel>Level Select</button>
+						<div class="sidebars">
+							<div class="divider-v"></div>
+							<div class="divider-v"></div>
+							<div class="leader big">
+								@foreach (var data in Score.DataFor(hoveredScene))
+								{
+									<div class="col">
+										<div class="head">@(data.name)</div>
+										<div><span class="name">This Solution</span><span class="score">@(GetSolutionScore(data))</span></div>
+										<div class="divider-h"></div>
+										<div><span class="name">World Best</span><span class="score">@(data.WorldBest)</span></div>
+										<div><span class="name">World Avg</span><span class="score">@(data.WorldAvg)</span></div>
+										<div class="divider-h"></div>
+										@foreach (var entry in data.friends.Entries)
+										{
+											<div>
+												<span class="name">@(entry.DisplayName)</span>
+												<span class="score">@(GetCurrentScore(data, entry))</span>
+											</div>
+										}
+									</div>
+								}
+							</div>
+							<div class="finishmenu">
+								<PaintCanvas class="large" @cursor=@false @paint=@(workspace.targetPaint) @size=@(768.0f)>
+								</PaintCanvas>
+								<div class="divider-h"></div>
+								<div class="menu-list">
+									<button class="roundy" @onclick=@ClickRefine>One more tweak...</button>
+									<button class="roundy" @onclick=@ClickNextLevel>Next Level</button>
+									<button class="roundy" @onclick=@ClickQuitLevel>Level Select</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				}
@@ -111,9 +167,9 @@
 						<TextEntry Value:bind=@DesignerTitle />
 						<TextEntry class="tall" Multiline="@true" Value:bind=@DesignerDesc />
 						<div style="flex-direction: row; gap: 4px; width: 100%; justify-content: space-evenly;">
-							<button @onclick=@DesignerImport>Import</button>
-							<button @onclick=@DesignerExport>Export</button>
-							<button @onclick=@DesignerExportPaint>Exp. Paint</button>
+							<button class="roundy" @onclick=@DesignerImport>Import</button>
+							<button class="roundy" @onclick=@DesignerExport>Export</button>
+							<button class="roundy" @onclick=@DesignerExportPaint>Exp. Paint</button>
 						</div>
 						<TextEntry class="tall" Multiline="@true" Value:bind=@DesignerIO />
 					</div>
@@ -178,6 +234,9 @@
 	private string DesignerIO { get; set; } = "import/export code";
 	private Scenario designScene = new();
 
+	private ScenarioData hoveredScene = null;
+	public string DisplayPaintSerial { get => hoveredScene?.Paint; }
+
 	protected override void OnStart()
 	{
 		workspace = Scene.Get<Workspace>();
@@ -193,14 +252,25 @@
 		view = "levels";
 	}
 
-	private void ClickLevel(ScenarioData scene)
+	private void ClickLevelInfo(ScenarioData scene)
 	{
-		workspace.BeginScenario(scene);
+		hoveredScene = scene;
+	}
+
+	private void ClickPlayHovered()
+	{
+		BeginScenario(hoveredScene);
+	}
+
+	private void BeginScenario(ScenarioData sceneData)
+	{
+		workspace.BeginScenario(sceneData);
 		view = "ingame";
 	}
 
 	private void ClickQuitLevel()
 	{
+
 		workspace.ResetLevel();
 		view = "levels";
 	}
@@ -211,7 +281,7 @@
 		if (next is null)
 			ClickQuitLevel();
 		else
-			ClickLevel(next);
+			BeginScenario(next);
 	}
 
 	private void ClickRefine()
@@ -228,6 +298,29 @@
 	{
 		if (workspace.Dragging)
 			workspace.EndDrag();
+	}
+
+	private int GetSolutionScore(Score.Data d)
+	{
+		return d.name switch
+		{
+			"Time" => workspace.finalScores.time,
+			"Ink" => workspace.finalScores.ink,
+			"Size" => workspace.finalScores.size,
+			_ => 0
+		};
+	}
+
+	private int GetMyScore(Score.Data d)
+	{
+		return System.Math.Min(GetSolutionScore(d), d.MyBest);
+	}
+
+	private int GetCurrentScore(Score.Data d, Sandbox.Services.Leaderboards.Board2.Entry entry)
+	{
+		if (entry.SteamId == Game.SteamId)
+			return System.Math.Min(GetSolutionScore(d), (int)entry.Value);
+		return (int)entry.Value;
 	}
 
 	private void ClickDesigner()
@@ -257,5 +350,5 @@
 	}
 
 	protected override int BuildHash() => System.HashCode.Combine(view, designer.brushColor, designer.brushDarken,
-	designer.brushDesat);
+	designer.brushDesat, hoveredScene);
 }

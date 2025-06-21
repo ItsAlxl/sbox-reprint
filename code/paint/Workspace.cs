@@ -35,7 +35,9 @@ public sealed class Workspace : Component
 
 	private readonly List<GameObject> sequence = [];
 	public float sequenceScore = float.NaN;
+	public (int time, int ink, int size) finalScores = (-1, -1, -1);
 	public bool IsCompleted { get => sequenceScore.AlmostEqual( 1.0f ); }
+	public string LeaderboardKey { get => currentScene?.LeaderboardKey ?? Score.GetLeaderboardKey( targetPaint.Serialize() ); }
 
 	protected override void OnStart()
 	{
@@ -57,6 +59,7 @@ public sealed class Workspace : Component
 		targetPaint = null;
 		scratchPaint = null;
 		sequenceScore = float.NaN;
+		finalScores = (-1, -1, -1);
 	}
 
 	public void BeginScenario( ScenarioData scene )
@@ -270,14 +273,17 @@ public sealed class Workspace : Component
 		return GetFactoryStep( stepIdx )?.ApplyTo( scratchPaint ) ?? (-1, 0, 0);
 	}
 
+	public string GetLeaderboardKey( string varname = "" )
+	{
+		return LeaderboardKey + (varname == "" ? "" : ("_" + varname));
+	}
+
 	public void SubmitSequence()
 	{
 		scratchPaint.Reset();
 
 		var stepIdx = 0;
-		var timeCost = 0;
-		var inkCost = 0;
-		var seqLength = sequence.Count( ( go ) => go != scratchGo && GetFactoryStep( go ) is not FactoryAnchor );
+		finalScores = (0, 0, 0);
 		while ( stepIdx < sequence.Count )
 		{
 			if ( stepIdx == ScratchIdx )
@@ -287,8 +293,8 @@ public sealed class Workspace : Component
 			else
 			{
 				var step = ApplyStepToScratch( stepIdx );
-				timeCost += step.timeCost;
-				inkCost += step.inkCost;
+				finalScores.time += step.timeCost;
+				finalScores.ink += step.inkCost;
 				stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
 			}
 		}
@@ -296,7 +302,8 @@ public sealed class Workspace : Component
 		sequenceScore = scratchPaint.ScoreAgainst( targetPaint );
 		if ( IsCompleted )
 		{
-			// TODO: leaderboard
+			finalScores.size = sequence.Count( ( go ) => go != scratchGo && GetFactoryStep( go ) is not FactoryAnchor );
+			Score.Send( LeaderboardKey, finalScores );
 		}
 		else
 		{

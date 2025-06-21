@@ -73,6 +73,11 @@ HUD {
 		background-color: #0008;
 	}
 
+	button.roundy.pressed {
+		border-color: #fff;
+		background-color: #000;
+	}
+
 	button.stealth {
 		color: #ba8;
 		padding: 0.25rem;
@@ -124,15 +129,16 @@ HUD {
 		}
 
 		button {
-			background-color: #124;
-			justify-content: center;
-			border: 1px solid #333;
 			padding: 5px 25px;
 		}
 
 		.title {
 			font-size: 30px;
 			padding: 2px;
+		}
+
+		.subtitle {
+			font-size: 24px;
 		}
 
 		.desc {
@@ -156,12 +162,68 @@ HUD {
 				text-align: center;
 				min-height: 150px;
 			}
+		}
 
-			PaintCanvas {
-				position: relative;
-				align-self: center;
+		PaintCanvas {
+			position: relative;
+			align-self: center;
+		}
+	}
+
+	.leader {
+		flex-direction: row;
+		flex-grow: 1;
+		align-self: stretch;
+		font-size: 22px;
+
+		.head {
+			font-size: 28px;
+			justify-content: center;
+		}
+
+		.col {
+			flex-direction: column;
+			flex-grow: 1;
+			width: 33.3%;
+
+			.name {
+				flex-grow: 1;
+				text-overflow: ellipsis;
+				max-height: 2em;
+				label {
+					width: 100%;
+				}
+			}
+
+			.score {
+				padding-right: 25px;
+				max-height: 2em;
+				min-width: 4em;
+				text-overflow: clip;
 			}
 		}
+	}
+
+	.leader.big {
+		font-size: 28px;
+		.head {
+			font-size: 36px;
+		}
+	}
+
+	.divider-h {
+		margin-top: 15px;
+	}
+
+	.divider-v {
+		margin-left: 15px;
+	}
+
+	.finishmenu {
+		flex-direction: column;
+		flex-grow: 1;
+		width: 40%;
+		justify-content: center;
 	}
 
 	.sidebars {

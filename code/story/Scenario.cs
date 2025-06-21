@@ -26,6 +26,8 @@ public sealed class Scenario
 	public string paint;
 	public string toolbox = "all";
 
+	public string LeaderboardKey { get => Score.GetLeaderboardKey( paint, toolbox ); }
+
 	private string ToolboxPath { get => toolbox is not null && toolbox.EndsWith( ".ptbox" ) ? toolbox : ("tools/boxes/" + (toolbox == "" || toolbox is null ? "all" : toolbox) + ".ptbox"); }
 	public IEnumerable<ToolData> Tools { get => _tools ??= ResourceLibrary.Get<ToolboxData>( ToolboxPath ).Tools.Select( ResourceLibrary.Get<ToolData> ); }
 	private IEnumerable<ToolData> _tools = null;

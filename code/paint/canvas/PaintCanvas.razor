@@ -1,31 +1,34 @@
 @namespace Reprint
 
 <root>
-	@if (paint is null)
-	{
-		<div>null paint</div>
-	}
-	else
-	{
-		int limit = paint.width > paint.height ? paint.width : paint.height;
-		float side = (0.5f * size - limit) / limit;
-		string sidePx = (int)side + "px";
-		string fontPx = (int)side + "px";
-		for (var y = 0; y < paint.height; y++)
+	@{
+		Painting showPaint = paint ?? new(paintSource.DisplayPaintSerial);
+		if (showPaint is null)
 		{
-			var unique_y = y;
-			<div class="row">
-				@for (var x = 0; x < paint.width; x++)
-				{
-					var unique_x = x;
-					var pxl = paint.PixelAt(unique_x, unique_y);
-					<div @onmouseover=@(() => EmitHover(pxl, unique_x, unique_y)) @onclick=@(() => EmitLClick(pxl, unique_x,
+			<div>null paint</div>
+		}
+		else
+		{
+			int limit = showPaint.width > showPaint.height ? showPaint.width : showPaint.height;
+			float side = (0.5f * size - limit) / limit;
+			string sidePx = (int)side + "px";
+			string fontPx = (int)side + "px";
+			for (var y = 0; y < showPaint.height; y++)
+			{
+				var unique_y = y;
+				<div class="row">
+					@for (var x = 0; x < showPaint.width; x++)
+					{
+						var unique_x = x;
+						var pxl = showPaint.PixelAt(unique_x, unique_y);
+						<div @onmouseover=@(() => EmitHover(pxl, unique_x, unique_y)) @onclick=@(() => EmitLClick(pxl, unique_x,
 			unique_y)) @onrightclick=@(() => EmitRClick(pxl, unique_x, unique_y))
-						style="background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; border-color: @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @fontPx">
-						@((cursor && unique_x == paint.cursorX && unique_y == paint.cursorY) ? "⯏" : "")
-					</div>
-				}
-			</div>
+							style="background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; border-color: @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @fontPx">
+							@((cursor && unique_x == showPaint.cursorX && unique_y == showPaint.cursorY) ? "⯏" : "")
+						</div>
+					}
+				</div>
+			}
 		}
 	}
 </root>
@@ -35,7 +38,8 @@
 	public ICanvasListener listener = null;
 
 	[Property] public float size = 256.0f;
-	public Painting paint;
+	public ICanvasSource paintSource = null;
+	public Painting paint = null;
 	public bool cursor = true;
 	private bool mouseInside = false;
 
@@ -64,5 +68,5 @@
 		}
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine(paint, paint?.BuildHash() ?? 0);
+	protected override int BuildHash() => System.HashCode.Combine(paintSource?.DisplayPaintSerial, paint, paint?.BuildHash() ?? 0);
 }
