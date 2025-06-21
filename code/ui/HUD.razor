@@ -83,14 +83,15 @@
 						<div class="group">
 							@foreach (var t in workspace.currentScene.Tools)
 							{
-								<button class="tool" @onmousedown=@(() => workspace.AddStep(t.Prefab))>
-									@if (t.ImagePath is null || t.ImagePath == "")
+								var hasImg = (t.ImagePath ?? "") != "";
+								<button Tooltip=@(hasImg ? t.Title : "") class="tool" @onmousedown=@(() => workspace.AddStep(t.Prefab))>
+									@if (hasImg)
 									{
-										<span>@(t.Title)</span>
+										<img style="width: 64px; height: 64px" src=@(t.ImagePath) />
 									}
 									else
 									{
-										<img style="width: 64px; height: 64px" src=@(t.ImagePath) />
+										<span>@(t.Title)</span>
 									}
 								</button>
 							}
