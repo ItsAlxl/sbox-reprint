@@ -29,7 +29,7 @@ public sealed class Pixel
 
 	public static Color CalculateColor( ColorLookup clr, int darken, int desat )
 	{
-		return Colors[(int)clr].color.Desaturate( desat / MAX_LEVEL ).Darken( darken / MAX_LEVEL );
+		return Colors[(int)clr].color.Desaturate( (desat == 2 ? 1.8f : (desat == 1 ? 1.2f : desat)) / MAX_LEVEL ).Darken( (float)Math.Pow( (double)darken / MAX_LEVEL, 1.4 ) );
 	}
 
 	public static Color CalculateContrastColor( int darken )
