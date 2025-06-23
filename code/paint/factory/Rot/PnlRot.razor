@@ -8,7 +8,7 @@
 	<FactoryStepPanel Fact=@(this)>
 		<Name>Rotate</Name>
 		<Config>
-			<div class="sel row">
+			<div class="row">
 				<button class="@(Fact.clockwise ? "" : "pressed")" @onclick=@(() =>
 					SelectTurn(false))>rotate_90_degrees_ccw</button>
 				<button class="@(Fact.clockwise ? "pressed" : "")" @onclick=@(() =>

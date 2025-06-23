@@ -30,15 +30,15 @@ public sealed class PaintingDesigner : ICanvasListener
 		// due to shenanigans, `p` may be from a different Painting object
 		var pxl = paint.PixelAt( x, y );
 		pxl.PaintOver( brushColor );
-		pxl.darkenLevel = brushDarken;
-		pxl.desatLevel = brushDesat;
+		pxl.DarkenLevel = brushDarken;
+		pxl.DesatLevel = brushDesat;
 	}
 
 	public void OnPxlRClick( Pixel p, int x, int y )
 	{
 		brushColor = p.BaseColor;
-		brushDarken = p.darkenLevel;
-		brushDesat = p.desatLevel;
+		brushDarken = p.DarkenLevel;
+		brushDesat = p.DesatLevel;
 	}
 
 	public string PaintSource()

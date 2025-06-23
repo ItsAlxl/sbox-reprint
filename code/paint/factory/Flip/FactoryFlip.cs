@@ -2,7 +2,7 @@ namespace Reprint;
 
 public sealed class FactoryFlip : FactoryStep
 {
-	public bool vertical = true;
+	public bool vertical = false;
 
 	override public (int next, int timeCost, int inkCost) ApplyTo( Painting p )
 	{

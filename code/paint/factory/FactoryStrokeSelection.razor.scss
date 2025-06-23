@@ -1,0 +1,20 @@
+FactoryStrokeSelection {
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	flex-grow: 1;
+
+	button svg {
+		width: 24px;
+		height: 24px;
+	}
+
+	.ex-pxl {
+		width: 24px;
+		height: 24px;
+	}
+
+	.ex-arrow {
+		font-family: Material Icons;
+	}
+}

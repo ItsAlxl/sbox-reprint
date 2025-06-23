@@ -1,7 +1,7 @@
 {
   "Title": "Gold Star",
   "Desc": "Alright, I've got some more tools. You should be able to move the cursor around now. The \"Goto\" tool is interesting too - they don't add any extra time themselves but they should let you create much shorter sequences if you're doing the same thing over and over.\nI figure this machine can make us a killing if we print things that people want. And who doesn't want validation? Let's make some gold stars for everybody.",
-  "Paint": "5:5:4a4a2a4a4a4a2a2a2a4a2a2a2a2a2a4a2a2a2a4a4a2a4a2a4a",
+  "Paint": "5:5:5e5e2a5e5e5e2a2a2a5e2a2a2a2a2a5e2a2a2a5e5e2a5e2a5e",
   "Toolbox": "tools/boxes/002 - manip.ptbox",
   "__references": [],
   "__version": 0

@@ -8,7 +8,7 @@
 	<FactoryStepPanel Fact=@(this)>
 		<Name>Flip</Name>
 		<Config>
-			<div class="sel row">
+			<div class="row">
 				<button class="@(Fact.vertical ? "" : "pressed")" @onclick=@(() =>
 					SelectFlip(false))>swap_horiz</button>
 				<button class="@(Fact.vertical ? "pressed" : "")" @onclick=@(() => SelectFlip(true))>swap_vert</button>

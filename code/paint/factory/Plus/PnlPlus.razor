@@ -1,23 +1,13 @@
 @using Sandbox;
 @using Sandbox.UI;
-@using System;
 @namespace Reprint
 @inherits FactoryPanel
 
 <root>
 	<FactoryStepPanel Fact=@(this)>
-		<Name>+ Shape</Name>
+		<Name>Plus Shape</Name>
 		<Config>
-			<div class="sel group">
-				@foreach (Pixel.ColorLookup clr in Enum.GetValues<Pixel.ColorLookup>())
-				{
-					var sel = Fact.color == clr;
-					var color = Pixel.GetColor(clr);
-					<button @onclick=@(() => SelectColor(clr)) class="clr sm @(sel ? "pressed" : "")"
-						style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
-							class="lbl">@(color.Initial)</span></button>
-				}
-			</div>
+			<FactoryStrokeSelection @StrokeStep=@Fact></FactoryStrokeSelection>
 		</Config>
 	</FactoryStepPanel>
 </root>
@@ -25,11 +15,5 @@
 @code
 {
 	private FactoryPlus Fact { get => factory as FactoryPlus; }
-
-	private void SelectColor(Pixel.ColorLookup sel)
-	{
-		Fact.color = sel;
-	}
-
 	protected override FactoryStep CreateFactory() => new FactoryPlus();
 }

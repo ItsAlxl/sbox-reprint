@@ -255,8 +255,8 @@
 
 	private void UpdateDesignerSize()
 	{
-		DesignerW = System.Math.Clamp(DesignerW, 4, 16);
-		DesignerH = System.Math.Clamp(DesignerH, 4, 16);
+		DesignerW = DesignerW.Clamp( 4, 16);
+		DesignerH = DesignerH.Clamp( 4, 16);
 		designer.Resize(DesignerW, DesignerH);
 	}
 

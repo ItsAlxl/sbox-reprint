@@ -14,7 +14,7 @@ public sealed class FactoryIter : FactoryStep
 		set
 		{
 			var updCurrent = _currentCount == _maxCount;
-			_maxCount = Math.Clamp( value, 1, 16 );
+			_maxCount = value.Clamp( 1, 16 );
 			if (updCurrent)
 				_currentCount = _maxCount;
 		}

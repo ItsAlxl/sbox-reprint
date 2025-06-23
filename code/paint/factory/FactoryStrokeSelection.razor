@@ -1,0 +1,76 @@
+@namespace Reprint
+
+<root>
+	<div class="row">
+		<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Paint)
+			class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Paint ? "pressed " : "")">
+			<svg src="icons/brush.svg"></svg>
+		</button>
+		<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Burn)
+			class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Burn ? "pressed " : "")">
+			<svg src="icons/burn.svg"></svg>
+		</button>
+		<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Sponge)
+			class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Sponge ? "pressed " : "")">
+			<svg src="icons/sponge.svg"></svg>
+		</button>
+	</div>
+	<div style="margin-top: 8px"></div>
+	<div class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Paint ? "group" : "col")">
+		@{
+			if (StrokeStep.stroke == FactoryStepStroke.StrokeType.Burn)
+			{
+				<div class="row">
+					<button class="sm" @onclick=@(() => StrokeStep.DarkenAmt++)>remove</button>
+					<span class="fixed-num">@(FormatLevelText(StrokeStep.DarkenAmt))</span>
+					<button class="sm" @onclick=@(() => StrokeStep.DarkenAmt--)>add</button>
+				</div>
+
+				var from = StrokeStep.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, -StrokeStep.DarkenAmt, 0) : Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
+				var to = StrokeStep.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) : Pixel.CalculateColor(Pixel.ColorLookup.Red, StrokeStep.DarkenAmt, 0);
+				<div class="row">
+					<span class="ex-pxl" style="background-color: @(from.Hex)"></span>
+					<span class="ex-arrow">arrow_forward</span>
+					<span class="ex-pxl" style="background-color: @(to.Hex)"></span>
+				</div>
+			}
+			else if (StrokeStep.stroke == FactoryStepStroke.StrokeType.Sponge)
+			{
+				<div class="row">
+					<button class="sm" @onclick=@(() => StrokeStep.DesatAmt++)>remove</button>
+					<span class="fixed-num">@(FormatLevelText(StrokeStep.DesatAmt))</span>
+					<button class="sm" @onclick=@(() => StrokeStep.DesatAmt--)>add</button>
+				</div>
+
+				var from = StrokeStep.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, -StrokeStep.DesatAmt) : Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
+				var to = StrokeStep.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) : Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, StrokeStep.DesatAmt);
+				<div class="row">
+					<span class="ex-pxl" style="background-color: @(from.Hex)"></span>
+					<span class="ex-arrow">arrow_forward</span>
+					<span class="ex-pxl" style="background-color: @(to.Hex)"></span>
+				</div>
+			}
+			else
+			{
+				foreach (Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>())
+				{
+					var sel = StrokeStep.color == clr;
+					var color = Pixel.GetColor(clr);
+					<button @onclick=@(() => StrokeStep.color = clr) class="clr sm @(sel ? "pressed" : "")"
+						style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
+							class="lbl">@(color.Initial)</span></button>
+				}
+			}
+		}
+	</div>
+</root>
+
+@code
+{
+	public FactoryStepStroke StrokeStep { get; set; }
+
+	private string FormatLevelText(int level)
+	{
+		return (level < 0 ? "+" : "") + -level;
+	}
+}

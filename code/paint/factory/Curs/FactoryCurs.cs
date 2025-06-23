@@ -5,7 +5,7 @@ namespace Reprint;
 public sealed class FactoryCurs : FactoryStep
 {
 	private int LimitX { get => Workspace.targetPaint.width - 1; }
-	public int AmtX { get => _amtX; set => _amtX = Math.Clamp( value, _setX ? 0 : -LimitX, LimitX ); }
+	public int AmtX { get => _amtX; set => _amtX = value.Clamp( _setX ? 0 : -LimitX, LimitX ); }
 	public bool SetX
 	{
 		get => _setX;
@@ -19,7 +19,7 @@ public sealed class FactoryCurs : FactoryStep
 	private int _amtX = 0;
 
 	private int LimitY { get => Workspace.targetPaint.height - 1; }
-	public int AmtY { get => _amtY; set => _amtY = Math.Clamp( value, _setY ? 0 : -LimitY, LimitY ); }
+	public int AmtY { get => _amtY; set => _amtY = value.Clamp( _setY ? 0 : -LimitY, LimitY ); }
 	public bool SetY
 	{
 		get => _setY;

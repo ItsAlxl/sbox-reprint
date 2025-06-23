@@ -34,7 +34,7 @@ HUD {
 
 		.level-list {
 			flex-direction: row;
-			gap: 1.5rem;
+			gap: 8px;
 			flex-wrap: wrap;
 			align-items: center;
 			justify-content: center;
@@ -80,7 +80,7 @@ HUD {
 
 	button.stealth {
 		color: #ba8;
-		padding: 0.25rem;
+		padding: 2px;
 	}
 
 	button.stealth:hover {

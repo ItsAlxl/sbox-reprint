@@ -67,7 +67,7 @@ public sealed class Painting
 		var limit = isX ? width : height;
 		if ( mode == CursorMoveMode.Set )
 		{
-			curs = Math.Clamp( amt, 0, limit - 1 );
+			curs = amt.Clamp( 0, limit - 1 );
 		}
 		else
 		{
@@ -75,7 +75,7 @@ public sealed class Painting
 			switch ( mode )
 			{
 				case CursorMoveMode.Clamp:
-					curs = Math.Clamp( curs, 0, limit - 1 );
+					curs = curs.Clamp( 0, limit - 1 );
 					break;
 				case CursorMoveMode.Wrap:
 					curs %= limit;
