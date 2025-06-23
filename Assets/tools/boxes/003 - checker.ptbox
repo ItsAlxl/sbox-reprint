@@ -1,7 +1,7 @@
 {
   "Tools": [
     "tools/line.ptool",
-    "tools/plus.ptool",
+    "tools/diag.ptool",
     "tools/rotate.ptool",
     "tools/flip.ptool",
     "tools/cursor.ptool",

@@ -1,0 +1,19 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace Reprint
+@inherits FactoryPanel
+
+<root>
+	<FactoryStepPanel Fact=@(this)>
+		<Name>Dunk</Name>
+		<Config>
+			<FactoryStrokeSelection @StrokeStep=@Fact></FactoryStrokeSelection>
+		</Config>
+	</FactoryStepPanel>
+</root>
+
+@code
+{
+	private FactoryDunk Fact { get => factory as FactoryDunk; }
+	protected override FactoryStep CreateFactory() => new FactoryDunk();
+}

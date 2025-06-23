@@ -50,7 +50,8 @@ public sealed class Pixel
 	public int LightLevel { get => MAX_LEVEL - DarkenLevel; }
 	public int SatLevel { get => MAX_LEVEL - DesatLevel; }
 
-	public PrimeColor DisplayColor { get => DarkenLevel == MAX_LEVEL || DesatLevel == MAX_LEVEL ? NeutralColor : GetColor( _baseColor ); }
+	public bool IsNeutral { get => DarkenLevel == MAX_LEVEL || DesatLevel == MAX_LEVEL; }
+	public PrimeColor DisplayColor { get => IsNeutral ? NeutralColor : GetColor( _baseColor ); }
 	public string Readout { get => $"C:{DisplayColor.Initial} S:{SatLevel} V:{LightLevel}"; }
 	public string ReadoutVerbose { get => $"Color: {DisplayColor.name}\nSaturation: {SatLevel}\nValue: {LightLevel}"; }
 
@@ -82,6 +83,11 @@ public sealed class Pixel
 
 	public float ScoreAgainst( Pixel p )
 	{
+		if ( IsNeutral || p.IsNeutral )
+		{
+			return (p.IsNeutral == IsNeutral && p.DarkenLevel == DarkenLevel) ? 1.0f : 0.5f;
+		}
+
 		var score = 0.0f;
 		if ( p.DisplayColor == DisplayColor )
 			score += 0.5f;

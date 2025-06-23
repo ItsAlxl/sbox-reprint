@@ -22,7 +22,6 @@ PaintCanvas {
 		justify-content: center;
 		align-items: center;
 		padding-bottom: 1%;
-		border: 1px solid;
 	}
 }
 
@@ -39,13 +38,9 @@ PaintCanvas.big {
 }
 
 PaintCanvas.medium {
-	gap: 1px;
+	gap: 2px;
 
 	.row {
-		gap: 1px;
-
-		div {
-			border: 2px solid;
-		}
+		gap: 2px;
 	}
 }

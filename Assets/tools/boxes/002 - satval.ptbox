@@ -1,13 +1,9 @@
 {
   "Tools": [
-    "tools/plus.ptool",
     "tools/line.ptool",
-    "tools/diag.ptool",
-    "tools/dunk.ptool",
     "tools/rotate.ptool",
     "tools/flip.ptool",
-    "tools/cursor.ptool",
-    "tools/loop.ptool"
+    "tools/cursor.ptool"
   ],
   "__references": [],
   "__version": 0
