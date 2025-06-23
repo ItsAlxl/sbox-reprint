@@ -165,7 +165,7 @@ public sealed class Painting
 	public Pixel PixelAt( int x, int y )
 	{
 		var coords = TransformCoords( x, y );
-		return pixels[coords[1] * width + coords[0]];
+		return (x >= 0 && x < width && y >= 0 && y < height) ? pixels[coords[1] * width + coords[0]] : null;
 	}
 
 	public void Randomize()

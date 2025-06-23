@@ -2,9 +2,9 @@
   "Tools": [
     "tools/line.ptool",
     "tools/plus.ptool",
-    "tools/cursor.ptool",
     "tools/rotate.ptool",
     "tools/flip.ptool",
+    "tools/cursor.ptool",
     "tools/loop.ptool"
   ],
   "__references": [],

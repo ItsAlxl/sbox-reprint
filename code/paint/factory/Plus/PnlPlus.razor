@@ -6,7 +6,7 @@
 
 <root>
 	<FactoryStepPanel Fact=@(this)>
-		<Name>Horizontal Line</Name>
+		<Name>+ Shape</Name>
 		<Config>
 			<div class="sel group">
 				@foreach (Pixel.ColorLookup clr in Enum.GetValues<Pixel.ColorLookup>())
@@ -24,12 +24,12 @@
 
 @code
 {
-	private FactoryLine Fact { get => factory as FactoryLine; }
+	private FactoryPlus Fact { get => factory as FactoryPlus; }
 
 	private void SelectColor(Pixel.ColorLookup sel)
 	{
 		Fact.color = sel;
 	}
 
-	protected override FactoryStep CreateFactory() => new FactoryLine();
+	protected override FactoryStep CreateFactory() => new FactoryPlus();
 }

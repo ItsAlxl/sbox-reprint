@@ -181,6 +181,10 @@ HUD {
 		}
 	}
 
+	.brief.wide {
+		width: 50%;
+	}
+
 	.leader {
 		flex-direction: row;
 		flex-grow: 1;
