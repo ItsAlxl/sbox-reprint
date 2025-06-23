@@ -2,7 +2,7 @@
   "Title": "Building Blocks",
   "Desc": "The calendars are already a hit! I knew this device was a good idea!\nYou might have noticed the symbol in the top-left of the scratch paper. That's the cursor. All of your brush strokes are placed according to the cursor position. I still don't have the tool to move the cursor yet, but we could just rotate the whole paper instead.\nHere, try out this pattern. It's a logo I came up with for our new venture. Don't worry about the orientation in the end - we can just turn it or flip it however we need after the machine is finished.",
   "Paint": "4:4:0a5a5a0a0a0d0d0a0a0d0d0a3a3a3a3a",
-  "Toolbox": null,
+  "Toolbox": "tools/boxes/moves.ptbox",
   "__references": [],
   "__version": 0
 }
