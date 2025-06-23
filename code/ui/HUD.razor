@@ -2,7 +2,6 @@
 @using Sandbox.UI;
 @namespace Reprint
 @inherits PanelComponent
-@implements ICanvasSource
 
 <root>
 	@switch (view)
@@ -39,7 +38,7 @@
 					</div>
 					<div class="brief">
 						<div class="title">@(hoveredScene.Title)</div>
-						<PaintCanvas class="medium" @cursor=@false @paintSource=@this @size=@(600.0f)>
+						<PaintCanvas class="medium" @cursor=@false @paintSource=@(() => hoveredScene.Paint) @size=@(600.0f)>
 						</PaintCanvas>
 						<div class="leader">
 							@foreach (var data in Score.DataFor(hoveredScene))
@@ -69,7 +68,7 @@
 			break;
 
 		case "ingame":
-			<div class="view @(workspace.Dragging ? "dragging" : "")" @onmouseup=@EndDrag>
+			<div class="view @(workspace.Dragging ? "mousewatch" : "")" @onmouseup=@EndDrag>
 				@if (workspace.IsCompleted)
 				{
 					<div class="view score">
@@ -82,10 +81,19 @@
 								{
 									<div class="col">
 										<div class="head">@(data.name)</div>
-										<div><span class="name">This Solution</span><span class="score">@(GetSolutionScore(data))</span></div>
+										<div>
+											<span class="name">This Solution</span>
+											<span class="score">@(GetSolutionScore(data))</span>
+										</div>
 										<div class="divider-h"></div>
-										<div><span class="name">World Best</span><span class="score">@(data.WorldBest)</span></div>
-										<div><span class="name">World Avg</span><span class="score">@(data.WorldAvg)</span></div>
+										<div>
+											<span class="name">World Best</span>
+											<span class="score">@(data.WorldBest)</span>
+										</div>
+										<div>
+											<span class="name">World Avg</span>
+											<span class="score">@(data.WorldAvg)</span>
+										</div>
 										<div class="divider-h"></div>
 										@foreach (var entry in data.friends.Entries)
 										{
@@ -161,27 +169,33 @@
 			break;
 
 		case "design":
-			<div class="view">
+			<div class="view @(designer.IsMouseDown ? "mousewatch" : "")" @onmouseup=@(designer.ReleaseMouse)>
 				<div class="design-up">
 					<div class="brief">
 						<TextEntry Value:bind=@DesignerTitle />
-						<TextEntry class="tall" Multiline="@true" Value:bind=@DesignerDesc />
-						<div style="flex-direction: row; gap: 4px; width: 100%; justify-content: space-evenly;">
+						<TextEntry class="taller" Multiline=@true Value:bind=@DesignerDesc />
+						<div class="controls">
+							<TextEntry numeric=@true Value:bind=@DesignerW @onchange=@UpdateDesignerSize />
+							<span style="font-size: 32px; padding: 0px 24px 0px 8px">x</span>
+							<TextEntry numeric=@true Value:bind=@DesignerH @onchange=@UpdateDesignerSize />
+						</div>
+						<div class="controls">
 							<button class="roundy" @onclick=@DesignerImport>Import</button>
 							<button class="roundy" @onclick=@DesignerExport>Export</button>
 							<button class="roundy" @onclick=@DesignerExportPaint>Exp. Paint</button>
 						</div>
-						<TextEntry class="tall" Multiline="@true" Value:bind=@DesignerIO />
+						<TextEntry class="tall" Multiline=@true Value:bind=@DesignerIO />
 					</div>
 					<div class="design-work">
-						<PaintCanvas @listener=@designer class="big" @cursor=@false @paint=@(designer.paint) @size=@(1024.0f)>
+						<PaintCanvas @listener=@designer class="big" @cursor=@false @paintSource=@(designer.PaintSource)
+							@size=@(1024.0f)>
 						</PaintCanvas>
 					</div>
 				</div>
 				<div class="toolbox">
 					<button @onclick=@ClickMenu>Back</button>
 					<div
-						style="width: 64px; height: 64px; background-color: @(designer.CalculateColor().Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)">
+						style="width: 64px; height: 64px; background-color: @(designer.CalculatedColor.Hex); border: 2px solid @(Pixel.CalculateContrastColor(designer.brushDarken).Hex)">
 					</div>
 					<div class="group">
 						@foreach (Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>())
@@ -229,13 +243,22 @@
 	private Workspace workspace;
 	private string view = "main";
 
+	private ScenarioData hoveredScene = null;
+
 	private string DesignerTitle { get; set; } = "Title";
 	private string DesignerDesc { get; set; } = "Description";
 	private string DesignerIO { get; set; } = "import/export code";
 	private Scenario designScene = new();
 
-	private ScenarioData hoveredScene = null;
-	public string DisplayPaintSerial { get => hoveredScene?.Paint; }
+	private int DesignerW { get; set; } = 4;
+	private int DesignerH { get; set; } = 4;
+
+	private void UpdateDesignerSize()
+	{
+		DesignerW = System.Math.Clamp(DesignerW, 4, 16);
+		DesignerH = System.Math.Clamp(DesignerH, 4, 16);
+		designer.Resize(DesignerW, DesignerH);
+	}
 
 	protected override void OnStart()
 	{
@@ -346,7 +369,7 @@
 		designScene.Import(DesignerIO);
 		DesignerTitle = designScene.title;
 		DesignerDesc = designScene.desc;
-		designer.paint.Deserialize(designScene.paint);
+		designer.paint = new(designScene.paint);
 	}
 
 	protected override int BuildHash() => System.HashCode.Combine(view, designer.brushColor, designer.brushDarken,

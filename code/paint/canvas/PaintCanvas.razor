@@ -2,7 +2,7 @@
 
 <root>
 	@{
-		Painting showPaint = paint ?? new(paintSource.DisplayPaintSerial);
+		Painting showPaint = paint ?? new(paintSource());
 		if (showPaint is null)
 		{
 			<div>null paint</div>
@@ -21,8 +21,7 @@
 					{
 						var unique_x = x;
 						var pxl = showPaint.PixelAt(unique_x, unique_y);
-						<div @onmouseover=@(() => EmitHover(pxl, unique_x, unique_y)) @onclick=@(() => EmitLClick(pxl, unique_x,
-			unique_y)) @onrightclick=@(() => EmitRClick(pxl, unique_x, unique_y))
+						<div @onmouseover=@(() => EmitHover(pxl, unique_x, unique_y)) @onmousedown=@((ev) => EmitClick(ev, pxl, unique_x, unique_y))
 							style="background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; border-color: @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @fontPx">
 							@((cursor && unique_x == showPaint.cursorX && unique_y == showPaint.cursorY) ? "⯏" : "")
 						</div>
@@ -38,7 +37,7 @@
 	public ICanvasListener listener = null;
 
 	[Property] public float size = 256.0f;
-	public ICanvasSource paintSource = null;
+	public System.Func<string> paintSource = null;
 	public Painting paint = null;
 	public bool cursor = true;
 	private bool mouseInside = false;
@@ -48,14 +47,16 @@
 		listener?.OnPxlHover(p, x, y);
 	}
 
-	private void EmitLClick(Pixel p, int x, int y)
+	private void EmitClick(Sandbox.UI.PanelEvent ev, Pixel p, int x, int y)
 	{
-		listener?.OnPxlLClick(p, x, y);
-	}
-
-	private void EmitRClick(Pixel p, int x, int y)
-	{
-		listener?.OnPxlRClick(p, x, y);
+		if (ev is Sandbox.UI.MousePanelEvent mEv)
+		{
+			var btn = mEv.Button;
+			if (btn == "mouseleft")
+				listener?.OnPxlLClick(p, x, y);
+			else if (btn == "mouseright")
+				listener?.OnPxlRClick(p, x, y);
+		}
 	}
 
 	public override void Tick()
@@ -68,5 +69,5 @@
 		}
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine(paintSource?.DisplayPaintSerial, paint, paint?.BuildHash() ?? 0);
+	protected override int BuildHash() => System.HashCode.Combine(paintSource?.Invoke(), paint, paint?.BuildHash() ?? 0);
 }
