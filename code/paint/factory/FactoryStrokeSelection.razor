@@ -1,7 +1,7 @@
 @namespace Reprint
 
 <root>
-	@if (ShowDodgeBurn)
+	@if (ShowBurnSponge)
 	{
 		<div class="row">
 			<button @onclick=@(() => StrokeStep.MainMode = FactoryStroke.Mode.Paint)
@@ -102,7 +102,7 @@
 @code
 {
 	public FactoryStepStroke StrokeStep { get; set; }
-	public bool ShowDodgeBurn { get; set; } = true;
+	public bool ShowBurnSponge { get; set; } = true;
 	public bool ShowConfigurator { get; set; } = true;
 
 	private string FormatLevelText(int level)

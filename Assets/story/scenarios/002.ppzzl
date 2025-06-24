@@ -5,6 +5,7 @@
   "Toolbox": "tools/boxes/002 - satval.ptbox",
   "UseSpongeBurn": true,
   "UseConfigurator": false,
+  "UseBreakpoints": false,
   "__references": [],
   "__version": 0
 }

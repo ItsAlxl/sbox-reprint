@@ -5,6 +5,7 @@
   "Toolbox": null,
   "UseSpongeBurn": true,
   "UseConfigurator": true,
+  "UseBreakpoints": true,
   "__references": [],
   "__version": 0
 }

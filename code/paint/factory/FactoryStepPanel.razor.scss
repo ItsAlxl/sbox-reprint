@@ -23,12 +23,12 @@ FactoryStepPanel {
 		border-bottom: 2px solid #000;
 
 		button {
+			font-family: Material Icons;
 			background-color: #112;
-			width: 40px;
-			height: 100%;
 			flex-shrink: 1;
 			align-items: center;
 			justify-content: center;
+			padding: 5px;
 		}
 
 		.dragbar {

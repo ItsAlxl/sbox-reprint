@@ -4,9 +4,13 @@
 	<div class="menu">
 		@if (CanDelete)
 		{
-			<button @onclick=@RemoveMe>X</button>
+			<button @onclick=@RemoveMe>close</button>
 		}
 		<span @onmousedown=@DragMe class="dragbar">ⵓ ⵓ ⵓ ⵓ</span>
+		@if (CanBreakpoint && UseBreakpoint)
+		{
+			<button @onclick=@ToggleBreakpoint>@(Fact.breakpoint ? "pause_circle_outline" : "radio_button_unchecked")</button>
+		}
 	</div>
 	<div class="title">@Name</div>
 	<div class="config">@Config</div>
@@ -18,14 +22,23 @@
 	public RenderFragment Config { get; set; }
 	public FactoryPanel Fact { get; set; }
 	public bool CanDelete { get; set; } = true;
+	public bool CanBreakpoint { get; set; } = true;
+
+	private Workspace Workspace { get => Fact.workspace; }
+	private bool UseBreakpoint { get => Workspace.useBreakpoints; }
 
 	private void RemoveMe()
 	{
-		Fact.workspace.RemoveFromSquence(Fact);
+		Workspace.RemoveFromSquence(Fact);
 	}
 
 	private void DragMe()
 	{
-		Fact.workspace.StartDragFactory(Fact);
+		Workspace.StartDragFactory(Fact);
+	}
+
+	private void ToggleBreakpoint()
+	{
+		Fact.breakpoint = !Fact.breakpoint;
 	}
 }

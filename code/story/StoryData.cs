@@ -18,4 +18,5 @@ public partial class ScenarioData : GameResource
 	public string Toolbox { get; set; }
 	public bool UseSpongeBurn { get; set; } = true;
 	public bool UseConfigurator { get; set; } = true;
+	public bool UseBreakpoints { get; set; } = true;
 }

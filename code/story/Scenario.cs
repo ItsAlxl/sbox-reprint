@@ -26,8 +26,9 @@ public sealed class Scenario
 	public string desc;
 	public string paint;
 	public string toolbox = "all";
-	public bool useDodgeBurn = true;
+	public bool useBurnSponge = true;
 	public bool useConfigurator = true;
+	public bool useBreakpoints = true;
 
 	public string LeaderboardKey { get => Score.GetLeaderboardKey( paint, toolbox ); }
 
@@ -53,8 +54,9 @@ public sealed class Scenario
 		title = data.Title;
 		desc = data.Desc;
 		paint = data.Paint;
-		useDodgeBurn = data.UseSpongeBurn;
+		useBurnSponge = data.UseSpongeBurn;
 		useConfigurator = data.UseConfigurator;
+		useBreakpoints = data.UseBreakpoints;
 		if ( toolbox != data.Toolbox )
 		{
 			_tools = null;

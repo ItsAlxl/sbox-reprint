@@ -5,6 +5,7 @@
   "Toolbox": "tools/boxes/000 - line.ptbox",
   "UseSpongeBurn": false,
   "UseConfigurator": false,
+  "UseBreakpoints": false,
   "__references": [],
   "__version": 0
 }

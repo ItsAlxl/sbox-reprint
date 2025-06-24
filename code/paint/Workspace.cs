@@ -41,6 +41,10 @@ public sealed class Workspace : Component
 
 	public FactoryStroke figStroke = new();
 
+	public bool useConfigurator { get => currentScene.useConfigurator; }
+	public bool useBurnSponge { get => currentScene.useBurnSponge; }
+	public bool useBreakpoints { get => currentScene.useBreakpoints; }
+
 	protected override void OnStart()
 	{
 		camCont = Scene.Get<CameraController>();
@@ -281,15 +285,33 @@ public sealed class Workspace : Component
 		return LeaderboardKey + (varname == "" ? "" : ("_" + varname));
 	}
 
+	public void AdvanceToBreakpoint()
+	{
+		var scratchIdx = ScratchIdx;
+		var stepIdx = scratchIdx + 1;
+		while ( stepIdx < sequence.Count )
+		{
+			var factory = GetFactoryStep( stepIdx );
+			if ( stepIdx > scratchIdx + 1 && factory.panel.breakpoint )
+				break;
+
+			var step = ApplyStepToScratch( stepIdx );
+			stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
+		}
+		MoveInSequence( scratchIdx, stepIdx - 1 );
+		AdjustSequenceLayout();
+	}
+
 	public void SubmitSequence()
 	{
 		scratchPaint.Reset();
 
+		var scratchIdx = ScratchIdx;
 		var stepIdx = 0;
 		finalScores = (0, 0, 0);
 		while ( stepIdx < sequence.Count )
 		{
-			if ( stepIdx == ScratchIdx )
+			if ( stepIdx == scratchIdx )
 			{
 				stepIdx++;
 			}

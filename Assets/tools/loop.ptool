@@ -1,5 +1,5 @@
 {
-  "Title": "Goto (Count)",
+  "Title": "Goto",
   "Prefab": "prefabs/stepiter.prefab",
   "ImagePath": "tools/loop.png",
   "__references": [],
