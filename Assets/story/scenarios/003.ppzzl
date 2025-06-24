@@ -3,6 +3,8 @@
   "Desc": "The new Goto tool is pretty interesting. It doesn't add any time to your sequence on its own, and it should let you make much shorter sequences if they're repetitive.\nLet's see what this sucker can do. Here, recreate my favorite video game texture. Just look at it! It's great, right?\nYou uh... You do have CS:S installed, right?",
   "Paint": "4:4:6a6m6a6m6m6a6m6a6a6m6a6m6m6a6m6a",
   "Toolbox": "tools/boxes/003 - checker.ptbox",
+  "UseSpongeBurn": true,
+  "UseConfigurator": false,
   "__references": [],
   "__version": 0
 }

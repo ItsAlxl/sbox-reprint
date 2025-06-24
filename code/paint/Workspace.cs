@@ -39,6 +39,8 @@ public sealed class Workspace : Component
 	public bool IsCompleted { get => sequenceScore.AlmostEqual( 1.0f ); }
 	public string LeaderboardKey { get => currentScene?.LeaderboardKey ?? Score.GetLeaderboardKey( targetPaint.Serialize() ); }
 
+	public FactoryStroke figStroke = new();
+
 	protected override void OnStart()
 	{
 		camCont = Scene.Get<CameraController>();
@@ -53,7 +55,7 @@ public sealed class Workspace : Component
 				sequence[i].Destroy();
 			sequence.RemoveRange( 0, sequence.Count );
 		}
-
+		figStroke.Reset();
 		camCont.ResetPosition();
 		scratchGo = null;
 		targetPaint = null;
@@ -228,6 +230,7 @@ public sealed class Workspace : Component
 			for ( var i = 0; i < sequence.Count; i++ )
 				if ( i != ScratchIdx )
 					GetFactoryStep( i ).ResetInternal();
+			figStroke.Reset();
 			AdjustSequenceLayout();
 			PutScratchInView();
 		}

@@ -1,0 +1,7 @@
+{
+  "Title": "Configurator",
+  "Prefab": "prefabs/stepfig.prefab",
+  "ImagePath": "tools/fig.svg",
+  "__references": [],
+  "__version": 0
+}

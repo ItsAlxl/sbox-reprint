@@ -4,53 +4,73 @@
 	@if (ShowDodgeBurn)
 	{
 		<div class="row">
-			<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Paint)
-				class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Paint ? "pressed " : "")">
+			<button @onclick=@(() => StrokeStep.MainMode = FactoryStroke.Mode.Paint)
+				class="@(!StrokeStep.useFig && StrokeStep.MainMode == FactoryStroke.Mode.Paint ? "pressed " : "")">
 				<svg src="icons/brush.svg"></svg>
 			</button>
-			<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Burn)
-				class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Burn ? "pressed " : "")">
+			<button @onclick=@(() => StrokeStep.MainMode = FactoryStroke.Mode.Burn)
+				class="@(!StrokeStep.useFig && StrokeStep.MainMode == FactoryStroke.Mode.Burn ? "pressed " : "")">
 				<svg src="icons/burn.svg"></svg>
 			</button>
-			<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Sponge)
-				class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Sponge ? "pressed " : "")">
+			<button @onclick=@(() => StrokeStep.MainMode = FactoryStroke.Mode.Sponge)
+				class="@(!StrokeStep.useFig && StrokeStep.MainMode == FactoryStroke.Mode.Sponge ? "pressed " : "")">
 				<svg src="icons/sponge.svg"></svg>
 			</button>
+			@if (ShowConfigurator)
+			{
+				<button @onclick=@(() => StrokeStep.useFig = true) class="@(StrokeStep.useFig ? "pressed " : "")">
+					<svg src="icons/cog.svg"></svg>
+				</button>
+			}
 		</div>
 		<div style="margin-top: 8px"></div>
 	}
-	<div class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Paint ? "group" : "col")">
+	<div class="@(StrokeStep.MainMode == FactoryStroke.Mode.Paint ? "group" : "col")">
 		@{
-			if (StrokeStep.stroke == FactoryStepStroke.StrokeType.Burn)
+			var isMain = !StrokeStep.useFig;
+			var stroke = StrokeStep.CurrentStroke;
+			if (stroke.mode == FactoryStroke.Mode.Burn)
 			{
 				<div class="row">
-					<button class="sm" @onclick=@(() => StrokeStep.DarkenAmt++)>remove</button>
-					<span class="fixed-num">@(FormatLevelText(StrokeStep.DarkenAmt))</span>
-					<button class="sm" @onclick=@(() => StrokeStep.DarkenAmt--)>add</button>
+					@if (isMain)
+					{
+						<button class="sm" @onclick=@(() => stroke.DarkenAmt++)>remove</button>
+					}
+					<span class="fixed-num">@(FormatLevelText(stroke.DarkenAmt))</span>
+					@if (isMain)
+					{
+						<button class="sm" @onclick=@(() => stroke.DarkenAmt--)>add</button>
+					}
 				</div>
 
-				var from = StrokeStep.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, -StrokeStep.DarkenAmt, 0) :
+				var from = stroke.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, -stroke.DarkenAmt, 0) :
 				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
-				var to = StrokeStep.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) :
-				Pixel.CalculateColor(Pixel.ColorLookup.Red, StrokeStep.DarkenAmt, 0);
+				var to = stroke.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) :
+				Pixel.CalculateColor(Pixel.ColorLookup.Red, stroke.DarkenAmt, 0);
 				<div class="row">
 					<span class="ex-pxl" style="background-color: @(from.Hex)"></span>
 					<span class="ex-arrow">arrow_forward</span>
 					<span class="ex-pxl" style="background-color: @(to.Hex)"></span>
 				</div>
 			}
-			else if (StrokeStep.stroke == FactoryStepStroke.StrokeType.Sponge)
+			else if (stroke.mode == FactoryStroke.Mode.Sponge)
 			{
 				<div class="row">
-					<button class="sm" @onclick=@(() => StrokeStep.DesatAmt++)>remove</button>
-					<span class="fixed-num">@(FormatLevelText(StrokeStep.DesatAmt))</span>
-					<button class="sm" @onclick=@(() => StrokeStep.DesatAmt--)>add</button>
+					@if (isMain)
+					{
+						<button class="sm" @onclick=@(() => stroke.DesatAmt++)>remove</button>
+					}
+					<span class="fixed-num">@(FormatLevelText(stroke.DesatAmt))</span>
+					@if (isMain)
+					{
+						<button class="sm" @onclick=@(() => stroke.DesatAmt--)>add</button>
+					}
 				</div>
 
-				var from = StrokeStep.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, -StrokeStep.DesatAmt) :
+				var from = stroke.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, -stroke.DesatAmt) :
 				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
-				var to = StrokeStep.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) :
-				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, StrokeStep.DesatAmt);
+				var to = stroke.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) :
+				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, stroke.DesatAmt);
 				<div class="row">
 					<span class="ex-pxl" style="background-color: @(from.Hex)"></span>
 					<span class="ex-arrow">arrow_forward</span>
@@ -59,13 +79,20 @@
 			}
 			else
 			{
-				foreach (Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>())
+				@if (isMain)
 				{
-					var sel = StrokeStep.color == clr;
-					var color = Pixel.GetColor(clr);
-					<button @onclick=@(() => StrokeStep.color = clr) class="clr sm @(sel ? "pressed" : "")"
-						style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
-							class="lbl">@(color.Initial)</span></button>
+					foreach (Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>())
+					{
+						var sel = stroke.color == clr;
+						var color = Pixel.GetColor(clr);
+						<button @onclick=@(() => stroke.color = clr) class="clr sm @(sel ? "pressed" : "")"
+							style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
+								class="lbl">@(color.Initial)</span></button>
+					}
+				}
+				else
+				{
+					<span class="ex-pxl" style="background-color: @(Pixel.GetColor(stroke.color).color.Hex)"></span>
 				}
 			}
 		}
@@ -76,9 +103,12 @@
 {
 	public FactoryStepStroke StrokeStep { get; set; }
 	public bool ShowDodgeBurn { get; set; } = true;
+	public bool ShowConfigurator { get; set; } = true;
 
 	private string FormatLevelText(int level)
 	{
 		return (level < 0 ? "+" : "") + -level;
 	}
+
+	protected override int BuildHash() => System.HashCode.Combine(StrokeStep.CurrentStroke, StrokeStep.CurrentStroke.color, StrokeStep.CurrentStroke.DarkenAmt, StrokeStep.CurrentStroke.DesatAmt);
 }

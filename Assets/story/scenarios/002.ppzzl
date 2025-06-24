@@ -4,6 +4,7 @@
   "Paint": "3:3:4a4e4i6a6e6i2a2e2i",
   "Toolbox": "tools/boxes/002 - satval.ptbox",
   "UseSpongeBurn": true,
+  "UseConfigurator": false,
   "__references": [],
   "__version": 0
 }

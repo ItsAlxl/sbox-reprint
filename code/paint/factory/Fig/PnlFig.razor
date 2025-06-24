@@ -1,0 +1,20 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace Reprint
+@inherits FactoryPanel
+
+<root>
+	<FactoryStepPanel Fact=@(this)>
+		<Name>Edit Configurator</Name>
+		<Config>
+			<FactoryStrokeSelection @ShowConfigurator=@false @ShowDodgeBurn=@(workspace.currentScene.useDodgeBurn)
+				@StrokeStep=@Fact></FactoryStrokeSelection>
+		</Config>
+	</FactoryStepPanel>
+</root>
+
+@code
+{
+	private FactoryFig Fact { get => factory as FactoryFig; }
+	protected override FactoryStep CreateFactory() => new FactoryFig();
+}

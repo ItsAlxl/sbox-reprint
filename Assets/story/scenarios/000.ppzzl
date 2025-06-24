@@ -4,6 +4,7 @@
   "Paint": "4:4:0a0a0a0a0d0d0d0d0d0d0d0d0d0d0d0d",
   "Toolbox": "tools/boxes/000 - line.ptbox",
   "UseSpongeBurn": false,
+  "UseConfigurator": false,
   "__references": [],
   "__version": 0
 }

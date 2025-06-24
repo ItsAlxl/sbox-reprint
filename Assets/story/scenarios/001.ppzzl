@@ -4,6 +4,7 @@
   "Paint": "4:4:0a5a5a0a0a0d0d0a0a0d0d0a3a3a3a3a",
   "Toolbox": "tools/boxes/001 - moves.ptbox",
   "UseSpongeBurn": false,
+  "UseConfigurator": false,
   "__references": [],
   "__version": 0
 }

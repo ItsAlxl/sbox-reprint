@@ -3,6 +3,8 @@
   "Desc": "Okay, that's all the tools! Now it's just up to you to make sure we're printing things that will actually turn a profit.\nI figure this machine can make us a killing if we print things that people want. And who doesn't want validation? Let's make some gold stars for everybody.",
   "Paint": "5:5:5e5e2e5e5e5e2e2e2e5e2e2e2e2e2e5e2e2e2e5e5e2e5e2e5e",
   "Toolbox": null,
+  "UseSpongeBurn": true,
+  "UseConfigurator": true,
   "__references": [],
   "__version": 0
 }

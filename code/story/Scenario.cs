@@ -27,11 +27,18 @@ public sealed class Scenario
 	public string paint;
 	public string toolbox = "all";
 	public bool useDodgeBurn = true;
+	public bool useConfigurator = true;
 
 	public string LeaderboardKey { get => Score.GetLeaderboardKey( paint, toolbox ); }
 
 	private string ToolboxPath { get => toolbox is not null && toolbox.EndsWith( ".ptbox" ) ? toolbox : ("tools/boxes/" + (toolbox == "" || toolbox is null ? "all" : toolbox) + ".ptbox"); }
-	public IEnumerable<ToolData> Tools { get => _tools ??= ResourceLibrary.Get<ToolboxData>( ToolboxPath ).Tools.Select( ResourceLibrary.Get<ToolData> ); }
+	public IEnumerable<ToolData> Tools { get => _tools ??= ToolPaths.Select( ResourceLibrary.Get<ToolData> ); }
+	private IEnumerable<string> ToolPaths
+	{
+		get => useConfigurator ?
+			ResourceLibrary.Get<ToolboxData>( ToolboxPath ).Tools.Append( "tools/fig.ptool" ) :
+			ResourceLibrary.Get<ToolboxData>( ToolboxPath ).Tools;
+	}
 	private IEnumerable<ToolData> _tools = null;
 
 	public Scenario( string t = "MISSING_TITLE", string d = "MISSING_DESCRIPTION", string p = "" )
@@ -47,6 +54,7 @@ public sealed class Scenario
 		desc = data.Desc;
 		paint = data.Paint;
 		useDodgeBurn = data.UseSpongeBurn;
+		useConfigurator = data.UseConfigurator;
 		if ( toolbox != data.Toolbox )
 		{
 			_tools = null;
