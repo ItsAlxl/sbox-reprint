@@ -7,7 +7,7 @@ public sealed class FactoryIter : FactoryStep
 	public bool resetOnContinue = true;
 	public int _maxCount = 1;
 	private int _currentCount = 1;
-	public int Counter { get => _currentCount; }
+	public int Counter { get => _currentCount >= 0 ? _currentCount : 0; }
 	public int MaxCount
 	{
 		get => _maxCount;
@@ -28,7 +28,7 @@ public sealed class FactoryIter : FactoryStep
 
 	override public (int next, int timeCost, int inkCost) ApplyTo( Painting p )
 	{
-		var next = Counter > 0 ? AnchorIdx + 1 : -1;
+		var next = _currentCount > 0 ? AnchorIdx + 1 : -1;
 		_currentCount--;
 		if ( next == -1 && resetOnContinue )
 			ResetInternal();

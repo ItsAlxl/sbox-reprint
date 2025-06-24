@@ -6,18 +6,18 @@
 
 <root>
 	<FactoryStepPanel Fact=@(this)>
-		<Name>Goto</Name>
+		<Name><span>Goto</span><span class="link" @onclick=@SnapToAnchor>@(Fact.AnchorLabel)</span></Name>
 		<Config>
 			<div class="row">
 				<button class="sm" @onclick=@DecrC>remove</button>
 				<span class="">@(Fact.MaxCount)</span>
 				<button class="sm" @onclick=@IncrC>add</button>
 			</div>
+			<button class="xs txt @(Fact.resetOnContinue ? "pressed" : "")" @onclick=@ToggleROC>@(Fact.resetOnContinue ?
+				"Reset on Continue" : "Don't Reset on Continue")</button>
 			<div class="row">
 				<span class="fixed-num">@(Fact.Counter)</span>
-				<button class="sm" @onclick=@ResetCount>replay</button>
 			</div>
-			<span class="link" @onclick=@SnapToAnchor>@(Fact.AnchorLabel)</span>
 		</Config>
 	</FactoryStepPanel>
 </root>

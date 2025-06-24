@@ -13,6 +13,11 @@ FactoryStepPanel {
 	pointer-events: all;
 	font-size: 20px;
 
+	.title {
+		flex-direction: row;
+		gap: 8px;
+	}
+
 	.menu {
 		flex-direction: row;
 		width: 100%;
@@ -82,11 +87,14 @@ FactoryStepPanel {
 
 		button.txt {
 			font-family: Poppins;
-			font-weight: bold;
 		}
 
 		button.sm {
 			font-size: 20px;
+		}
+
+		button.xs {
+			font-size: 14px;
 		}
 
 		button.pressed {
@@ -108,10 +116,10 @@ FactoryStepPanel {
 				color: #fff;
 			}
 		}
+	}
 
-		.link {
-			text-underline-offset: 4px;
-			text-decoration: underline solid #fff 4px;
-		}
+	.link {
+		text-underline-offset: 4px;
+		text-decoration: underline solid #fff 4px;
 	}
 }

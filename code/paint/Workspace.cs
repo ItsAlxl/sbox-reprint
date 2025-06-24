@@ -276,12 +276,13 @@ public sealed class Workspace : Component
 			else
 			{
 				var step = ApplyStepToScratch( stepIdx );
-				if ( sequence[stepIdx] == go )
+				var isFinal = sequence[stepIdx] == go;
+				stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
+				if ( isFinal )
 				{
 					stepIdx++;
 					break;
 				}
-				stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
 			}
 		}
 
