@@ -45,8 +45,7 @@
 							{
 								<div class="col">
 									<div class="head">@(data.name)</div>
-									<div><span class="name">World Best</span><span class="score">@(data.WorldBest)</span></div>
-									<div><span class="name">World Avg</span><span class="score">@(data.WorldAvg)</span></div>
+									<div><span class="name">You</span><span class="score">@(data.me.Min)</span></div>
 									<div class="divider-h"></div>
 									@foreach (var entry in data.friends.Entries)
 									{
@@ -55,6 +54,9 @@
 											<span class="score">@(GetCurrentScore(data, entry))</span>
 										</div>
 									}
+									<div class="divider-h"></div>
+									<div><span class="name">World Best</span><span class="score">@(data.WorldBest)</span></div>
+									<div><span class="name">World Avg</span><span class="score">@(data.WorldAvg)</span></div>
 								</div>
 							}
 						</div>
@@ -86,6 +88,14 @@
 											<span class="score">@(GetSolutionScore(data))</span>
 										</div>
 										<div class="divider-h"></div>
+										@foreach (var entry in data.friends.Entries)
+										{
+											<div>
+												<span class="name">@(entry.DisplayName)</span>
+												<span class="score">@(GetCurrentScore(data, entry))</span>
+											</div>
+										}
+										<div class="divider-h"></div>
 										<div>
 											<span class="name">World Best</span>
 											<span class="score">@(data.WorldBest)</span>
@@ -94,14 +104,6 @@
 											<span class="name">World Avg</span>
 											<span class="score">@(data.WorldAvg)</span>
 										</div>
-										<div class="divider-h"></div>
-										@foreach (var entry in data.friends.Entries)
-										{
-											<div>
-												<span class="name">@(entry.DisplayName)</span>
-												<span class="score">@(GetCurrentScore(data, entry))</span>
-											</div>
-										}
 									</div>
 								}
 							</div>
