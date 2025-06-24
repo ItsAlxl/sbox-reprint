@@ -1,7 +1,7 @@
 {
   "Title": "this game was made in june",
   "Desc": "You know what, let's forget about money for just a moment. It's Pride! Let's celebrate!\nWe got a new tool now, the Configurator. You can set it to either paint, burn, or sponge, and then you can set other tools to use the current Configurator. Combined with Gotos, this should let you re-use certain tools and shorten your sequence even further!",
-  "Paint": "8:6:0a0a0a0a0a0a0a0a1a1a1a1a1a1a1a1a2a2a2a2a2a2a2a2a3e3e3e3e3e3e3e3e5a5a5a5a5a5a5a5a6f6f6f6f6f6f6f6f",
+  "Paint": "8:6:0a0a0a0a0a0a0a0a1a1a1a1a1a1a1a1a2a2a2a2a2a2a2a2a3e3e3e3e3e3e3e3e5e5e5e5e5e5e5e5e6f6f6f6f6f6f6f6f",
   "Toolbox": "tools/boxes/003 - checker.ptbox",
   "UseSpongeBurn": true,
   "__references": [],

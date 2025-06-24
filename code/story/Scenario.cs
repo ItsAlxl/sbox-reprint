@@ -4,6 +4,7 @@ namespace Reprint;
 
 public sealed class Scenario
 {
+	const string GZIP_BASE64_PREFIX = "H4sI";
 	const char SERIAL_DELIMITER = '&';
 
 	public static IEnumerable<ScenarioData> Order { get => _order ??= ResourceLibrary.Get<StoryData>( "story/main.pzstory" ).Scenarios.Select( ResourceLibrary.Get<ScenarioData> ); }
@@ -77,9 +78,19 @@ public sealed class Scenario
 
 	public void Import( string imp )
 	{
-		var comps = (imp.Contains( SERIAL_DELIMITER ) ? imp : StringCompressor.Decompress( imp )).Split( SERIAL_DELIMITER );
-		title = WebUtility.UrlDecode( comps[0] );
-		desc = WebUtility.UrlDecode( comps[1] );
-		paint = WebUtility.UrlDecode( comps[2] );
+		var isRaw = imp.Contains( SERIAL_DELIMITER );
+		if ( isRaw || imp.StartsWith( GZIP_BASE64_PREFIX ) )
+		{
+			var comps = (isRaw ? imp : StringCompressor.Decompress( imp )).Split( SERIAL_DELIMITER );
+			title = WebUtility.UrlDecode( comps[0] );
+			desc = WebUtility.UrlDecode( comps[1] );
+			paint = WebUtility.UrlDecode( comps[2] );
+		}
+		else
+		{
+			title = "NO NAME";
+			desc = "NO DESC";
+			paint = WebUtility.UrlDecode( imp );
+		}
 	}
 }
