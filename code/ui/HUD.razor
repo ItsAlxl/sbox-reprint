@@ -181,9 +181,8 @@
 						<TextEntry Value:bind=@DesignerTitle />
 						<TextEntry class="taller" Multiline=@true Value:bind=@DesignerDesc />
 						<div class="controls">
-							<TextEntry numeric=@true Value:bind=@DesignerW @onchange=@UpdateDesignerSize />
-							<span style="font-size: 32px; padding: 0px 24px 0px 8px">x</span>
-							<TextEntry numeric=@true Value:bind=@DesignerH @onchange=@UpdateDesignerSize />
+							<span style="font-size: 32px; padding: 5px 24px 0px 8px; width:40%;">size</span>
+							<TextEntry numeric=@true Value:bind=@DesignerSize @onchange=@UpdateDesignerSize />
 						</div>
 						<div class="controls">
 							<button class="roundy" @onclick=@DesignerImport>Import</button>
@@ -256,14 +255,12 @@
 	private string DesignerIO { get; set; } = "import/export code";
 	private Scenario designScene = new();
 
-	private int DesignerW { get; set; } = 4;
-	private int DesignerH { get; set; } = 4;
+	private int DesignerSize { get; set; } = 4;
 
 	private void UpdateDesignerSize()
 	{
-		DesignerW = DesignerW.Clamp(3, 16);
-		DesignerH = DesignerH.Clamp(3, 16);
-		designer.Resize(DesignerW, DesignerH);
+		DesignerSize = DesignerSize.Clamp(3, 16);
+		designer.Resize(DesignerSize, DesignerSize);
 	}
 
 	protected override void OnStart()
