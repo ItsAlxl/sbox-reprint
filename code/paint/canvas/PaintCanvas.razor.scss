@@ -1,7 +1,6 @@
 PaintCanvas {
 	position: absolute;
 	flex-direction: column;
-	gap: 1px;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -13,34 +12,16 @@ PaintCanvas {
 	font-weight: bold;
 	pointer-events: all;
 
-	.row {
-		flex-direction: row;
-		gap: 1px;
-	}
-
-	.row div {
+	div {
+		position: absolute;
 		justify-content: center;
 		align-items: center;
-		padding-bottom: 1%;
+		border: 1px solid #000;
 	}
 }
 
 PaintCanvas.big {
-	gap: 1px;
-
-	.row {
-		gap: 1px;
-
-		div {
-			border: 4px solid;
-		}
-	}
-}
-
-PaintCanvas.medium {
-	gap: 2px;
-
-	.row {
-		gap: 2px;
+	div {
+		border: 3px solid;
 	}
 }

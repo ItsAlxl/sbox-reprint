@@ -1,6 +1,6 @@
 @namespace Reprint
 
-<root>
+<root style="width: @(size)px; height: @(size)px">
 	@{
 		Painting showPaint = paint ?? new(paintSource());
 		if (showPaint is null)
@@ -10,23 +10,23 @@
 		else
 		{
 			int limit = showPaint.width > showPaint.height ? showPaint.width : showPaint.height;
-			float side = (0.5f * size - limit) / limit;
+			float side = size / limit;
 			string sidePx = (int)side + "px";
-			string fontPx = (int)side + "px";
+			int padX = showPaint.width > showPaint.height ? 0 : (int)( (size - side * showPaint.width) / 2 );
+			int padY = showPaint.height > showPaint.width ? 0 : (int)( (size - side * showPaint.height) / 2 );
 			for (var y = 0; y < showPaint.height; y++)
 			{
-				var unique_y = y;
-				<div class="row">
-					@for (var x = 0; x < showPaint.width; x++)
-					{
-						var unique_x = x;
-						var pxl = showPaint.PixelAt(unique_x, unique_y);
-						<div @onmouseover=@(() => EmitHover(pxl, unique_x, unique_y)) @onmousedown=@((ev) => EmitClick(ev, pxl, unique_x, unique_y))
-							style="background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; border-color: @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @fontPx">
-							@((cursor && unique_x == showPaint.cursorX && unique_y == showPaint.cursorY) ? "⯏" : "")
-						</div>
-					}
-				</div>
+				var unqY = y;
+				@for (var x = 0; x < showPaint.width; x++)
+				{
+					var unqX = x;
+					var pxl = showPaint.PixelAt(unqX, unqY);
+					<div @onmouseover=@(() => EmitHover(pxl, unqX, unqY)) @onmousedown=@((ev) => EmitClick(ev, pxl, unqX,
+		unqY))
+						style="left: @(padX + side * x)px; top: @(padY + side * y)px; background-color: @pxl.FinalColor.Hex; color: @pxl.ContrastGray.Hex; width: @sidePx; height: @sidePx; font-size: @sidePx">
+						@((cursor && unqX == showPaint.cursorX && unqY == showPaint.cursorY) ? "⯏" : "")
+					</div>
+				}
 			}
 		}
 	}
@@ -36,7 +36,7 @@
 {
 	public ICanvasListener listener = null;
 
-	[Property] public float size = 256.0f;
+	[Property] public float size = 128.0f;
 	public System.Func<string> paintSource = null;
 	public Painting paint = null;
 	public bool cursor = true;
