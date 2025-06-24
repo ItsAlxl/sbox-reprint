@@ -59,9 +59,16 @@ public sealed class CameraController : Component
 
 	public bool PutInView( Vector3 left, Vector3 right, float padding = 38.0f )
 	{
-		if ( !PutInView( left, padding ) )
-			return PutInView( right, padding );
+		var leftFirst = WorldPosition.y > left.y;
+		if ( !PutInView( leftFirst ? left : right, padding ) )
+			return PutInView( leftFirst ? right : left, padding );
 		return true;
+	}
+
+	public bool PutInView( GameObject go, float padding = 38.0f )
+	{
+		var width = (go.Components.Get<WorldPanel>()?.PanelSize.x ?? 0) * Workspace.CHILD_SPACING;
+		return PutInView( go.WorldPosition - new Vector3( 0, width, 0 ), go.WorldPosition + new Vector3( 0, width, 0 ), padding );
 	}
 
 	public bool IsInCameraBounds( Vector3 pos )

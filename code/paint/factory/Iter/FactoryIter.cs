@@ -15,7 +15,7 @@ public sealed class FactoryIter : FactoryStep
 		{
 			var updCurrent = _currentCount == _maxCount;
 			_maxCount = value.Clamp( 1, 16 );
-			if (updCurrent)
+			if ( updCurrent )
 				_currentCount = _maxCount;
 		}
 	}
@@ -24,6 +24,7 @@ public sealed class FactoryIter : FactoryStep
 	private FactoryAnchor Anchor { get => anchorPanel?.factory as FactoryAnchor; }
 	public int AnchorIdx { get => Anchor?.idx ?? -1; }
 	public string AnchorLabel { get => Anchor?.Label ?? "__"; }
+	public GameObject AnchorGo { get => anchorPanel?.GameObject; }
 
 	override public (int next, int timeCost, int inkCost) ApplyTo( Painting p )
 	{
@@ -43,6 +44,8 @@ public sealed class FactoryIter : FactoryStep
 	public override void Placed( int atIdx )
 	{
 		anchorPanel ??= Workspace.CreateAnchor( atIdx );
+		if ( anchorPanel is not null )
+			Anchor.source = this;
 	}
 
 	public override void Removed()

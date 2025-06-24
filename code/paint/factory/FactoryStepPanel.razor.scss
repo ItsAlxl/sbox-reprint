@@ -108,5 +108,10 @@ FactoryStepPanel {
 				color: #fff;
 			}
 		}
+
+		.link {
+			text-underline-offset: 4px;
+			text-decoration: underline solid #fff 4px;
+		}
 	}
 }

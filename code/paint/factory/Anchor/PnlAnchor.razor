@@ -8,7 +8,7 @@
 	<FactoryStepPanel Fact=@(this) CanDelete=@false CanBreakpoint=@false>
 		<Name style="font-family: Material Icons">anchor</Name>
 		<Config>
-			<span>@(Fact.Label)</span>
+			<span class="link" @onclick=@SnapToSource>@(Fact.Label)</span>
 		</Config>
 	</FactoryStepPanel>
 </root>
@@ -16,6 +16,11 @@
 @code
 {
 	private FactoryAnchor Fact { get => factory as FactoryAnchor; }
+
+	private void SnapToSource()
+	{
+		workspace.PutInView(Fact.SourceGo);
+	}
 
 	protected override FactoryStep CreateFactory() => new FactoryAnchor();
 	protected override int BuildHash() => HashCode.Combine(Fact.Label);

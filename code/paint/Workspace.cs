@@ -6,7 +6,7 @@ namespace Reprint;
 
 public sealed class Workspace : Component
 {
-	const float CHILD_SPACING = 30.0f / 512.0f;
+	public const float CHILD_SPACING = 30.0f / 512.0f;
 	const float SCRATCH_SPACING = CHILD_SPACING * 128.0f;
 	const float QUICK_ADD_TIME = 0.1f;
 
@@ -199,10 +199,15 @@ public sealed class Workspace : Component
 		return start;
 	}
 
+	public void PutInView( GameObject go )
+	{
+		if ( go is not null )
+			camCont.PutInView( go );
+	}
+
 	private void PutScratchInView()
 	{
-		camCont.PutInView( ScratchLeft );
-		camCont.PutInView( ScratchRight );
+		camCont.PutInView( scratchGo );
 	}
 
 	public void AdvanceScratch()
@@ -299,6 +304,7 @@ public sealed class Workspace : Component
 			stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
 		}
 		MoveInSequence( scratchIdx, stepIdx - 1 );
+		PutScratchInView();
 		AdjustSequenceLayout();
 	}
 

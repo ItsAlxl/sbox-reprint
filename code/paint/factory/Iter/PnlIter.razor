@@ -17,7 +17,7 @@
 				<span class="fixed-num">@(Fact.Counter)</span>
 				<button class="sm" @onclick=@ResetCount>replay</button>
 			</div>
-			<span>@(Fact.AnchorLabel)</span>
+			<span class="link" @onclick=@SnapToAnchor>@(Fact.AnchorLabel)</span>
 		</Config>
 	</FactoryStepPanel>
 </root>
@@ -44,6 +44,11 @@
 	private void ResetCount()
 	{
 		Fact.ResetInternal();
+	}
+
+	private void SnapToAnchor()
+	{
+		workspace.PutInView(Fact.AnchorGo);
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryIter();
