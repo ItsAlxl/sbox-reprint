@@ -125,7 +125,7 @@
         },
         {
           "__type": "Reprint.HUD",
-          "__guid": "72440cbd-7995-47cb-8524-7b0586308f66",
+          "__guid": "08ea543d-922f-474e-bfe4-10a92241bd24",
           "__enabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,

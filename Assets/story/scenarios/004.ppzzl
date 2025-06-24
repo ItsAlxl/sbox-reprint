@@ -1,8 +1,9 @@
 {
-  "Title": "Gold Star",
-  "Desc": "Okay, that's all the tools! Now it's just up to you to make sure we're printing things that will actually turn a profit.\nI figure this machine can make us a killing if we print things that people want. And who doesn't want validation? Let's make some gold stars for everybody.",
-  "Paint": "5:5:5e5e2e5e5e5e2e2e2e5e2e2e2e2e2e5e2e2e2e5e5e2e5e2e5e",
-  "Toolbox": null,
+  "Title": "this game was made in june",
+  "Desc": "You know what, let's forget about money for just a moment. It's Pride! Let's celebrate!\nWe got a new tool now, the Configurator. You can set it to either paint, burn, or sponge, and then you can set other tools to use the current Configurator. Combined with Gotos, this should let you re-use certain tools and shorten your sequence even further!",
+  "Paint": "8:6:0a0a0a0a0a0a0a0a1a1a1a1a1a1a1a1a2a2a2a2a2a2a2a2a3e3e3e3e3e3e3e3e5a5a5a5a5a5a5a5a6f6f6f6f6f6f6f6f",
+  "Toolbox": "tools/boxes/003 - checker.ptbox",
+  "UseSpongeBurn": true,
   "__references": [],
   "__version": 0
 }

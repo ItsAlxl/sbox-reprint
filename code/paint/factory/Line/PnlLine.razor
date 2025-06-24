@@ -8,7 +8,7 @@
 	<FactoryStepPanel Fact=@(this)>
 		<Name>Horizontal Line</Name>
 		<Config>
-			<FactoryStrokeSelection @StrokeStep=@Fact></FactoryStrokeSelection>
+			<FactoryStrokeSelection @ShowDodgeBurn=@(workspace.currentScene.useDodgeBurn) @StrokeStep=@Fact></FactoryStrokeSelection>
 		</Config>
 	</FactoryStepPanel>
 </root>

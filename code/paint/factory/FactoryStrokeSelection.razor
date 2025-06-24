@@ -1,21 +1,24 @@
 @namespace Reprint
 
 <root>
-	<div class="row">
-		<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Paint)
-			class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Paint ? "pressed " : "")">
-			<svg src="icons/brush.svg"></svg>
-		</button>
-		<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Burn)
-			class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Burn ? "pressed " : "")">
-			<svg src="icons/burn.svg"></svg>
-		</button>
-		<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Sponge)
-			class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Sponge ? "pressed " : "")">
-			<svg src="icons/sponge.svg"></svg>
-		</button>
-	</div>
-	<div style="margin-top: 8px"></div>
+	@if (ShowDodgeBurn)
+	{
+		<div class="row">
+			<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Paint)
+				class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Paint ? "pressed " : "")">
+				<svg src="icons/brush.svg"></svg>
+			</button>
+			<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Burn)
+				class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Burn ? "pressed " : "")">
+				<svg src="icons/burn.svg"></svg>
+			</button>
+			<button @onclick=@(() => StrokeStep.stroke = FactoryStepStroke.StrokeType.Sponge)
+				class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Sponge ? "pressed " : "")">
+				<svg src="icons/sponge.svg"></svg>
+			</button>
+		</div>
+		<div style="margin-top: 8px"></div>
+	}
 	<div class="@(StrokeStep.stroke == FactoryStepStroke.StrokeType.Paint ? "group" : "col")">
 		@{
 			if (StrokeStep.stroke == FactoryStepStroke.StrokeType.Burn)
@@ -26,8 +29,10 @@
 					<button class="sm" @onclick=@(() => StrokeStep.DarkenAmt--)>add</button>
 				</div>
 
-				var from = StrokeStep.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, -StrokeStep.DarkenAmt, 0) : Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
-				var to = StrokeStep.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) : Pixel.CalculateColor(Pixel.ColorLookup.Red, StrokeStep.DarkenAmt, 0);
+				var from = StrokeStep.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, -StrokeStep.DarkenAmt, 0) :
+				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
+				var to = StrokeStep.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) :
+				Pixel.CalculateColor(Pixel.ColorLookup.Red, StrokeStep.DarkenAmt, 0);
 				<div class="row">
 					<span class="ex-pxl" style="background-color: @(from.Hex)"></span>
 					<span class="ex-arrow">arrow_forward</span>
@@ -42,8 +47,10 @@
 					<button class="sm" @onclick=@(() => StrokeStep.DesatAmt--)>add</button>
 				</div>
 
-				var from = StrokeStep.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, -StrokeStep.DesatAmt) : Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
-				var to = StrokeStep.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) : Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, StrokeStep.DesatAmt);
+				var from = StrokeStep.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, -StrokeStep.DesatAmt) :
+				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
+				var to = StrokeStep.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) :
+				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, StrokeStep.DesatAmt);
 				<div class="row">
 					<span class="ex-pxl" style="background-color: @(from.Hex)"></span>
 					<span class="ex-arrow">arrow_forward</span>
@@ -68,6 +75,7 @@
 @code
 {
 	public FactoryStepStroke StrokeStep { get; set; }
+	public bool ShowDodgeBurn { get; set; } = true;
 
 	private string FormatLevelText(int level)
 	{

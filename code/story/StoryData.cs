@@ -16,4 +16,5 @@ public partial class ScenarioData : GameResource
 	public string Paint { get; set; }
 	[ResourceType( "ptbox" )]
 	public string Toolbox { get; set; }
+	public bool UseSpongeBurn { get; set; } = true;
 }

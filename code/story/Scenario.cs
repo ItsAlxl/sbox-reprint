@@ -25,6 +25,7 @@ public sealed class Scenario
 	public string desc;
 	public string paint;
 	public string toolbox = "all";
+	public bool useDodgeBurn = true;
 
 	public string LeaderboardKey { get => Score.GetLeaderboardKey( paint, toolbox ); }
 
@@ -44,6 +45,7 @@ public sealed class Scenario
 		title = data.Title;
 		desc = data.Desc;
 		paint = data.Paint;
+		useDodgeBurn = data.UseSpongeBurn;
 		if ( toolbox != data.Toolbox )
 		{
 			_tools = null;

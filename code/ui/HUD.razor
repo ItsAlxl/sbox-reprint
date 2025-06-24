@@ -38,7 +38,7 @@
 					</div>
 					<div class="brief wide">
 						<div class="title">@(hoveredScene.Title)</div>
-						<PaintCanvas class="medium" @cursor=@false @paintSource=@(() => hoveredScene.Paint) @size=@(600.0f)>
+						<PaintCanvas @cursor=@false @paintSource=@(() => hoveredScene.Paint) @size=@(300.0f)>
 						</PaintCanvas>
 						<div class="leader">
 							@foreach (var data in Score.DataFor(hoveredScene))
@@ -106,7 +106,7 @@
 								}
 							</div>
 							<div class="finishmenu">
-								<PaintCanvas class="large" @cursor=@false @paint=@(workspace.targetPaint) @size=@(768.0f)>
+								<PaintCanvas class="large" @cursor=@false @paint=@(workspace.targetPaint) @size=@(400.0f)>
 								</PaintCanvas>
 								<div class="divider-h"></div>
 								<div class="menu-list">
@@ -133,8 +133,8 @@
 								}
 							</div>
 							<div class="goal">
-								<PaintCanvas class="medium" @listener=@goalInsp @cursor=@false @paint=@(workspace.targetPaint)
-									@size=@(512.0f)></PaintCanvas>
+								<PaintCanvas @listener=@goalInsp @cursor=@false @paint=@(workspace.targetPaint)
+									@size=@(256.0f)></PaintCanvas>
 								<div class="readout">@(goalInsp.CreateHoverReadoutVerbose(workspace.targetPaint))</div>
 							</div>
 						</div>
@@ -188,7 +188,7 @@
 					</div>
 					<div class="design-work">
 						<PaintCanvas @listener=@designer class="big" @cursor=@false @paintSource=@(designer.PaintSource)
-							@size=@(1024.0f)>
+							@size=@(512.0f)>
 						</PaintCanvas>
 					</div>
 				</div>
@@ -212,8 +212,8 @@
 						{
 							var sel = designer.brushDesat == i;
 							var color = Pixel.CalculateColor(designer.brushColor, 0, i);
-							var unique_i = i;
-							<button @onclick=@(() => designer.brushDesat = unique_i) class="clr @(sel ? "pressed" : "")"
+							var unqI = i;
+							<button @onclick=@(() => designer.brushDesat = unqI) class="clr @(sel ? "pressed" : "")"
 								style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
 									class="lbl">@((int)Pixel.MAX_LEVEL - i)</span></button>
 						}
@@ -223,8 +223,8 @@
 						{
 							var sel = designer.brushDarken == i;
 							var color = Pixel.CalculateColor(designer.brushColor, i, 0);
-							var unique_i = i;
-							<button @onclick=@(() => designer.brushDarken = unique_i) class="clr @(sel ? "pressed" : "")"
+							var unqI = i;
+							<button @onclick=@(() => designer.brushDarken = unqI) class="clr @(sel ? "pressed" : "")"
 								style="color: @color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
 									class="lbl">@((int)Pixel.MAX_LEVEL - i)</span></button>
 						}

@@ -7,7 +7,7 @@
 	<FactoryStepPanel Fact=@(this)>
 		<Name>Plus Shape</Name>
 		<Config>
-			<FactoryStrokeSelection @StrokeStep=@Fact></FactoryStrokeSelection>
+			<FactoryStrokeSelection @ShowDodgeBurn=@(workspace.currentScene.useDodgeBurn) @StrokeStep=@Fact></FactoryStrokeSelection>
 		</Config>
 	</FactoryStepPanel>
 </root>
