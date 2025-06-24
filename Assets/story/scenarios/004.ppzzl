@@ -1,6 +1,6 @@
 {
   "Title": "this game was made in june",
-  "Desc": "You know what, let's forget about money for just a moment. It's Pride! Let's celebrate!\nWe got a new tool now, the Configurator. You can set it to either paint, burn, or sponge, and then you can set other tools to use the current Configurator. Combined with Gotos, this should let you re-use certain tools and shorten your sequence even further!\nIt can be pretty easy to get lost in the sequence now, so you can now set any of your tools to act as breakpoints by clicking the circle in the top-right of their panel. Click the \"Next Breakpoint\" button, and your scratch paper will rapidly advance through your sequence, automatically stopping just before one that you've set as a breakpoint.",
+  "Desc": "You know what, let's forget about money for just a moment. It's Pride! Let's celebrate!\nWe got a new tool now, the Configurator. You can set it to paint, burn, or sponge, then have other tools use it. Combined with Gotos, this should let you re-use certain tools and shorten your sequence even further!\nIt can be pretty easy to get lost in the sequence now, so I recommend using breakpoints by clicking the circle in the top-right of a tool and using the \"Next BP\" button. You can also use the arrow cycle symbol on a tool to reset your scratch paper and advance it to that tool all in one click.",
   "Paint": "6:6:0a0a0a0a0a0a1a1a1a1a1a1a2a2a2a2a2a2a3f3f3f3f3f3f5e5e5e5e5e5e6i6i6i6i6i6i",
   "Toolbox": null,
   "UseSpongeBurn": true,

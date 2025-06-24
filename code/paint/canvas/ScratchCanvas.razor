@@ -5,7 +5,7 @@
 
 <root>
 	<div class="top menu">
-		<button @onclick=@(workspace.ResetScratch) class="icon">replay</button>
+		<button @onclick=@(() => workspace.ResetScratch()) class="icon">replay</button>
 		<span @onmousedown=@DragMe class="dragbar">ⵓ ⵓ ⵓ ⵓ</span>
 		<button @onclick=@(workspace.AdvanceScratch) class="icon">play_arrow</button>
 	</div>

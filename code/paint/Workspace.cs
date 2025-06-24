@@ -222,27 +222,80 @@ public sealed class Workspace : Component
 		}
 	}
 
+	public void AdvanceToBreakpoint()
+	{
+		var scratchIdx = ScratchIdx;
+		var stepIdx = scratchIdx + 1;
+		while ( stepIdx < sequence.Count )
+		{
+			var factory = GetFactoryStep( stepIdx );
+			if ( stepIdx > scratchIdx + 1 && factory.panel.breakpoint )
+				break;
+
+			var step = ApplyStepToScratch( stepIdx );
+			stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
+		}
+		MoveInSequence( scratchIdx, stepIdx - 1 );
+		AdjustSequenceLayout();
+		PutScratchInView();
+	}
+
+	public void ResetScratch( bool moveAndSnap = true )
+	{
+		if ( scratchGo is not null )
+		{
+			var scratchIdx = ScratchIdx;
+			for ( var i = 0; i < sequence.Count; i++ )
+				if ( i != scratchIdx )
+					GetFactoryStep( i ).ResetInternal();
+			figStroke.Reset();
+			scratchPaint.Reset();
+
+			if ( moveAndSnap )
+			{
+				MoveInSequence( ScratchIdx, 0 );
+				AdjustSequenceLayout();
+				PutScratchInView();
+			}
+		}
+	}
+
+	public void ResetAndAdvanceTo( FactoryPanel pnl )
+	{
+		ResetScratch( false );
+
+		var scratchIdx = ScratchIdx;
+		var stepIdx = 0;
+		var go = pnl.GameObject;
+		while ( stepIdx < sequence.Count )
+		{
+			if ( stepIdx == scratchIdx )
+			{
+				stepIdx++;
+			}
+			else
+			{
+				var step = ApplyStepToScratch( stepIdx );
+				if ( sequence[stepIdx] == go )
+				{
+					stepIdx++;
+					break;
+				}
+				stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
+			}
+		}
+
+		MoveInSequence( scratchIdx, scratchIdx > stepIdx ? stepIdx : (stepIdx - 1) );
+		AdjustSequenceLayout();
+		PutScratchInView();
+	}
+
 	public FactoryPanel CreateAnchor( int idx )
 	{
 		var anchorGo = GameObject.GetPrefab( "prefabs/Anchor.prefab" ).Clone();
 		sequence.Insert( idx, anchorGo );
 		AdjustSequenceLayout();
 		return anchorGo.Components.Get<FactoryPanel>();
-	}
-
-	public void ResetScratch()
-	{
-		if ( scratchGo is not null )
-		{
-			scratchPaint.Reset();
-			MoveInSequence( ScratchIdx, 0 );
-			for ( var i = 0; i < sequence.Count; i++ )
-				if ( i != ScratchIdx )
-					GetFactoryStep( i ).ResetInternal();
-			figStroke.Reset();
-			AdjustSequenceLayout();
-			PutScratchInView();
-		}
 	}
 
 	protected override void OnUpdate()
@@ -288,24 +341,6 @@ public sealed class Workspace : Component
 	public string GetLeaderboardKey( string varname = "" )
 	{
 		return LeaderboardKey + (varname == "" ? "" : ("_" + varname));
-	}
-
-	public void AdvanceToBreakpoint()
-	{
-		var scratchIdx = ScratchIdx;
-		var stepIdx = scratchIdx + 1;
-		while ( stepIdx < sequence.Count )
-		{
-			var factory = GetFactoryStep( stepIdx );
-			if ( stepIdx > scratchIdx + 1 && factory.panel.breakpoint )
-				break;
-
-			var step = ApplyStepToScratch( stepIdx );
-			stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
-		}
-		MoveInSequence( scratchIdx, stepIdx - 1 );
-		PutScratchInView();
-		AdjustSequenceLayout();
 	}
 
 	public void SubmitSequence()

@@ -9,7 +9,9 @@
 		<span @onmousedown=@DragMe class="dragbar">ⵓ ⵓ ⵓ ⵓ</span>
 		@if (CanBreakpoint && UseBreakpoint)
 		{
-			<button @onclick=@ToggleBreakpoint>@(Fact.breakpoint ? "pause_circle_outline" : "radio_button_unchecked")</button>
+			<button @onclick=@SkipToMe>screen_rotation_alt</button>
+			<button @onclick=@ToggleBreakpoint>@(Fact.breakpoint ? "pause_circle_outline" :
+			"radio_button_unchecked")</button>
 		}
 	</div>
 	<div class="title">@Name</div>
@@ -40,5 +42,10 @@
 	private void ToggleBreakpoint()
 	{
 		Fact.breakpoint = !Fact.breakpoint;
+	}
+
+	private void SkipToMe()
+	{
+		Workspace.ResetAndAdvanceTo(Fact);
 	}
 }
