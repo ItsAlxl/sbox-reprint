@@ -85,7 +85,12 @@ public sealed class Pixel
 	{
 		if ( IsNeutral || p.IsNeutral )
 		{
-			return (p.IsNeutral == IsNeutral && p.DarkenLevel == DarkenLevel) ? 1.0f : 0.5f;
+			var nscore = 0.0f;
+			if ( p.IsNeutral == IsNeutral )
+				nscore += 0.75f;
+			if ( p.DarkenLevel == DarkenLevel )
+				nscore += 0.25f;
+			return nscore;
 		}
 
 		var score = 0.0f;
