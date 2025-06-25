@@ -29,7 +29,7 @@
 		@{
 			var isMain = !StrokeStep.useFig;
 			var stroke = StrokeStep.CurrentStroke;
-			if (stroke.mode == FactoryStroke.Mode.Burn)
+			if (stroke.StrokeMode == FactoryStroke.Mode.Burn)
 			{
 				<div class="row">
 					@if (isMain)
@@ -49,7 +49,7 @@
 					<span class="ex-pxl" style="background-color: #f00"></span>
 				</div>
 			}
-			else if (stroke.mode == FactoryStroke.Mode.Sponge)
+			else if (stroke.StrokeMode == FactoryStroke.Mode.Sponge)
 			{
 				<div class="row">
 					@if (isMain)
@@ -75,16 +75,16 @@
 				{
 					foreach (Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>())
 					{
-						var sel = stroke.color == clr;
+						var sel = stroke.Color == clr;
 						var color = Pixel.GetColor(clr);
-						<button @onclick=@(() => stroke.color = clr) class="clr sm @(sel ? "pressed" : "")"
+						<button @onclick=@(() => stroke.Color = clr) class="clr sm @(sel ? "pressed" : "")"
 							style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
 								class="lbl">@(color.Initial)</span></button>
 					}
 				}
 				else
 				{
-					<span class="ex-pxl" style="background-color: @(Pixel.GetColor(stroke.color).color.Hex)"></span>
+					<span class="ex-pxl" style="background-color: @(Pixel.GetColor(stroke.Color).color.Hex)"></span>
 				}
 			}
 		}
@@ -102,6 +102,6 @@
 		return (level < 0 ? "+" : "") + -level;
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine(StrokeStep.CurrentStroke, StrokeStep.CurrentStroke.color,
+	protected override int BuildHash() => System.HashCode.Combine(StrokeStep.CurrentStroke, StrokeStep.CurrentStroke.Color,
 	StrokeStep.CurrentStroke.DarkenAmt, StrokeStep.CurrentStroke.DesatAmt);
 }

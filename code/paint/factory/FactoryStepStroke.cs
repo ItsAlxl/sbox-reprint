@@ -13,11 +13,18 @@ public abstract class FactoryStepStroke : FactoryStep
 		set
 		{
 			useFig = false;
-			strokeMain.mode = value;
+			strokeMain.StrokeMode = value;
+			ConfigUpdated();
 		}
-		get => strokeMain.mode;
+		get => strokeMain.StrokeMode;
 	}
 	public FactoryStroke CurrentStroke { get => useFig ? StrokeFig : strokeMain; }
+
+	public override void OnStart()
+	{
+		base.OnStart();
+		strokeMain.OnConfigChanged += ConfigUpdated;
+	}
 
 	protected int InkPixel( Painting p, int x, int y )
 	{

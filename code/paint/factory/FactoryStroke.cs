@@ -1,3 +1,4 @@
+using Sandbox;
 using System;
 
 namespace Reprint;
@@ -5,8 +6,35 @@ namespace Reprint;
 public class FactoryStroke
 {
 	public enum Mode { Paint, Burn, Sponge };
-	public Mode mode = Mode.Paint;
-	public Pixel.ColorLookup color = Pixel.ColorLookup.Red;
+
+	public event Action OnConfigChanged;
+
+	public FactoryStroke()
+	{
+		Reset();
+	}
+
+	private Mode _strokeMode = Mode.Paint;
+	public Mode StrokeMode
+	{
+		get => _strokeMode;
+		set
+		{
+			_strokeMode = value;
+			OnConfigChanged?.Invoke();
+		}
+	}
+
+	private Pixel.ColorLookup _color = Pixel.ColorLookup.Red;
+	public Pixel.ColorLookup Color
+	{
+		get => _color;
+		set
+		{
+			_color = value;
+			OnConfigChanged?.Invoke();
+		}
+	}
 
 	private int _darkenAmt = 1;
 	public int DarkenAmt
@@ -15,6 +43,7 @@ public class FactoryStroke
 		set
 		{
 			_darkenAmt = ClampLevelValue( _darkenAmt, value );
+			OnConfigChanged?.Invoke();
 		}
 	}
 
@@ -25,22 +54,18 @@ public class FactoryStroke
 		set
 		{
 			_desatAmt = ClampLevelValue( _desatAmt, value );
+			OnConfigChanged?.Invoke();
 		}
 	}
 
 	private Action<Pixel> StrokeCb
 	{
-		get => mode switch
+		get => StrokeMode switch
 		{
 			Mode.Burn => StrokeBurn,
 			Mode.Sponge => StrokeDesat,
 			_ => StrokePaint,
 		};
-	}
-
-	public FactoryStroke()
-	{
-		Reset();
 	}
 
 	private static int ClampLevelValue( int from, int to )
@@ -50,7 +75,7 @@ public class FactoryStroke
 
 	private void StrokePaint( Pixel pxl )
 	{
-		pxl.PaintOver( color );
+		pxl.PaintOver( Color );
 	}
 
 	private void StrokeBurn( Pixel pxl )
@@ -70,16 +95,16 @@ public class FactoryStroke
 
 	public void Copy( FactoryStroke other )
 	{
-		mode = other.mode;
-		color = other.color;
+		StrokeMode = other.StrokeMode;
+		Color = other.Color;
 		DarkenAmt = other.DarkenAmt;
 		DesatAmt = other.DesatAmt;
 	}
 
 	public void Reset()
 	{
-		mode = Mode.Paint;
-		color = Pixel.ColorLookup.Red;
+		StrokeMode = Mode.Paint;
+		Color = Pixel.ColorLookup.Red;
 		DarkenAmt = 1;
 		DesatAmt = 1;
 	}

@@ -2,11 +2,20 @@ namespace Reprint;
 
 public sealed class FactoryRot : FactoryStep
 {
-	public bool clockwise = true;
+	private bool _clockwise = true;
+	public bool Clockwise
+	{
+		get => _clockwise;
+		set
+		{
+			_clockwise = value;
+			ConfigUpdated();
+		}
+	}
 
 	override public (int next, int timeCost, int inkCost) ApplyTo( Painting p )
 	{
-		if ( clockwise )
+		if ( Clockwise )
 			p.RotateCW();
 		else
 			p.RotateCCW();

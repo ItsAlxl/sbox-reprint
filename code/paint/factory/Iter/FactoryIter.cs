@@ -4,8 +4,18 @@ namespace Reprint;
 
 public sealed class FactoryIter : FactoryStep
 {
-	public bool resetOnContinue = true;
-	public int _maxCount = 1;
+	private bool _resetOnContinue = true;
+	public bool ResetOnContinue
+	{
+		get => _resetOnContinue;
+		set
+		{
+			_resetOnContinue = value;
+			ConfigUpdated();
+		}
+	}
+
+	private int _maxCount = 1;
 	private int _currentCount = 1;
 	public int Counter { get => _currentCount >= 0 ? _currentCount : 0; }
 	public int MaxCount
@@ -17,6 +27,7 @@ public sealed class FactoryIter : FactoryStep
 			_maxCount = value.Clamp( 1, 16 );
 			if ( updCurrent )
 				_currentCount = _maxCount;
+			ConfigUpdated();
 		}
 	}
 
@@ -30,7 +41,7 @@ public sealed class FactoryIter : FactoryStep
 	{
 		var next = _currentCount > 0 ? (AnchorIdx + 1) : -1;
 		_currentCount--;
-		if ( next == -1 && resetOnContinue )
+		if ( next == -1 && ResetOnContinue )
 			ResetInternal();
 		return (next, 0, 0);
 	}

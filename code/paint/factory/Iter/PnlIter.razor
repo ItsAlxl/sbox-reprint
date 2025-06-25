@@ -13,7 +13,7 @@
 				<span class="">@(Fact.MaxCount)</span>
 				<button class="sm" @onclick=@IncrC>add</button>
 			</div>
-			<button class="xs txt @(Fact.resetOnContinue ? "pressed" : "")" @onclick=@ToggleROC>@(Fact.resetOnContinue ?
+			<button class="xs txt @(Fact.ResetOnContinue ? "pressed" : "")" @onclick=@ToggleROC>@(Fact.ResetOnContinue ?
 				"Reset on Continue" : "Don't Reset on Continue")</button>
 			<div class="row">
 				<span class="fixed-num">@(Fact.Counter)</span>
@@ -28,7 +28,7 @@
 
 	private void ToggleROC()
 	{
-		Fact.resetOnContinue = !Fact.resetOnContinue;
+		Fact.ResetOnContinue = !Fact.ResetOnContinue;
 	}
 
 	private void DecrC()
@@ -52,6 +52,6 @@
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryIter();
-	protected override int BuildHash() => HashCode.Combine(Fact.resetOnContinue, Fact.MaxCount, Fact.Counter,
+	protected override int BuildHash() => HashCode.Combine(Fact.ResetOnContinue, Fact.MaxCount, Fact.Counter,
 	Fact.AnchorLabel);
 }

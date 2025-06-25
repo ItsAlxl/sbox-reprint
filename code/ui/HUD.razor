@@ -26,9 +26,9 @@
 				<div class="gap"></div>
 				<div class="menu-list">
 					<div>Made in 2 weeks for S&box Game Jam #1</div>
-					<div>(which is extremely poorly named cuz it's like the 4th game jam for s&box)</div>
+					<div>(which is extremely poorly named cuz it's at least the 4th game jam for s&box)</div>
 					<div>Sounds by Kenney</div>
-					<div>Images from Material Icons, Tabler Icons, and Fluent Emoji</div>
+					<div>Icons from Material Icons, Tabler Icons, and Fluent Emoji</div>
 				</div>
 				<div class="gap"></div>
 				<div class="menu-list">
@@ -165,6 +165,38 @@
 								chevron_right
 							</button>
 						</div>
+						<div class="gap"></div>
+						<div class="brief min">
+							<div class="title">Result</div>
+							<div class="goal">
+								<PaintCanvas @listener=@resultInsp @paint=@(workspace.scratchPaint) @size=@(256.0f)>
+								</PaintCanvas>
+								<div class="readout">@(resultInsp.CreateHoverReadoutVerbose(workspace.scratchPaint))</div>
+							</div>
+							<div style="flex-direction: column">
+								<div style="justify-content: center">Accuracy: @(workspace.sequenceScore.ToString("0.0%"))</div>
+								<div class="leader">
+									<div class="col">
+										<div class="head">Time</div>
+										<div>
+											<span class="lone">@(workspace.finalScores.time)</span>
+										</div>
+									</div>
+									<div class="col">
+										<div class="head">Ink</div>
+										<div>
+											<span class="lone">@(workspace.finalScores.ink)</span>
+										</div>
+									</div>
+									<div class="col">
+										<div class="head">Size</div>
+										<div>
+											<span class="lone">@(workspace.finalScores.size)</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="toolbox">
 						<div class="group">
@@ -187,6 +219,7 @@
 								</button>
 							}
 						</div>
+						<div class="gap"></div>
 						<div class="group">
 							@if (workspace.useBreakpoints)
 							{
@@ -269,6 +302,7 @@
 {
 	private PaintingDesigner designer = new();
 	private PaintingInspector goalInsp = new();
+	private PaintingInspector resultInsp = new();
 
 	private Workspace workspace;
 	private string view = "main";
@@ -437,5 +471,5 @@
 	}
 
 	protected override int BuildHash() => System.HashCode.Combine(view, designer.brushColor, designer.brushDarken,
-	designer.brushDesat, hoveredScene, ingameBriefSize);
+	designer.brushDesat, hoveredScene, ingameBriefSize, workspace.sequenceScore, workspace.finalScores);
 }

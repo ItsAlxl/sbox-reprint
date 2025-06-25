@@ -277,6 +277,11 @@ HUD {
 				min-width: 4em;
 				text-overflow: clip;
 			}
+
+			.lone {
+				flex-grow: 1;
+				justify-content: center;
+			}
 		}
 	}
 

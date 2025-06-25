@@ -9,9 +9,9 @@
 		<Name>Flip</Name>
 		<Config>
 			<div class="row">
-				<button class="@(Fact.vertical ? "" : "pressed")" @onclick=@(() =>
+				<button class="@(Fact.Vertical ? "" : "pressed")" @onclick=@(() =>
 					SelectFlip(false))>swap_horiz</button>
-				<button class="@(Fact.vertical ? "pressed" : "")" @onclick=@(() => SelectFlip(true))>swap_vert</button>
+				<button class="@(Fact.Vertical ? "pressed" : "")" @onclick=@(() => SelectFlip(true))>swap_vert</button>
 			</div>
 		</Config>
 	</FactoryStepPanel>
@@ -23,9 +23,9 @@
 
 	private void SelectFlip(bool v)
 	{
-		Fact.vertical = v;
+		Fact.Vertical = v;
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryFlip();
-	protected override int BuildHash() => HashCode.Combine(Fact.vertical);
+	protected override int BuildHash() => HashCode.Combine(Fact.Vertical);
 }

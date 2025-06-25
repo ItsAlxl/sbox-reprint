@@ -16,6 +16,7 @@ public abstract class FactoryPanel : PanelComponent
 
 	protected override void OnStart()
 	{
+		factory.OnStart();
 		workspace = Scene.Get<Workspace>();
 	}
 }
