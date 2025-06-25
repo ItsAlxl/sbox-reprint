@@ -9,6 +9,7 @@ public sealed class Workspace : Component
 	public const float CHILD_SPACING = 30.0f / 512.0f;
 	const float SCRATCH_SPACING = CHILD_SPACING * 128.0f;
 	const float QUICK_ADD_TIME = 0.1f;
+	const float COSMETIC_ROT_MULT = 0.5f;
 
 	public static float LeftBound { get => 0.0f; }
 	public float RightBound { get => _rightBound; }
@@ -128,9 +129,10 @@ public sealed class Workspace : Component
 		GetFactoryStep( go )?.Removed();
 		go.Destroy();
 		AdjustSequenceLayout();
+		Sound.Play( "delete" );
 	}
 
-	private void StartDrag( GameObject go )
+	private void StartDrag( GameObject go, bool playSound = true )
 	{
 		dragGo = go;
 		dragIdx = sequence.FindIndex( ( go ) => go == dragGo );
@@ -139,6 +141,8 @@ public sealed class Workspace : Component
 			sequence.RemoveAt( dragIdx );
 		dragOffset = go.WorldPosition - camCont.MouseWorldPosition + new Vector3( 5.0f, 0.0f, 0.0f );
 		AdjustSequenceLayout();
+		if ( playSound )
+			Sound.Play( "pickup" );
 	}
 
 	public void StartDragFactory( FactoryPanel pnl )
@@ -156,7 +160,8 @@ public sealed class Workspace : Component
 		var go = GameObject.GetPrefab( prefabPath ).Clone();
 		go.WorldPosition = camCont.MouseWorldPosition + new Vector3( 0.0f, 0.0f, -0.025f * go.Components.Get<WorldPanel>().PanelSize.y );
 		addStart = 0;
-		StartDrag( go );
+		StartDrag( go, false );
+		Sound.Play( "create" );
 	}
 
 	public void EndDrag()
@@ -168,6 +173,7 @@ public sealed class Workspace : Component
 		dragGo = null;
 		dragOffset = Vector3.Zero;
 		AdjustSequenceLayout();
+		Sound.Play( "place" );
 	}
 
 	private int FindDragIndex( float yPos )
@@ -219,6 +225,7 @@ public sealed class Workspace : Component
 			MoveInSequence( scratchIdx, step.next == -1 ? scratchIdx + 1 : step.next );
 			AdjustSequenceLayout();
 			PutScratchInView();
+			Sound.Play( "advance" );
 		}
 	}
 
@@ -238,6 +245,7 @@ public sealed class Workspace : Component
 		MoveInSequence( scratchIdx, stepIdx - 1 );
 		AdjustSequenceLayout();
 		PutScratchInView();
+		Sound.Play( "advance" );
 	}
 
 	public void ResetScratch( bool moveAndSnap = true )
@@ -256,6 +264,7 @@ public sealed class Workspace : Component
 				MoveInSequence( ScratchIdx, 0 );
 				AdjustSequenceLayout();
 				PutScratchInView();
+				Sound.Play( "reset" );
 			}
 		}
 	}
@@ -289,6 +298,7 @@ public sealed class Workspace : Component
 		MoveInSequence( scratchIdx, scratchIdx > stepIdx ? stepIdx : (stepIdx - 1) );
 		AdjustSequenceLayout();
 		PutScratchInView();
+		Sound.Play( "advance" );
 	}
 
 	public FactoryPanel CreateAnchor( int idx )
@@ -316,6 +326,7 @@ public sealed class Workspace : Component
 			{
 				var currDrag = camCont.MouseWorldPosition;
 				dragGo.WorldPosition = currDrag + dragOffset;
+				ApplyCosmeticRotation( dragGo, 2.0f );
 				var newIdx = FindDragIndex( currDrag.y );
 				if ( dragIdx != newIdx )
 				{
@@ -325,6 +336,14 @@ public sealed class Workspace : Component
 				}
 			}
 		}
+
+		foreach ( var go in sequence )
+			ApplyCosmeticRotation( go );
+	}
+
+	private void ApplyCosmeticRotation( GameObject go, float factor = 1.0f )
+	{
+		go.WorldRotation = go.WorldRotation.Angles().WithYaw( factor * COSMETIC_ROT_MULT * (camCont.WorldPosition.y - go.WorldPosition.y) );
 	}
 
 	private void SnapToEndScratch()
@@ -371,10 +390,12 @@ public sealed class Workspace : Component
 		{
 			finalScores.size = sequence.Count( ( go ) => go != scratchGo && GetFactoryStep( go ) is not FactoryAnchor );
 			Score.Send( LeaderboardKey, finalScores );
+			Sound.Play( "success" );
 		}
 		else
 		{
 			SnapToEndScratch();
+			Sound.Play( "failure" );
 		}
 	}
 
