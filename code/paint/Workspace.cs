@@ -9,7 +9,7 @@ public sealed class Workspace : Component
 	public const float CHILD_SPACING = 30.0f / 512.0f;
 	const float SCRATCH_SPACING = CHILD_SPACING * 128.0f;
 	const float QUICK_ADD_TIME = 0.1f;
-	const float COSMETIC_ROT_MULT = 0.5f;
+	const float COSMETIC_ROT_MULT = 0.25f;
 
 	public static float LeftBound { get => 0.0f; }
 	public float RightBound { get => _rightBound; }
@@ -139,7 +139,7 @@ public sealed class Workspace : Component
 		showFirstDragGap = dragIdx >= 0;
 		if ( showFirstDragGap )
 			sequence.RemoveAt( dragIdx );
-		dragOffset = go.WorldPosition - camCont.MouseWorldPosition + new Vector3( 5.0f, 0.0f, 0.0f );
+		dragOffset = go.WorldPosition - camCont.MouseWorldPosition;
 		AdjustSequenceLayout();
 		if ( playSound )
 			Sound.Play( "pickup" );
@@ -325,7 +325,7 @@ public sealed class Workspace : Component
 			else
 			{
 				var currDrag = camCont.MouseWorldPosition;
-				dragGo.WorldPosition = currDrag + dragOffset;
+				dragGo.WorldPosition = (currDrag + dragOffset).WithX(5.0f);
 				ApplyCosmeticRotation( dragGo, 2.0f );
 				var newIdx = FindDragIndex( currDrag.y );
 				if ( dragIdx != newIdx )
