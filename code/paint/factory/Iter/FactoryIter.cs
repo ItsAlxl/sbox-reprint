@@ -28,7 +28,7 @@ public sealed class FactoryIter : FactoryStep
 
 	override public (int next, int timeCost, int inkCost) ApplyTo( Painting p )
 	{
-		var next = _currentCount > 0 ? AnchorIdx : -1;
+		var next = _currentCount > 0 ? (AnchorIdx + 1) : -1;
 		_currentCount--;
 		if ( next == -1 && resetOnContinue )
 			ResetInternal();

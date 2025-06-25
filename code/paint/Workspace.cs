@@ -17,9 +17,7 @@ public sealed class Workspace : Component
 
 	public Painting scratchPaint;
 	private GameObject scratchGo;
-	private int ScratchIdx { get => sequence.FindIndex( ( go ) => go == scratchGo ); }
-	private Vector3 ScratchLeft { get => scratchGo.WorldPosition - new Vector3( 0, SCRATCH_SPACING, 0 ); }
-	private Vector3 ScratchRight { get => scratchGo.WorldPosition + new Vector3( 0, SCRATCH_SPACING, 0 ); }
+	private int scratchIdx = 0;
 
 	private TimeSince addStart;
 	private int dragIdx = -1;
@@ -60,13 +58,19 @@ public sealed class Workspace : Component
 				sequence[i].Destroy();
 			sequence.RemoveRange( 0, sequence.Count );
 		}
+
+		if ( scratchGo is not null )
+			scratchGo.Destroy();
+		scratchGo = null;
+
 		figStroke.Reset();
 		camCont.ResetPosition();
-		scratchGo = null;
 		targetPaint = null;
 		scratchPaint = null;
+
 		sequenceScore = float.NaN;
 		finalScores = (-1, -1, -1);
+		scratchIdx = 0;
 	}
 
 	public void BeginScenario( ScenarioData scene )
@@ -79,29 +83,45 @@ public sealed class Workspace : Component
 		targetPaint = new( currentScene.paint );
 		scratchPaint = new( targetPaint.width, targetPaint.height );
 		scratchGo = GameObject.GetPrefab( "prefabs/scratchpad.prefab" ).Clone();
-		sequence.Add( scratchGo );
 		AdjustSequenceLayout();
+	}
+
+	private float GetWorldPanelSize( GameObject go )
+	{
+		return go.Components.Get<WorldPanel>().PanelSize.x * CHILD_SPACING;
+	}
+
+	private float ArrangeSequenceGo( GameObject go, float right, bool isDragIdx = false )
+	{
+		var size = GetWorldPanelSize( go );
+		if ( isDragIdx )
+			right += 128 * CHILD_SPACING;
+		go.LocalPosition = Vector3.Zero.WithY( right + size * 0.5f );
+		right += size;
+		return right;
 	}
 
 	private void AdjustSequenceLayout()
 	{
-		_rightBound = 0;
+		var scratchDrag = scratchGo == dragGo;
+		_rightBound = scratchDrag ? GetWorldPanelSize( scratchGo ) : 0.0f;
 		var numAnchors = 0;
-		for ( var i = 0; i < sequence.Count; i++ )
+		for ( var i = 0; i <= sequence.Count; i++ )
 		{
-			var go = sequence[i];
-			var size = go.Components.Get<WorldPanel>().PanelSize.x * CHILD_SPACING;
-			if ( i == dragIdx && (showFirstDragGap || i > 0) )
-				_rightBound += 128 * CHILD_SPACING;
-			go.LocalPosition = Vector3.Zero.WithY( _rightBound + size * 0.5f );
-			_rightBound += size;
+			if ( i == scratchIdx && !scratchDrag )
+				_rightBound = ArrangeSequenceGo( scratchGo, _rightBound );
 
-			var anchor = GetFactoryStep( go ) as FactoryAnchor;
-			if ( anchor is not null )
+			if ( i < sequence.Count )
 			{
-				anchor.id = numAnchors;
-				anchor.idx = i;
-				numAnchors++;
+				var go = sequence[i];
+				_rightBound = ArrangeSequenceGo( go, _rightBound, i == dragIdx && (showFirstDragGap || i > 0) );
+
+				if ( GetFactoryStep( go ) is FactoryAnchor anchor && anchor is not null )
+				{
+					anchor.id = numAnchors;
+					anchor.idx = i;
+					numAnchors++;
+				}
 			}
 		}
 	}
@@ -217,13 +237,22 @@ public sealed class Workspace : Component
 		camCont.PutInView( scratchGo );
 	}
 
+	private void MoveScratchAfter( int idx )
+	{
+		scratchIdx = idx + 1;
+	}
+
+	private void MoveScratchBefore( int idx )
+	{
+		scratchIdx = idx;
+	}
+
 	public void AdvanceScratch()
 	{
-		var scratchIdx = ScratchIdx;
-		if ( scratchIdx < sequence.Count - 1 )
+		if ( scratchIdx < sequence.Count )
 		{
-			var step = ApplyStepToScratch( scratchIdx + 1 );
-			MoveInSequence( scratchIdx, step.next == -1 ? scratchIdx + 1 : step.next );
+			var step = ApplyStepToScratch( scratchIdx );
+			MoveScratchBefore( step.next == -1 ? scratchIdx + 1 : step.next );
 			AdjustSequenceLayout();
 			PutScratchInView();
 			Sound.Play( "advance" );
@@ -232,37 +261,34 @@ public sealed class Workspace : Component
 
 	public void AdvanceToBreakpoint()
 	{
-		var scratchIdx = ScratchIdx;
-		var stepIdx = scratchIdx + 1;
+		var stepIdx = scratchIdx;
 		while ( stepIdx < sequence.Count )
 		{
 			var factory = GetFactoryStep( stepIdx );
-			if ( stepIdx > scratchIdx + 1 && factory.panel.breakpoint )
+			if ( stepIdx > scratchIdx && factory.panel.breakpoint )
 				break;
 
 			var step = ApplyStepToScratch( stepIdx );
 			stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
 		}
-		MoveInSequence( scratchIdx, stepIdx - 1 );
+		MoveScratchBefore( stepIdx );
 		AdjustSequenceLayout();
 		PutScratchInView();
 		Sound.Play( "advance" );
 	}
 
-	public void ResetScratch( bool moveAndSnap = true )
+	public void ResetScratch( bool notice = true )
 	{
 		if ( scratchGo is not null )
 		{
-			var scratchIdx = ScratchIdx;
-			for ( var i = 0; i < sequence.Count; i++ )
-				if ( i != scratchIdx )
-					GetFactoryStep( i ).ResetInternal();
+			foreach ( var go in sequence )
+				GetFactoryStep( go )?.ResetInternal();
 			figStroke.Reset();
 			scratchPaint.Reset();
 
-			if ( moveAndSnap )
+			if ( notice )
 			{
-				MoveInSequence( ScratchIdx, 0 );
+				MoveScratchBefore( 0 );
 				AdjustSequenceLayout();
 				PutScratchInView();
 				Sound.Play( "reset" );
@@ -274,30 +300,18 @@ public sealed class Workspace : Component
 	{
 		ResetScratch( false );
 
-		var scratchIdx = ScratchIdx;
 		var stepIdx = 0;
 		var go = pnl.GameObject;
 		while ( stepIdx < sequence.Count )
 		{
-			if ( stepIdx == scratchIdx )
-			{
-				stepIdx++;
-			}
-			else
-			{
-				var step = ApplyStepToScratch( stepIdx );
-				var isFinal = sequence[stepIdx] == go;
-				stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
-				if ( isFinal )
-				{
-					stepIdx++;
-					break;
-				}
-			}
+			var step = ApplyStepToScratch( stepIdx );
+			var isFinal = sequence[stepIdx] == go;
+			var thisStep = stepIdx;
+			stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
+			if ( isFinal && stepIdx > thisStep )
+				break;
 		}
-
-		stepIdx = (stepIdx > sequence.Count) ? sequence.Count : stepIdx;
-		MoveInSequence( scratchIdx, scratchIdx > stepIdx ? stepIdx : (stepIdx - 1) );
+		MoveScratchBefore( stepIdx );
 		AdjustSequenceLayout();
 		PutScratchInView();
 		Sound.Play( "advance" );
@@ -350,7 +364,7 @@ public sealed class Workspace : Component
 
 	private void SnapToEndScratch()
 	{
-		MoveInSequence( ScratchIdx, sequence.Count - 1 );
+		MoveScratchBefore( sequence.Count );
 		AdjustSequenceLayout();
 		camCont.SnapTo( scratchGo.WorldPosition.y );
 	}
@@ -369,28 +383,20 @@ public sealed class Workspace : Component
 	{
 		scratchPaint.Reset();
 
-		var scratchIdx = ScratchIdx;
 		var stepIdx = 0;
 		finalScores = (0, 0, 0);
 		while ( stepIdx < sequence.Count )
 		{
-			if ( stepIdx == scratchIdx )
-			{
-				stepIdx++;
-			}
-			else
-			{
-				var step = ApplyStepToScratch( stepIdx );
-				finalScores.time += step.timeCost;
-				finalScores.ink += step.inkCost;
-				stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
-			}
+			var step = ApplyStepToScratch( stepIdx );
+			finalScores.time += step.timeCost;
+			finalScores.ink += step.inkCost;
+			stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
 		}
 
 		sequenceScore = scratchPaint.ScoreAgainst( targetPaint );
 		if ( IsCompleted )
 		{
-			finalScores.size = sequence.Count( ( go ) => go != scratchGo && GetFactoryStep( go ) is not FactoryAnchor );
+			finalScores.size = sequence.Count( ( go ) => GetFactoryStep( go ) is not FactoryAnchor );
 			Score.Send( LeaderboardKey, finalScores );
 			Sound.Play( "success" );
 		}
