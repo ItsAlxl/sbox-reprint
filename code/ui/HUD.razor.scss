@@ -114,7 +114,7 @@ HUD {
 		background-color: #000;
 		color: #fff;
 		pointer-events: all;
-		width: 25%;
+		width: 600px;
 		overflow: visible;
 		font-size: 21px;
 		padding: 0 15px;
@@ -146,6 +146,7 @@ HUD {
 		.title {
 			font-size: 30px;
 			padding: 2px;
+			text-align: center;
 		}
 
 		.subtitle {
@@ -177,6 +178,67 @@ HUD {
 		PaintCanvas {
 			position: relative;
 			align-self: center;
+		}
+
+		.minmax {
+			font-family: Material Icons;
+			width: 50px;
+			height: 50px;
+			position: absolute;
+			top: 0;
+			left: 600px;
+			padding: 0;
+			justify-content: center;
+			align-items: center;
+			font-weight: bold;
+			font-size: 50px;
+		}
+
+		.minmax.bot {
+			top: 50px;
+			display: none;
+		}
+	}
+
+	.brief.min {
+		width: 256px;
+
+		.desc {
+			display: none;
+		}
+
+		.goal {
+			flex-grow: 1;
+			justify-content: center;
+		}
+
+		.minmax {
+			left: 256px;
+		}
+
+		.minmax.bot {
+			top: 50px;
+			display: flex;
+		}
+	}
+
+	.brief.hidden {
+		width: 0;
+
+		* {
+			display: none;
+		}
+
+		.minmax {
+			left: 0;
+			display: flex;
+			* {
+				display: flex;
+			}
+		}
+
+		.minmax.bot {
+			display: none;
 		}
 	}
 

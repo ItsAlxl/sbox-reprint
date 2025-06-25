@@ -142,7 +142,7 @@
 				else
 				{
 					<div class="sidebars">
-						<div class="brief">
+						<div class="brief @IngameBriefClass">
 							<div class="title">@(workspace.currentScene.title)</div>
 							<div class="desc">
 								@{
@@ -158,6 +158,12 @@
 								</PaintCanvas>
 								<div class="readout">@(goalInsp.CreateHoverReadoutVerbose(workspace.targetPaint))</div>
 							</div>
+							<button class="roundy minmax" @onclick=@IgBriefShrink>
+								@(IngameBriefClass == "hidden" ? "chevron_right" : "chevron_left")
+							</button>
+							<button class="roundy minmax bot" @onclick=@IgBriefExp>
+								chevron_right
+							</button>
 						</div>
 					</div>
 					<div class="toolbox">
@@ -273,8 +279,20 @@
 	private string DesignerDesc { get; set; } = "Description";
 	private string DesignerIO { get; set; } = "import/export code";
 	private Scenario designScene = new();
-
 	private int DesignerSize { get; set; } = 4;
+
+	private int ingameBriefSize = 2;
+	private string IngameBriefClass
+	{
+		get
+		{
+			if (ingameBriefSize == 1)
+				return "min";
+			else if (ingameBriefSize == 0)
+				return "hidden";
+			return "";
+		}
+	}
 
 	private void UpdateDesignerSize()
 	{
@@ -332,6 +350,19 @@
 	private void ClickRefine()
 	{
 		workspace.BeginRetry();
+	}
+
+	private void IgBriefExp()
+	{
+		ingameBriefSize++;
+	}
+
+	private void IgBriefShrink()
+	{
+		if (ingameBriefSize == 0)
+			ingameBriefSize++;
+		else
+			ingameBriefSize--;
 	}
 
 	private void SubmitSequence()
@@ -405,5 +436,5 @@
 	}
 
 	protected override int BuildHash() => System.HashCode.Combine(view, designer.brushColor, designer.brushDarken,
-	designer.brushDesat, hoveredScene);
+	designer.brushDesat, hoveredScene, ingameBriefSize);
 }
