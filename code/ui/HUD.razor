@@ -13,7 +13,26 @@
 				<div class="gap"></div>
 				<div class="menu-list">
 					<button class="stealth" @onclick=@ClickLevelSelect>Level Select</button>
-					<button class="stealth" @onclick=@ClickDesigner>Scenario Designer</button>
+					<button class="stealth" @onclick=@ClickDesigner>Puzzle Designer</button>
+					<button class="stealth" @onclick=@ClickCredit>Credits</button>
+				</div>
+			</div>
+			break;
+
+		case "credit":
+			<div class="main view">
+				<div class="title">Fauxto Shop</div>
+				<div class="subtitle">a game by alxl</div>
+				<div class="gap"></div>
+				<div class="menu-list">
+					<div>Made in 2 weeks for S&box Game Jam #1</div>
+					<div>(which is extremely poorly named cuz it's like the 4th game jam for s&box)</div>
+					<div>Sounds by Kenney</div>
+					<div>Images from Material Icons, Tabler Icons, and Fluent Emoji</div>
+				</div>
+				<div class="gap"></div>
+				<div class="menu-list">
+					<button class="stealth" @onclick=@ClickMenu>Back</button>
 				</div>
 			</div>
 			break;
@@ -357,6 +376,11 @@
 	private void ClickDesigner()
 	{
 		view = "design";
+	}
+
+	private void ClickCredit()
+	{
+		view = "credit";
 	}
 
 	private void DesignerExport()
