@@ -324,6 +324,15 @@
 		}
 	}
 
+	private void SetIngameBriefSize(int igbs)
+	{
+		// this is a terrible way to do this, but yknow what, it works
+		var cc = Scene.Get<CameraController>();
+		if (cc is not null)
+			cc.IngameBriefSize = igbs;
+		ingameBriefSize = igbs;
+	}
+
 	private void UpdateDesignerSize()
 	{
 		DesignerSize = DesignerSize.Clamp(3, 16);
@@ -358,7 +367,7 @@
 	private void BeginScenario(ScenarioData sceneData)
 	{
 		workspace.BeginScenario(sceneData);
-		ingameBriefSize = 2;
+		SetIngameBriefSize(2);
 		view = "ingame";
 	}
 
@@ -385,15 +394,15 @@
 
 	private void IgBriefExp()
 	{
-		ingameBriefSize++;
+		SetIngameBriefSize(ingameBriefSize + 1);
 	}
 
 	private void IgBriefShrink()
 	{
 		if (ingameBriefSize == 0)
-			ingameBriefSize++;
+			SetIngameBriefSize(ingameBriefSize + 1);
 		else
-			ingameBriefSize--;
+			SetIngameBriefSize(ingameBriefSize - 1);
 	}
 
 	private void SubmitSequence()
