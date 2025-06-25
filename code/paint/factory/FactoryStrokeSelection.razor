@@ -97,5 +97,5 @@
 	}
 
 	protected override int BuildHash() => System.HashCode.Combine(StrokeStep.CurrentStroke, StrokeStep.CurrentStroke.Color,
-	StrokeStep.CurrentStroke.DarkenAmt, StrokeStep.CurrentStroke.DesatAmt);
+	StrokeStep.CurrentStroke.DarkenAmt, StrokeStep.CurrentStroke.DesatAmt, base.BuildHash());
 }

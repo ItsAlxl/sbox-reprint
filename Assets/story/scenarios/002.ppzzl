@@ -1,6 +1,6 @@
 {
   "Title": "CMY, ok",
-  "Desc": "More tools have come in! Now you can affect the saturation (sponge) and value (burn) of colors, not just the hue. You are also able to move the cursor now.\nRemember that you don't have to worry about the final orientation of the image, we can flip it or turn it afterwards without the machine. And in case you missed it, you can hover over pixels on your scratchpad or on the target below to get information about color, saturation, and value - you don't have to rely on your eyes alone!\nLet's make sure the machine's CMYK is accurate.",
+  "Desc": "More tools have come in! Now you can affect the saturation (sponge) and value (burn) of colors, not just the hue. You are also able to move the cursor now.\nRemember that you don't have to worry about the final orientation of the image, we can flip it or turn it afterwards without the machine. And in case you missed it, you can hover over pixels on your result or on the target below to get information about color, saturation, and value - you don't have to rely on your eyes alone!\nLet's make sure the machine's CMYK is accurate.",
   "Paint": "3:3:4a4e4i6a6e6i2a2e2i",
   "Toolbox": "tools/boxes/002 - satval.ptbox",
   "UseSpongeBurn": true,

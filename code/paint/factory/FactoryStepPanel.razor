@@ -9,8 +9,9 @@
 		<span @onmousedown=@DragMe class="dragbar">drag_indicator</span>
 		@if (CanBreakpoint && UseBreakpoint)
 		{
-			<button @onclick=@ToggleBreakpoint>@(Fact.breakpoint ? "pause_circle_outline" :
-			"radio_button_unchecked")</button>
+			<button @onclick=@ToggleBreakpoint>
+				@(IsBreakpoint ? "pause_circle_outline" : "radio_button_unchecked")
+			</button>
 		}
 	</div>
 	<div class="body">
@@ -29,6 +30,7 @@
 
 	private Workspace Workspace { get => Fact.workspace; }
 	private bool UseBreakpoint { get => Workspace.useBreakpoints; }
+	private bool IsBreakpoint { get => Workspace.Breakpoint == Fact.factory; }
 
 	private void RemoveMe()
 	{
@@ -42,6 +44,8 @@
 
 	private void ToggleBreakpoint()
 	{
-		Fact.breakpoint = !Fact.breakpoint;
+		Workspace.Breakpoint = IsBreakpoint ? null : Fact.factory;
 	}
+
+	protected override int BuildHash() => System.HashCode.Combine(IsBreakpoint);
 }

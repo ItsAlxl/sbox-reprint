@@ -15,8 +15,6 @@ public sealed class Workspace : Component
 	public float BotBound { get => _botBound; }
 	private float _botBound = 0.0f;
 
-	public Painting scratchPaint;
-
 	private TimeSince addStart;
 	private int dragIdx = -1;
 	private bool showFirstDragGap = false;
@@ -36,7 +34,18 @@ public sealed class Workspace : Component
 	public bool IsCompleted { set; get; }
 	public string LeaderboardKey { get => currentScene?.LeaderboardKey ?? Score.GetLeaderboardKey( targetPaint.Serialize() ); }
 
+	public Painting scratchPaint;
 	public FactoryStroke figStroke = new();
+	private FactoryStep _breakpoint = null;
+	public FactoryStep Breakpoint
+	{
+		get => _breakpoint;
+		set
+		{
+			_breakpoint = value;
+			UpdateResult();
+		}
+	}
 
 	public bool useConfigurator { get => currentScene.useConfigurator; }
 	public bool useBurnSponge { get => currentScene.useBurnSponge; }
@@ -217,22 +226,7 @@ public sealed class Workspace : Component
 			camCont.PutInView( go );
 	}
 
-	public void AdvanceToBreakpoint()
-	{
-		var stepIdx = 0;
-		while ( stepIdx < sequence.Count )
-		{
-			var factory = GetFactoryStep( stepIdx );
-			if ( stepIdx > 0 && factory.panel.breakpoint )
-				break;
-
-			var step = ApplyStepToScratch( stepIdx );
-			stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
-		}
-		Sound.Play( "advance" );
-	}
-
-	public void UpdateResult()
+	public void UpdateResult( bool ignoreBreakpoints = false )
 	{
 		foreach ( var go in sequence )
 			GetFactoryStep( go )?.ResetInternal();
@@ -243,10 +237,14 @@ public sealed class Workspace : Component
 		finalScores = (0, 0, sequence.Count( ( go ) => GetFactoryStep( go ) is not FactoryAnchor ));
 		while ( stepIdx < sequence.Count )
 		{
-			var step = ApplyStepToScratch( stepIdx );
-			finalScores.time += step.timeCost;
-			finalScores.ink += step.inkCost;
-			stepIdx = step.next == -1 ? stepIdx + 1 : step.next;
+			var step = GetFactoryStep( stepIdx );
+			if ( !ignoreBreakpoints && step == Breakpoint )
+				break;
+
+			var result = step?.ApplyTo( scratchPaint ) ?? (-1, 0, 0);
+			finalScores.time += result.timeCost;
+			finalScores.ink += result.inkCost;
+			stepIdx = result.next == -1 ? stepIdx + 1 : result.next;
 		}
 		sequenceScore = scratchPaint.ScoreAgainst( targetPaint );
 	}
@@ -293,11 +291,6 @@ public sealed class Workspace : Component
 		go.WorldRotation = new Angles( factor * COSMETIC_ROT_MULT * (camCont.WorldPosition.z - go.WorldPosition.z), 0.0f, 0.0f );
 	}
 
-	public (int next, int timeCost, int inkCost) ApplyStepToScratch( int stepIdx )
-	{
-		return GetFactoryStep( stepIdx )?.ApplyTo( scratchPaint ) ?? (-1, 0, 0);
-	}
-
 	public string GetLeaderboardKey( string varname = "" )
 	{
 		return LeaderboardKey + (varname == "" ? "" : ("_" + varname));
@@ -305,7 +298,7 @@ public sealed class Workspace : Component
 
 	public void SubmitSequence()
 	{
-		UpdateResult();
+		UpdateResult( true );
 		IsCompleted = sequenceScore.AlmostEqual( 1.0f );
 		if ( IsCompleted )
 		{

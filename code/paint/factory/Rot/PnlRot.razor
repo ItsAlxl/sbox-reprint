@@ -28,5 +28,5 @@
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryRot();
-	protected override int BuildHash() => HashCode.Combine(Fact.Clockwise);
+	protected override int BuildHash() => HashCode.Combine(Fact.Clockwise, base.BuildHash());
 }

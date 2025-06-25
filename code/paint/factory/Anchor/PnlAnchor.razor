@@ -23,5 +23,5 @@
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryAnchor();
-	protected override int BuildHash() => HashCode.Combine(Fact.Label);
+	protected override int BuildHash() => HashCode.Combine(Fact.Label, base.BuildHash());
 }

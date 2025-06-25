@@ -106,5 +106,5 @@
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryCurs();
-	protected override int BuildHash() => HashCode.Combine(Fact.SetX, Fact.AmtX, Fact.SetY, Fact.AmtY);
+	protected override int BuildHash() => HashCode.Combine(Fact.SetX, Fact.AmtX, Fact.SetY, Fact.AmtY, base.BuildHash());
 }

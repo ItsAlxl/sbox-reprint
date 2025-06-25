@@ -52,5 +52,5 @@
 
 	protected override FactoryStep CreateFactory() => new FactoryIter();
 	protected override int BuildHash() => HashCode.Combine(Fact.ResetOnContinue, Fact.MaxCount, Fact.Counter,
-	Fact.AnchorLabel);
+	Fact.AnchorLabel, base.BuildHash());
 }

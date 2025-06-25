@@ -221,10 +221,6 @@
 						</div>
 						<div class="gap"></div>
 						<div class="group">
-							@if (workspace.useBreakpoints)
-							{
-								<button @onclick=@NextBp>Next BP</button>
-							}
 							<button @onclick=@SubmitSequence>Submit</button>
 						</div>
 					</div>
@@ -403,11 +399,6 @@
 	private void SubmitSequence()
 	{
 		workspace.SubmitSequence();
-	}
-
-	private void NextBp()
-	{
-		workspace.AdvanceToBreakpoint();
 	}
 
 	private void EndDrag()

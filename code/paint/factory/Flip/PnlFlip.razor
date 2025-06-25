@@ -27,5 +27,5 @@
 	}
 
 	protected override FactoryStep CreateFactory() => new FactoryFlip();
-	protected override int BuildHash() => HashCode.Combine(Fact.Vertical);
+	protected override int BuildHash() => HashCode.Combine(Fact.Vertical, base.BuildHash());
 }
