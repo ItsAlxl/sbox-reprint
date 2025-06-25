@@ -86,7 +86,7 @@ public sealed class Workspace : Component
 	private void AdjustSequenceLayout()
 	{
 		_rightBound = 0;
-		var anchorIdx = 0;
+		var numAnchors = 0;
 		for ( var i = 0; i < sequence.Count; i++ )
 		{
 			var go = sequence[i];
@@ -99,8 +99,9 @@ public sealed class Workspace : Component
 			var anchor = GetFactoryStep( go ) as FactoryAnchor;
 			if ( anchor is not null )
 			{
-				anchor.id = anchorIdx;
-				anchorIdx++;
+				anchor.id = numAnchors;
+				anchor.idx = i;
+				numAnchors++;
 			}
 		}
 	}
