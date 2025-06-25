@@ -295,6 +295,7 @@ public sealed class Workspace : Component
 			}
 		}
 
+		stepIdx = (stepIdx > sequence.Count) ? sequence.Count : stepIdx;
 		MoveInSequence( scratchIdx, scratchIdx > stepIdx ? stepIdx : (stepIdx - 1) );
 		AdjustSequenceLayout();
 		PutScratchInView();
@@ -325,7 +326,7 @@ public sealed class Workspace : Component
 			else
 			{
 				var currDrag = camCont.MouseWorldPosition;
-				dragGo.WorldPosition = (currDrag + dragOffset).WithX(5.0f);
+				dragGo.WorldPosition = (currDrag + dragOffset).WithX( 5.0f );
 				ApplyCosmeticRotation( dragGo, 2.0f );
 				var newIdx = FindDragIndex( currDrag.y );
 				if ( dragIdx != newIdx )
