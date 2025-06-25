@@ -25,49 +25,43 @@
 		</div>
 		<div style="margin-top: 8px"></div>
 	}
-	<div class="@(StrokeStep.MainMode == FactoryStroke.Mode.Paint ? "group" : "col")">
+	<div class="row strokecfg">
 		@{
 			var isMain = !StrokeStep.useFig;
 			var stroke = StrokeStep.CurrentStroke;
 			if (stroke.StrokeMode == FactoryStroke.Mode.Burn)
 			{
-				<div class="row">
-					@if (isMain)
-					{
-						<button class="sm" @onclick=@(() => stroke.DarkenAmt++)>remove</button>
-					}
-					<span class="fixed-num">@(FormatLevelText(stroke.DarkenAmt))</span>
-					@if (isMain)
-					{
-						<button class="sm" @onclick=@(() => stroke.DarkenAmt--)>add</button>
-					}
-				</div>
-				<div class="row">
-					<span class="ex-pxl"
-						style="background-color: @(Pixel.CalculateColor(Pixel.ColorLookup.Red, stroke.DarkenAmt < 0 ? -stroke.DarkenAmt : stroke.DarkenAmt, 0).Hex)"></span>
-					<span class="ex-arrow">@(stroke.DarkenAmt < 0 ? "arrow_forward" : "arrow_back")</span>
-					<span class="ex-pxl" style="background-color: #f00"></span>
-				</div>
+				@if (isMain)
+				{
+					<button class="sm" @onclick=@(() => stroke.DarkenAmt++)>remove</button>
+				}
+				<span class="fixed-num">@(FormatLevelText(stroke.DarkenAmt))</span>
+				@if (isMain)
+				{
+					<button class="sm" @onclick=@(() => stroke.DarkenAmt--)>add</button>
+				}
+				<div class="divier-v"></div>
+				<span class="ex-pxl"
+					style="background-color: @(Pixel.CalculateColor(Pixel.ColorLookup.Red, stroke.DarkenAmt < 0 ? -stroke.DarkenAmt : stroke.DarkenAmt, 0).Hex)"></span>
+				<span class="ex-arrow">@(stroke.DarkenAmt < 0 ? "arrow_forward" : "arrow_back")</span>
+				<span class="ex-pxl" style="background-color: #f00"></span>
 			}
 			else if (stroke.StrokeMode == FactoryStroke.Mode.Sponge)
 			{
-				<div class="row">
-					@if (isMain)
-					{
-						<button class="sm" @onclick=@(() => stroke.DesatAmt++)>remove</button>
-					}
-					<span class="fixed-num">@(FormatLevelText(stroke.DesatAmt))</span>
-					@if (isMain)
-					{
-						<button class="sm" @onclick=@(() => stroke.DesatAmt--)>add</button>
-					}
-				</div>
-				<div class="row">
-					<span class="ex-pxl"
-						style="background-color: @(Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, stroke.DesatAmt < 0 ? -stroke.DesatAmt : stroke.DesatAmt).Hex)"></span>
-					<span class="ex-arrow">@(stroke.DesatAmt < 0 ? "arrow_forward" : "arrow_back")</span>
-					<span class="ex-pxl" style="background-color: #f00"></span>
-				</div>
+				@if (isMain)
+				{
+					<button class="sm" @onclick=@(() => stroke.DesatAmt++)>remove</button>
+				}
+				<span class="fixed-num">@(FormatLevelText(stroke.DesatAmt))</span>
+				@if (isMain)
+				{
+					<button class="sm" @onclick=@(() => stroke.DesatAmt--)>add</button>
+				}
+				<div class="divier-v"></div>
+				<span class="ex-pxl"
+					style="background-color: @(Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, stroke.DesatAmt < 0 ? -stroke.DesatAmt : stroke.DesatAmt).Hex)"></span>
+				<span class="ex-arrow">@(stroke.DesatAmt < 0 ? "arrow_forward" : "arrow_back")</span>
+				<span class="ex-pxl" style="background-color: #f00"></span>
 			}
 			else
 			{

@@ -1,5 +1,5 @@
 FactoryStepPanel {
-	flex-direction: column;
+	flex-direction: row;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -14,26 +14,28 @@ FactoryStepPanel {
 	font-size: 20px;
 
 	.title {
+		justify-content: center;
+		text-align: center;
 		flex-direction: row;
 		gap: 8px;
 	}
 
 	.menu {
-		flex-direction: row;
-		width: 100%;
+		flex-direction: column;
+		align-self: stretch;
 		justify-content: flex-start;
 		align-items: center;
 		background-color: #334;
 		gap: 0;
 		border-bottom: 2px solid #000;
+		font-family: Material Icons;
 
 		button {
-			font-family: Material Icons;
 			background-color: #112;
 			flex-shrink: 1;
 			align-items: center;
 			justify-content: center;
-			padding: 5px;
+			padding: 1px;
 		}
 
 		.dragbar {
@@ -43,12 +45,20 @@ FactoryStepPanel {
 		}
 	}
 
+	.body {
+		flex-direction: column;
+		flex-grow: 1;
+		justify-content: flex-start;
+		align-self: stretch;
+	}
+
 	.config {
 		flex-direction: column;
-		justify-content: center;
-		gap: 5px;
 		flex-grow: 1;
+		justify-content: center;
 		align-items: center;
+		align-content: center;
+		gap: 5px;
 
 		.fixed-num {
 			justify-content: center;

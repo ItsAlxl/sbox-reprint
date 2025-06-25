@@ -2,7 +2,6 @@ FactoryStrokeSelection {
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	flex-grow: 1;
 
 	button svg {
 		width: 24px;
@@ -16,5 +15,9 @@ FactoryStrokeSelection {
 
 	.ex-arrow {
 		font-family: Material Icons;
+	}
+
+	.row.strokecfg {
+		height: 34px;
 	}
 }

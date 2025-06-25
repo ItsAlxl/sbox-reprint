@@ -8,7 +8,7 @@ namespace Reprint;
 
 public sealed class CameraController : Component
 {
-	const float SCROLL_SPEED = 10.0f;
+	const float SCROLL_SPEED = 7.5f;
 
 	[RequireComponent] public CameraComponent Camera { get; set; }
 	private readonly Sandbox.UI.WorldInput worldInput = new();
@@ -29,19 +29,15 @@ public sealed class CameraController : Component
 		worldInput.MouseLeftPressed = Input.Down( "ClickL" );
 		worldInput.MouseRightPressed = Input.Down( "ClickR" );
 
-		if ( Input.Down( "ScrollL" ) )
-		{
-			WorldPosition = WorldPosition.WithY( Math.Max( WorldPosition.y - SCROLL_SPEED, Workspace.LeftBound ) );
-		}
-		if ( Input.Down( "ScrollR" ) )
-		{
-			WorldPosition = WorldPosition.WithY( Math.Min( WorldPosition.y + SCROLL_SPEED, workspace.RightBound ) );
-		}
+		if ( Input.Down( "ScrollUp" ) )
+			WorldPosition = WorldPosition.WithZ( Math.Min( WorldPosition.z + SCROLL_SPEED, Workspace.TopBound ) );
+		if ( Input.Down( "ScrollDown" ) )
+			WorldPosition = WorldPosition.WithZ( Math.Max( WorldPosition.z - SCROLL_SPEED, workspace.BotBound ) );
 	}
 
-	public void SnapTo( float y )
+	public void SnapTo( float z )
 	{
-		WorldPosition = WorldPosition.WithY( y );
+		WorldPosition = WorldPosition.WithZ( Math.Clamp( z, workspace.BotBound, Workspace.TopBound ) );
 	}
 
 	public void ResetPosition()
@@ -49,26 +45,17 @@ public sealed class CameraController : Component
 		SnapTo( 0.0f );
 	}
 
-	public bool PutInView( Vector3 p, float padding = 38.0f )
+	public bool PutInView( Vector3 p, float padding = 0.0f )
 	{
 		var moved = !IsInCameraBounds( p );
 		if ( moved )
-			SnapTo( p.y + (WorldPosition.y > p.y ? 1 : -1) * padding );
+			SnapTo( p.z + (WorldPosition.z > p.z ? -1 : 1) * padding );
 		return moved;
 	}
 
-	public bool PutInView( Vector3 left, Vector3 right, float padding = 38.0f )
+	public bool PutInView( GameObject go, float padding = 0.0f )
 	{
-		var leftFirst = WorldPosition.y > left.y;
-		if ( !PutInView( leftFirst ? left : right, padding ) )
-			return PutInView( leftFirst ? right : left, padding );
-		return true;
-	}
-
-	public bool PutInView( GameObject go, float padding = 38.0f )
-	{
-		var width = (go.Components.Get<WorldPanel>()?.PanelSize.x ?? 0) * Workspace.CHILD_SPACING;
-		return PutInView( go.WorldPosition - new Vector3( 0, width, 0 ), go.WorldPosition + new Vector3( 0, width, 0 ), padding );
+		return PutInView( go.WorldPosition - new Vector3( 0.0f, 0.0f, Workspace.GetWorldPanelSize( go ).y ), padding );
 	}
 
 	public bool IsInCameraBounds( Vector3 pos )

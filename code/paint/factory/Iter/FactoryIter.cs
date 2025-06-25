@@ -61,6 +61,6 @@ public sealed class FactoryIter : FactoryStep
 	public override void Removed()
 	{
 		if ( anchorPanel is not null )
-			Workspace.RemoveFromSquence( anchorPanel );
+			Workspace.RemoveFromSquence( anchorPanel, false );
 	}
 }

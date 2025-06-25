@@ -6,15 +6,17 @@
 		{
 			<button @onclick=@RemoveMe>close</button>
 		}
-		<span @onmousedown=@DragMe class="dragbar">ⵓ ⵓ ⵓ ⵓ</span>
+		<span @onmousedown=@DragMe class="dragbar">drag_indicator</span>
 		@if (CanBreakpoint && UseBreakpoint)
 		{
 			<button @onclick=@ToggleBreakpoint>@(Fact.breakpoint ? "pause_circle_outline" :
 			"radio_button_unchecked")</button>
 		}
 	</div>
-	<div class="title">@Name</div>
-	<div class="config">@Config</div>
+	<div class="body">
+		<div class="title">@Name</div>
+		<div class="config">@Config</div>
+	</div>
 </root>
 
 @code

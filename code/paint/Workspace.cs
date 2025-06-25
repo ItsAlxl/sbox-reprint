@@ -6,14 +6,14 @@ namespace Reprint;
 
 public sealed class Workspace : Component
 {
-	public const float CHILD_SPACING = 30.0f / 512.0f;
+	const float CHILD_SPACING = 30.0f / 512.0f;
 	const float SCRATCH_SPACING = CHILD_SPACING * 128.0f;
 	const float QUICK_ADD_TIME = 0.1f;
-	const float COSMETIC_ROT_MULT = 0.25f;
+	const float COSMETIC_ROT_MULT = -1.0f;
 
-	public static float LeftBound { get => 0.0f; }
-	public float RightBound { get => _rightBound; }
-	private float _rightBound = 0.0f;
+	public static float TopBound { get => 0.0f; }
+	public float BotBound { get => _botBound; }
+	private float _botBound = 0.0f;
 
 	public Painting scratchPaint;
 
@@ -77,29 +77,29 @@ public sealed class Workspace : Component
 		AdjustSequenceLayout();
 	}
 
-	private float GetWorldPanelSize( GameObject go )
+	public static Vector2 GetWorldPanelSize( GameObject go )
 	{
-		return go.Components.Get<WorldPanel>().PanelSize.x * CHILD_SPACING;
+		return (go.Components.Get<WorldPanel>()?.PanelSize ?? Vector2.Zero) * CHILD_SPACING;
 	}
 
-	private float ArrangeSequenceGo( GameObject go, float right, bool showDragGap = false )
+	private float ArrangeSequenceGo( GameObject go, float bottom, bool showDragGap = false )
 	{
 		var size = GetWorldPanelSize( go );
 		if ( showDragGap )
-			right += 128 * CHILD_SPACING;
-		go.LocalPosition = Vector3.Zero.WithY( right + size * 0.5f );
-		right += size;
-		return right;
+			bottom -= 128 * CHILD_SPACING;
+		go.WorldPosition = new Vector3( 0.0f, size.x * 0.4f, bottom - size.y * 0.5f );
+		bottom -= size.y;
+		return bottom;
 	}
 
 	private void AdjustSequenceLayout()
 	{
-		_rightBound = 0.0f;
+		_botBound = 0.0f;
 		var numAnchors = 0;
 		for ( var i = 0; i < sequence.Count; i++ )
 		{
 			var go = sequence[i];
-			_rightBound = ArrangeSequenceGo( go, _rightBound, i == dragIdx && (showFirstDragGap || i > 0) );
+			_botBound = ArrangeSequenceGo( go, _botBound, i == dragIdx && (showFirstDragGap || i > 0) );
 
 			if ( GetFactoryStep( go ) is FactoryAnchor anchor && anchor is not null )
 			{
@@ -128,7 +128,7 @@ public sealed class Workspace : Component
 		sequence.Insert( toIdx, item );
 	}
 
-	public void RemoveFromSquence( FactoryPanel pnl )
+	public void RemoveFromSquence( FactoryPanel pnl, bool alert = true )
 	{
 		var go = pnl.GameObject;
 		var idx = sequence.IndexOf( go );
@@ -137,7 +137,8 @@ public sealed class Workspace : Component
 		go.Destroy();
 		UpdateResult();
 		AdjustSequenceLayout();
-		Sound.Play( "delete" );
+		if ( alert )
+			Sound.Play( "delete" );
 	}
 
 	private void StartDrag( GameObject go, bool playSound = true )
@@ -162,7 +163,7 @@ public sealed class Workspace : Component
 	public void AddStep( string prefabPath )
 	{
 		var go = GameObject.GetPrefab( prefabPath ).Clone();
-		go.WorldPosition = camCont.MouseWorldPosition + new Vector3( 0.0f, 0.0f, -0.025f * go.Components.Get<WorldPanel>().PanelSize.y );
+		go.WorldPosition = camCont.MouseWorldPosition + new Vector3( 0.0f, 0.4f * GetWorldPanelSize( go ).x, 0.0f );
 		addStart = 0;
 		StartDrag( go, false );
 		Sound.Play( "create" );
@@ -181,28 +182,28 @@ public sealed class Workspace : Component
 		Sound.Play( "place" );
 	}
 
-	private int FindDragIndex( float yPos )
+	private int FindDragIndex( float zPos )
 	{
 		if ( sequence.Count == 0 )
 			return 0;
 
 		var start = 0;
-		if ( yPos < sequence[start].WorldPosition.y )
+		if ( zPos > sequence[start].WorldPosition.z )
 			return start;
 
 		var end = sequence.Count - 1;
-		if ( yPos > sequence[end].WorldPosition.y )
+		if ( zPos < sequence[end].WorldPosition.z )
 			return end + 1;
 
 		while ( start <= end )
 		{
 			int mid = (start + end) / 2;
 
-			float midY = sequence[mid].WorldPosition.y;
-			if ( midY.AlmostEqual( yPos ) )
+			float midZ = sequence[mid].WorldPosition.z;
+			if ( midZ.AlmostEqual( zPos ) )
 				return mid;
 
-			if ( midY < yPos )
+			if ( midZ > zPos )
 				start = mid + 1;
 			else
 				end = mid - 1;
@@ -272,7 +273,7 @@ public sealed class Workspace : Component
 				var currDrag = camCont.MouseWorldPosition;
 				dragGo.WorldPosition = (currDrag + dragOffset).WithX( 5.0f );
 				ApplyCosmeticRotation( dragGo, 2.0f );
-				var newIdx = FindDragIndex( currDrag.y );
+				var newIdx = FindDragIndex( currDrag.z );
 				if ( dragIdx != newIdx )
 				{
 					dragIdx = newIdx;
@@ -289,7 +290,7 @@ public sealed class Workspace : Component
 
 	private void ApplyCosmeticRotation( GameObject go, float factor = 1.0f )
 	{
-		go.WorldRotation = go.WorldRotation.Angles().WithYaw( factor * COSMETIC_ROT_MULT * (camCont.WorldPosition.y - go.WorldPosition.y) );
+		go.WorldRotation = new Angles( factor * COSMETIC_ROT_MULT * (camCont.WorldPosition.z - go.WorldPosition.z), 0.0f, 0.0f );
 	}
 
 	public (int next, int timeCost, int inkCost) ApplyStepToScratch( int stepIdx )

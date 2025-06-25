@@ -12,9 +12,11 @@
 				<button class="sm" @onclick=@DecrC>remove</button>
 				<span class="">@(Fact.MaxCount)</span>
 				<button class="sm" @onclick=@IncrC>add</button>
+				<div class="divider-h"></div>
+				<button class="xs txt @(Fact.ResetOnContinue ? "pressed" : "")"
+					@onclick=@ToggleROC>@(Fact.ResetOnContinue ?
+					"Reset on Continue" : "Don't Reset on Continue")</button>
 			</div>
-			<button class="xs txt @(Fact.ResetOnContinue ? "pressed" : "")" @onclick=@ToggleROC>@(Fact.ResetOnContinue ?
-				"Reset on Continue" : "Don't Reset on Continue")</button>
 		</Config>
 	</FactoryStepPanel>
 </root>
