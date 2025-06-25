@@ -108,6 +108,8 @@ public sealed class Workspace : Component
 		for ( var i = 0; i < sequence.Count; i++ )
 		{
 			var go = sequence[i];
+			if ( i == 0 )
+				_botBound += GetWorldPanelSize( go ).y;
 			_botBound = ArrangeSequenceGo( go, _botBound, i == dragIdx && (showFirstDragGap || i > 0) );
 
 			if ( GetFactoryStep( go ) is FactoryAnchor anchor && anchor is not null )
@@ -118,6 +120,7 @@ public sealed class Workspace : Component
 			}
 		}
 		UpdateResult();
+		camCont.EnforceBounds();
 	}
 
 	private FactoryStep GetFactoryStep( GameObject factGo )

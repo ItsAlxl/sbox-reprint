@@ -35,6 +35,11 @@ public sealed class CameraController : Component
 			WorldPosition = WorldPosition.WithZ( Math.Max( WorldPosition.z - SCROLL_SPEED, workspace.BotBound ) );
 	}
 
+	public void EnforceBounds()
+	{
+		WorldPosition = WorldPosition.WithZ( Math.Clamp( WorldPosition.z, workspace.BotBound, Workspace.TopBound ) );
+	}
+
 	public void SnapTo( float z )
 	{
 		WorldPosition = WorldPosition.WithZ( Math.Clamp( z, workspace.BotBound, Workspace.TopBound ) );
