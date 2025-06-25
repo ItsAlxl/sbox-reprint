@@ -12,7 +12,7 @@
 				<div class="col">
 					<span>X</span>
 					<div class="row">
-						<button class="sm pressed" @onclick=@ToggleModeX>@(Fact.SetX ? "drag_handle" : (Fact.AmtX < 0 ?
+						<button class="sm" @onclick=@ToggleModeX>@(Fact.SetX ? "drag_handle" : (Fact.AmtX < 0 ?
 							"arrow_back" : "arrow_forward"))</button>
 						<span class="fixed-num">@(Fact.AmtX < 0 ? -Fact.AmtX : Fact.AmtX)</span>
 					</div>
@@ -24,7 +24,7 @@
 				<div class="col">
 					<span>Y</span>
 					<div class="row">
-						<button class="sm pressed" @onclick=@ToggleModeY>@(Fact.SetY ? "drag_handle" : (Fact.AmtY < 0 ?
+						<button class="sm" @onclick=@ToggleModeY>@(Fact.SetY ? "drag_handle" : (Fact.AmtY < 0 ?
 							"arrow_upward" : "arrow_downward"))</button>
 						<span class="fixed-num">@(Fact.AmtY < 0 ? -Fact.AmtY : Fact.AmtY)</span>
 					</div>
@@ -44,7 +44,11 @@
 
 	private void ToggleModeX()
 	{
-		if (Fact.AmtX >= 0)
+		if (Fact.AmtX == 0)
+		{
+			Fact.SetX = !Fact.SetX;
+		}
+		else if (Fact.AmtX > 0)
 		{
 			if (Fact.SetX)
 				Fact.SetX = false;
@@ -59,7 +63,11 @@
 
 	private void ToggleModeY()
 	{
-		if (Fact.AmtY >= 0)
+		if (Fact.AmtY == 0)
+		{
+			Fact.SetY = !Fact.SetY;
+		}
+		else if (Fact.AmtY > 0)
 		{
 			if (Fact.SetY)
 				Fact.SetY = false;
