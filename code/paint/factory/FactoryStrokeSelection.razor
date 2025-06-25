@@ -42,15 +42,11 @@
 						<button class="sm" @onclick=@(() => stroke.DarkenAmt--)>add</button>
 					}
 				</div>
-
-				var from = stroke.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, -stroke.DarkenAmt, 0) :
-				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
-				var to = stroke.DarkenAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) :
-				Pixel.CalculateColor(Pixel.ColorLookup.Red, stroke.DarkenAmt, 0);
 				<div class="row">
-					<span class="ex-pxl" style="background-color: @(from.Hex)"></span>
-					<span class="ex-arrow">arrow_forward</span>
-					<span class="ex-pxl" style="background-color: @(to.Hex)"></span>
+					<span class="ex-pxl"
+						style="background-color: @(Pixel.CalculateColor(Pixel.ColorLookup.Red, stroke.DarkenAmt < 0 ? -stroke.DarkenAmt : stroke.DarkenAmt, 0).Hex)"></span>
+					<span class="ex-arrow">@(stroke.DarkenAmt < 0 ? "arrow_forward" : "arrow_back")</span>
+					<span class="ex-pxl" style="background-color: #f00"></span>
 				</div>
 			}
 			else if (stroke.mode == FactoryStroke.Mode.Sponge)
@@ -66,15 +62,11 @@
 						<button class="sm" @onclick=@(() => stroke.DesatAmt--)>add</button>
 					}
 				</div>
-
-				var from = stroke.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, -stroke.DesatAmt) :
-				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0);
-				var to = stroke.DesatAmt < 0 ? Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, 0) :
-				Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, stroke.DesatAmt);
 				<div class="row">
-					<span class="ex-pxl" style="background-color: @(from.Hex)"></span>
-					<span class="ex-arrow">arrow_forward</span>
-					<span class="ex-pxl" style="background-color: @(to.Hex)"></span>
+					<span class="ex-pxl"
+						style="background-color: @(Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, stroke.DesatAmt < 0 ? -stroke.DesatAmt : stroke.DesatAmt).Hex)"></span>
+					<span class="ex-arrow">@(stroke.DesatAmt < 0 ? "arrow_forward" : "arrow_back")</span>
+					<span class="ex-pxl" style="background-color: #f00"></span>
 				</div>
 			}
 			else
@@ -110,5 +102,6 @@
 		return (level < 0 ? "+" : "") + -level;
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine(StrokeStep.CurrentStroke, StrokeStep.CurrentStroke.color, StrokeStep.CurrentStroke.DarkenAmt, StrokeStep.CurrentStroke.DesatAmt);
+	protected override int BuildHash() => System.HashCode.Combine(StrokeStep.CurrentStroke, StrokeStep.CurrentStroke.color,
+	StrokeStep.CurrentStroke.DarkenAmt, StrokeStep.CurrentStroke.DesatAmt);
 }
