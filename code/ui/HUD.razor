@@ -198,7 +198,7 @@
 
 		case "ingame":
 			<div class="view @(workspace.Dragging ? "mousewatch" : "")" @onmouseup=@EndDrag>
-				@if (workspace.IsCompleted)
+				@if (workspace.IsSubmitted)
 				{
 					<div class="view score">
 						<div class="subtitle">Nice work!</div>
@@ -329,7 +329,7 @@
 						</div>
 						<div class="gap"></div>
 						<div class="group">
-							<button @onclick=@SubmitSequence>Submit</button>
+							<button @onclick=@SubmitSequence class="@(workspace.IsCompleted ? "" : "disabled")">Submit</button>
 						</div>
 					</div>
 				}
@@ -540,7 +540,8 @@
 
 	private void BeginScenario(ScenarioData sceneData)
 	{
-		launcher = view;
+		if (view != "ingame")
+			launcher = view;
 		workspace.BeginScenario(sceneData);
 		SetIngameBriefSize(2);
 		view = "ingame";

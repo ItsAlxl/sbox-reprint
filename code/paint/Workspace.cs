@@ -30,7 +30,8 @@ public sealed class Workspace : Component
 	private readonly List<GameObject> sequence = [];
 	public float sequenceScore = float.NaN;
 	public (int time, int ink, int size) finalScores = (-1, -1, -1);
-	public bool IsCompleted { set; get; }
+	public bool IsCompleted { get => sequenceScore.AlmostEqual( 1.0f ); }
+	public bool IsSubmitted { get; set; }
 	public string LeaderboardKey { get => currentScene?.LeaderboardKey ?? Score.GetLeaderboardKey( targetPaint.Serialize() ); }
 
 	public Painting scratchPaint;
@@ -70,7 +71,7 @@ public sealed class Workspace : Component
 		targetPaint = null;
 		scratchPaint = null;
 
-		IsCompleted = false;
+		IsSubmitted = false;
 		sequenceScore = float.NaN;
 		finalScores = (-1, -1, -1);
 	}
@@ -235,7 +236,7 @@ public sealed class Workspace : Component
 		return finalScores;
 	}
 
-	public void UpdateResult( bool ignoreBreakpoints = false )
+	public void UpdateResult( bool alert = true )
 	{
 		foreach ( var go in sequence )
 			GetFactoryStep( go )?.ResetInternal();
@@ -245,9 +246,15 @@ public sealed class Workspace : Component
 		finalScores = ApplySequence(
 			sequence.Select( GetFactoryStep ).ToList(),
 			scratchPaint,
-			ignoreBreakpoints ? null : Breakpoint
+			Breakpoint
 		);
+
+		var wasCompleted = IsCompleted;
 		sequenceScore = scratchPaint.ScoreAgainst( targetPaint );
+		if ( alert && IsCompleted != wasCompleted )
+		{
+			Sound.Play( wasCompleted ? "failure" : "success" );
+		}
 	}
 
 	public FactoryPanel CreateAnchor( int idx )
@@ -296,21 +303,19 @@ public sealed class Workspace : Component
 
 	public void SubmitSequence()
 	{
-		UpdateResult( true );
-		IsCompleted = sequenceScore.AlmostEqual( 1.0f );
+		UpdateResult();
+		IsSubmitted = IsCompleted;
 		if ( IsCompleted )
 		{
 			Score.Send( LeaderboardKey, finalScores );
-			Sound.Play( "success" );
-		}
-		else
-		{
-			Sound.Play( "failure" );
+			Sound.Play( "submit" );
 		}
 	}
 
 	public void BeginRetry()
 	{
 		sequenceScore = float.NaN;
+		IsSubmitted = false;
+		UpdateResult( false );
 	}
 }

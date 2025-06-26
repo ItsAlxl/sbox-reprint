@@ -127,6 +127,14 @@ HUD {
 		background-color: #000;
 	}
 
+	button.disabled,
+	button.disabled.pressed,
+	button.disabled:hover {
+		background-color: #aaa1;
+		color: #888;
+		border-color: #888;
+	}
+
 	button.stealth {
 		color: #ba8;
 		padding: 2px;
