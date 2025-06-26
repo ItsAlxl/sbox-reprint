@@ -42,9 +42,9 @@
 				}
 				<div class="divier-v"></div>
 				<span class="ex-pxl"
-					style="background-color: @(Pixel.CalculateColor(Pixel.ColorLookup.Red, stroke.DarkenAmt < 0 ? -stroke.DarkenAmt : stroke.DarkenAmt, 0).Hex)"></span>
+					style="background: @(CreateRainbow(stroke.DarkenAmt < 0 ? -stroke.DarkenAmt : stroke.DarkenAmt, 0))"></span>
 				<span class="ex-arrow">@(stroke.DarkenAmt < 0 ? "arrow_forward" : "arrow_back")</span>
-				<span class="ex-pxl" style="background-color: #f00"></span>
+				<span class="ex-pxl" style="background: @PlainRainbow"></span>
 			}
 			else if (stroke.StrokeMode == FactoryStroke.Mode.Sponge)
 			{
@@ -59,9 +59,9 @@
 				}
 				<div class="divier-v"></div>
 				<span class="ex-pxl"
-					style="background-color: @(Pixel.CalculateColor(Pixel.ColorLookup.Red, 0, stroke.DesatAmt < 0 ? -stroke.DesatAmt : stroke.DesatAmt).Hex)"></span>
+					style="background: @(CreateRainbow(0, stroke.DesatAmt < 0 ? -stroke.DesatAmt : stroke.DesatAmt))"></span>
 				<span class="ex-arrow">@(stroke.DesatAmt < 0 ? "arrow_forward" : "arrow_back")</span>
-				<span class="ex-pxl" style="background-color: #f00"></span>
+				<span class="ex-pxl" style="background: @PlainRainbow"></span>
 			}
 			else
 			{
@@ -90,10 +90,22 @@
 	public FactoryStepStroke StrokeStep { get; set; }
 	public bool ShowBurnSponge { get; set; } = true;
 	public bool ShowConfigurator { get; set; } = true;
+	private string _plainRainbow = null;
+	private string PlainRainbow { get => _plainRainbow ??= CreateRainbow(0, 0); }
 
 	private string FormatLevelText(int level)
 	{
 		return (level < 0 ? "+" : "") + -level;
+	}
+
+	private string CreateRainbow(int darken, int desat)
+	{
+		var gradient = "linear-gradient(45deg";
+		foreach (Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>())
+		{
+			gradient += ", " + Pixel.CalculateColor(clr, darken, desat).Hex;
+		}
+		return gradient + ")";
 	}
 
 	protected override int BuildHash() => System.HashCode.Combine(StrokeStep.CurrentStroke, StrokeStep.CurrentStroke.Color,
