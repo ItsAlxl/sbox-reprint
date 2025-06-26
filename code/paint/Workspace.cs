@@ -186,6 +186,7 @@ public sealed class Workspace : Component
 		var placeIdx = addStart < QUICK_ADD_TIME ? sequence.Count : dragIdx;
 		sequence.Insert( placeIdx, dragGo );
 		GetFactoryStep( dragGo )?.Placed( placeIdx );
+		ApplyCosmeticRotation( dragGo, 0.0f );
 		dragIdx = -1;
 		dragGo = null;
 		dragOffset = Vector3.Zero;
@@ -284,9 +285,6 @@ public sealed class Workspace : Component
 				}
 			}
 		}
-
-		foreach ( var go in sequence )
-			ApplyCosmeticRotation( go );
 	}
 
 	private void ApplyCosmeticRotation( GameObject go, float factor = 1.0f )
