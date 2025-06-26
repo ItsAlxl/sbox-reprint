@@ -90,9 +90,22 @@ public sealed class Score
 		return GetLeaderboardKey( sceneData.Paint, sceneData.Toolbox );
 	}
 
+	private static string ReduceToolboxName( string toolbox )
+	{
+		if ( toolbox == null )
+			return "all";
+		var start = toolbox.IndexOf( " - " );
+		start = start < 0 ? 0 : (start + 2);
+
+		var len = toolbox.Length - start;
+		if ( toolbox.EndsWith( ".ptbox" ) )
+			len -= 6;
+		return toolbox.Substring( start, len );
+	}
+
 	public static string GetLeaderboardKey( string paintSerial, string toolbox = null )
 	{
-		return (toolbox ?? "all") + "_" + paintSerial;
+		return ReduceToolboxName( toolbox ) + "_" + paintSerial;
 	}
 
 	public static void Send( string key, (int ink, int time, int size) scores )

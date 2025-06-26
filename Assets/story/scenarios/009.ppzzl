@@ -1,0 +1,11 @@
+{
+  "Title": "Strange Rune",
+  "Desc": "Such an odd request... What could it mean?",
+  "Paint": "9:9:5f5f5f5d5d5d5f5f5f5f5f5d5f5f5f5d5f5f5f5f5d5f5f5f5f5f5f5f5f5f5d5f5f5f5f5f5f5f5d5f5d5f5f5d5f5f5d5f5f5f5d5d5f5f5f5d5f5f5f5d5f5f5f5f5d5f5f5d5f5d5f5f5f5f5d5d5f5f5f5d5f",
+  "Toolbox": null,
+  "UseSpongeBurn": true,
+  "UseConfigurator": true,
+  "UseBreakpoints": true,
+  "__references": [],
+  "__version": 0
+}
