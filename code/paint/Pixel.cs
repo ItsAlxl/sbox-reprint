@@ -132,4 +132,9 @@ public sealed class Pixel
 		var result = ((int)a + b) % numVals;
 		return (ColorLookup)(result < 0 ? result + numVals : result);
 	}
+
+	public static ColorLookup RandomColor(Random rng)
+	{
+		return (ColorLookup)rng.Next(Enum.GetValues<ColorLookup>().Length);
+	}
 }

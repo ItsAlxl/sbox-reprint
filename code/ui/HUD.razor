@@ -13,6 +13,7 @@
 				<div class="gap"></div>
 				<div class="menu-list">
 					<button class="stealth" @onclick=@ClickLevelSelect>level select</button>
+					<button class="stealth" @onclick=@ClickDaily>daily hipster</button>
 					<button class="stealth" @onclick=@ClickImport>import puzzle</button>
 					<button class="stealth" @onclick=@ClickDesigner>puzzle designer</button>
 					<button class="stealth" @onclick=@ClickCredit>credits</button>
@@ -100,6 +101,64 @@
 						</div>
 						<TextEntry class="io" Value:bind=@ImportCode />
 						<button class="stealth" @onclick=@ClickImportData>import</button>
+					</div>
+					<div class="brief wide">
+						@if (hoveredScene is not null && !importedScene.IsEmpty)
+						{
+							<div class="title">@(hoveredScene.Title)</div>
+							<PaintCanvas @cursor=@false @paintSource=@(() => hoveredScene.Paint) @size=@(300.0f)>
+							</PaintCanvas>
+							<div class="leader">
+								@foreach (var data in Score.DataFor(hoveredScene))
+								{
+									<div class="col">
+										<div class="head">@(data.name)</div>
+										<div><span class="name">You</span><span class="score">@(data.me.Min)</span></div>
+										<div class="divider-h"></div>
+										@foreach (var entry in data.friends.Entries)
+										{
+											<div>
+												<span class="name">@(entry.DisplayName)</span>
+												<span class="score">@(GetCurrentScore(data, entry))</span>
+											</div>
+										}
+										<div class="divider-h"></div>
+										<div><span class="name">World Best</span><span class="score">@(data.WorldBest)</span></div>
+										<div><span class="name">World Avg</span><span class="score">@(data.WorldAvg)</span></div>
+									</div>
+								}
+							</div>
+							<button style="margin-bottom: 16px" class="roundy" @onclick=@ClickPlayHovered>Play</button>
+						}
+					</div>
+				</div>
+				<div class="gutter">
+					<button class="stealth" @onclick=@ClickMenu>back</button>
+				</div>
+			</div>
+			break;
+
+		case "daily":
+			<div class="import view">
+				<div class="subtitle">daily hipster</div>
+				<div class="sidebars">
+					<div class="importer">
+						<div class="explainer">
+							<p>Listen, every day there's a new hipster that comes round the shop and says that our current
+								inventory is too... "mainstream." They want something a little more avant garde, a little
+								Pollock.</p>
+							<p>That shouldn't be too hard, right?</p>
+						</div>
+						<div class="date">
+							<TextEntry class="yyyy" MaxLength=@(4) numeric=@true Value:bind=@DailyYear />
+							<span>-</span>
+							<TextEntry class="mm" MaxLength=@(2) numeric=@true Value:bind=@DailyMonth />
+							<span>-</span>
+							<TextEntry class="dd" MaxLength=@(2) numeric=@true Value:bind=@DailyDay />
+							<div class="divider-v"></div>
+							<button class="stealth" @onclick=@ClickImportDaily>view</button>
+						</div>
+						<button class="stealth" @onclick=@ClickImportToday>today</button>
 					</div>
 					<div class="brief wide">
 						@if (hoveredScene is not null && !importedScene.IsEmpty)
@@ -286,7 +345,7 @@
 						<div class="controls">
 							<div class="gap"></div>
 							<span style="font-size: 32px; padding: 5px 0px 0px 8px">size</span>
-							<TextEntry numeric=@true Value:bind=@DesignerSize @onchange=@UpdateDesignerSize />
+							<TextEntry MaxLength=@(2) numeric=@true Value:bind=@DesignerSize @onchange=@UpdateDesignerSize />
 						</div>
 						<div class="controls">
 							<button class="roundy" @onclick=@DesignerImport>Import</button>
@@ -359,6 +418,10 @@
 	private ScenarioData hoveredScene = null;
 	private bool hoverIsImported = false;
 
+	private int DailyYear { get; set; } = 0;
+	private int DailyMonth { get; set; } = 0;
+	private int DailyDay { get; set; } = 0;
+
 	private string DesignerTitle { get; set; } = "Title";
 	private string DesignerDesc { get; set; } = "Description";
 	private string DesignerIO { get; set; } = "import/export code";
@@ -403,6 +466,12 @@
 		view = "main";
 	}
 
+	private void ClickDaily()
+	{
+		view = "daily";
+		ClickImportToday();
+	}
+
 	private void ClickImport()
 	{
 		view = "import";
@@ -426,6 +495,38 @@
 		hoveredScene = new();
 		importedScene.CopyTo(hoveredScene);
 		hoverIsImported = true;
+	}
+
+	private void ImportDaily()
+	{
+		importedScene.CreateDaily(DailyYear, DailyMonth, DailyDay);
+		hoveredScene = new();
+		importedScene.CopyTo(hoveredScene);
+		hoverIsImported = true;
+	}
+
+	private void ClickImportDaily()
+	{
+		EnforceDate();
+		ImportDaily();
+	}
+
+	private void ClickImportToday()
+	{
+		EnforceDate(true);
+		ImportDaily();
+	}
+
+	private void EnforceDate(bool force = false)
+	{
+		if (force || DailyYear <= 0 || DailyMonth <= 0 || DailyDay <= 0 || DailyMonth > 12 || DailyDay >
+		System.DateTime.DaysInMonth(DailyYear, DailyMonth))
+		{
+			var now = System.DateTime.Now;
+			DailyYear = now.Year;
+			DailyMonth = now.Month;
+			DailyDay = now.Day;
+		}
 	}
 
 	private void ClickPlayHovered()

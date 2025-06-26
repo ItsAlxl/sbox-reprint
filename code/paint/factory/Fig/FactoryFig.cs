@@ -1,3 +1,5 @@
+using System;
+
 namespace Reprint;
 
 public sealed class FactoryFig : FactoryStep
@@ -72,4 +74,6 @@ public sealed class FactoryFig : FactoryStep
 		Workspace.figStroke.Modify( StrokeMode, AddMode, Modif );
 		return (-1, 0, 0);
 	}
+
+	public override void Randomize( Random rng ) { }
 }

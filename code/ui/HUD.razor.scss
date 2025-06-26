@@ -68,6 +68,24 @@ HUD {
 				}
 			}
 
+			.date {
+				flex-direction: row;
+				justify-content: center;
+
+				span {
+					align-items: center;
+				}
+
+				TextEntry.mm,
+				TextEntry.dd {
+					width: 75px;
+				}
+
+				TextEntry.yyyy {
+					width: 125px;
+				}
+			}
+
 			button.stealth {
 				align-self: center;
 			}

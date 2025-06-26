@@ -1,3 +1,5 @@
+using System;
+
 namespace Reprint;
 
 public sealed class FactoryFlip : FactoryStep
@@ -21,5 +23,10 @@ public sealed class FactoryFlip : FactoryStep
 			p.FlipH();
 
 		return (-1, 1, 0);
+	}
+
+	public override void Randomize( Random rng )
+	{
+		Vertical = rng.NextDouble() < 0.5;
 	}
 }

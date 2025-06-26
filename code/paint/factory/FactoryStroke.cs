@@ -78,11 +78,11 @@ public class FactoryStroke
 		var max = Pixel.MAX_LEVEL + 1;
 		var min = -max;
 		var result = from + add;
-		if (result > min && result < max)
+		if ( result > min && result < max )
 			return result;
-		if (result == max)
+		if ( result == max )
 			return min + 1;
-		if (result == min)
+		if ( result == min )
 			return max - 1;
 		return (result > max ? min : max) + (max + result) % (2 * max);
 	}
@@ -130,13 +130,13 @@ public class FactoryStroke
 		{
 			case Mode.Burn:
 				if ( add )
-					DarkenAmt = WrapLevelValue(DarkenAmt, -modif);
+					DarkenAmt = WrapLevelValue( DarkenAmt, -modif );
 				else
 					DarkenAmt = -modif;
 				break;
 			case Mode.Sponge:
 				if ( add )
-					DesatAmt = WrapLevelValue(DesatAmt, -modif);
+					DesatAmt = WrapLevelValue( DesatAmt, -modif );
 				else
 					DesatAmt = -modif;
 				break;
@@ -147,5 +147,13 @@ public class FactoryStroke
 					Color = (Pixel.ColorLookup)modif;
 				break;
 		}
+	}
+
+	public void Randomize( Random rng )
+	{
+		Color = Pixel.RandomColor( rng );
+		DarkenAmt = rng.Next(-Pixel.MAX_LEVEL, Pixel.MAX_LEVEL + 1);
+		DesatAmt = rng.Next(-Pixel.MAX_LEVEL, Pixel.MAX_LEVEL + 1);
+		StrokeMode = (Mode)rng.Next(Enum.GetValues<Mode>().Length);
 	}
 }

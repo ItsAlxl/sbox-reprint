@@ -29,7 +29,7 @@
 	public bool CanBreakpoint { get; set; } = true;
 
 	private Workspace Workspace { get => Fact.workspace; }
-	private bool UseBreakpoint { get => Workspace.useBreakpoints; }
+	private bool UseBreakpoint { get => Workspace.UseBreakpoints; }
 	private bool IsBreakpoint { get => Workspace.Breakpoint == Fact.factory; }
 
 	private void RemoveMe()

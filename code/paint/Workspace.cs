@@ -7,7 +7,6 @@ namespace Reprint;
 public sealed class Workspace : Component
 {
 	const float CHILD_SPACING = 30.0f / 512.0f;
-	const float SCRATCH_SPACING = CHILD_SPACING * 128.0f;
 	const float QUICK_ADD_TIME = 0.1f;
 	const float COSMETIC_ROT_MULT = -1.0f;
 
@@ -47,9 +46,9 @@ public sealed class Workspace : Component
 		}
 	}
 
-	public bool useConfigurator { get => currentScene.useConfigurator; }
-	public bool useBurnSponge { get => currentScene.useBurnSponge; }
-	public bool useBreakpoints { get => currentScene.useBreakpoints; }
+	public bool UseConfigurator { get => currentScene.useConfigurator; }
+	public bool UseBurnSponge { get => currentScene.useBurnSponge; }
+	public bool UseBreakpoints { get => currentScene.useBreakpoints; }
 
 	protected override void OnStart()
 	{
@@ -78,6 +77,7 @@ public sealed class Workspace : Component
 
 	public void BeginScenario( ScenarioData scene )
 	{
+		FactoryStep.TargetPaint = targetPaint;
 		ResetLevel();
 		currentSceneData = scene;
 		currentScene = new( scene );
@@ -91,7 +91,7 @@ public sealed class Workspace : Component
 		return (go.Components.Get<WorldPanel>()?.PanelSize ?? Vector2.Zero) * CHILD_SPACING;
 	}
 
-	private float ArrangeSequenceGo( GameObject go, float bottom, bool showDragGap = false )
+	private static float ArrangeSequenceGo( GameObject go, float bottom, bool showDragGap = false )
 	{
 		var size = GetWorldPanelSize( go );
 		if ( showDragGap )
@@ -123,27 +123,14 @@ public sealed class Workspace : Component
 		camCont.EnforceBounds();
 	}
 
-	private FactoryStep GetFactoryStep( GameObject factGo )
+	public static FactoryStep GetFactoryStep( GameObject factGo )
 	{
 		return factGo.Components.Get<FactoryPanel>()?.factory;
-	}
-
-	private FactoryStep GetFactoryStep( int idx )
-	{
-		return GetFactoryStep( sequence[idx] );
-	}
-
-	private void MoveInSequence( int fromIdx, int toIdx )
-	{
-		var item = sequence[fromIdx];
-		sequence.RemoveAt( fromIdx );
-		sequence.Insert( toIdx, item );
 	}
 
 	public void RemoveFromSquence( FactoryPanel pnl, bool alert = true )
 	{
 		var go = pnl.GameObject;
-		var idx = sequence.IndexOf( go );
 		sequence.Remove( go );
 		GetFactoryStep( go )?.Removed();
 		go.Destroy();
@@ -230,6 +217,24 @@ public sealed class Workspace : Component
 			camCont.PutInView( go );
 	}
 
+	public static (int time, int ink, int size) ApplySequence( List<FactoryStep> seq, Painting p, FactoryStep breakpoint = null )
+	{
+		var stepIdx = 0;
+		var finalScores = (time: 0, ink: 0, size: seq.Count( ( step ) => step is not FactoryAnchor ));
+		while ( stepIdx < seq.Count )
+		{
+			var step = seq[stepIdx];
+			if ( step == breakpoint )
+				break;
+
+			var (next, timeCost, inkCost) = step?.ApplyTo( p ) ?? (-1, 0, 0);
+			finalScores.time += timeCost;
+			finalScores.ink += inkCost;
+			stepIdx = next == -1 ? stepIdx + 1 : next;
+		}
+		return finalScores;
+	}
+
 	public void UpdateResult( bool ignoreBreakpoints = false )
 	{
 		foreach ( var go in sequence )
@@ -237,19 +242,11 @@ public sealed class Workspace : Component
 		figStroke.Reset();
 		scratchPaint.Reset();
 
-		var stepIdx = 0;
-		finalScores = (0, 0, sequence.Count( ( go ) => GetFactoryStep( go ) is not FactoryAnchor ));
-		while ( stepIdx < sequence.Count )
-		{
-			var step = GetFactoryStep( stepIdx );
-			if ( !ignoreBreakpoints && step == Breakpoint )
-				break;
-
-			var result = step?.ApplyTo( scratchPaint ) ?? (-1, 0, 0);
-			finalScores.time += result.timeCost;
-			finalScores.ink += result.inkCost;
-			stepIdx = result.next == -1 ? stepIdx + 1 : result.next;
-		}
+		finalScores = ApplySequence(
+			sequence.Select( GetFactoryStep ).ToList(),
+			scratchPaint,
+			ignoreBreakpoints ? null : Breakpoint
+		);
 		sequenceScore = scratchPaint.ScoreAgainst( targetPaint );
 	}
 

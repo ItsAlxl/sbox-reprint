@@ -1,3 +1,5 @@
+using System;
+
 namespace Reprint;
 
 public sealed class FactoryAnchor : FactoryStep
@@ -12,4 +14,6 @@ public sealed class FactoryAnchor : FactoryStep
 	{
 		return (-1, 0, 0);
 	}
+
+	public override void Randomize( Random rng ) { }
 }

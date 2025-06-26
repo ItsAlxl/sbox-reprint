@@ -23,6 +23,7 @@ public sealed class Painting
 		for ( var i = 0; i < width * height; i++ )
 			pixels[i] = new Pixel( Pixel.ColorLookup.Red );
 	}
+	public Painting( int s ) : this( s, s ) { }
 
 	public Painting( Painting p )
 	{

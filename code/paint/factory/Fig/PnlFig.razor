@@ -7,7 +7,7 @@
 	<FactoryStepPanel Fact=@(this)>
 		<Name>Modify Memory</Name>
 		<Config>
-			@if (workspace.useBurnSponge)
+			@if (workspace.UseBurnSponge)
 			{
 				<div class="row">
 					@foreach (FactoryStroke.Mode mode in System.Enum.GetValues<FactoryStroke.Mode>())

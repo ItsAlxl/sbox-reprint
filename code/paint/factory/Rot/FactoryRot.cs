@@ -1,3 +1,5 @@
+using System;
+
 namespace Reprint;
 
 public sealed class FactoryRot : FactoryStep
@@ -21,5 +23,10 @@ public sealed class FactoryRot : FactoryStep
 			p.RotateCCW();
 
 		return (-1, 1, 0);
+	}
+
+	public override void Randomize( Random rng )
+	{
+		Clockwise = rng.NextDouble() < 0.5;
 	}
 }

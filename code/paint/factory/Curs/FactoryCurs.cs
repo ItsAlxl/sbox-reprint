@@ -4,7 +4,7 @@ namespace Reprint;
 
 public sealed class FactoryCurs : FactoryStep
 {
-	private int LimitX { get => Workspace.targetPaint.width - 1; }
+	private int LimitX { get => TargetPaint.width - 1; }
 	public int AmtX
 	{
 		get => _amtX;
@@ -27,7 +27,7 @@ public sealed class FactoryCurs : FactoryStep
 	private bool _setX = false;
 	private int _amtX = 0;
 
-	private int LimitY { get => Workspace.targetPaint.height - 1; }
+	private int LimitY { get => TargetPaint.height - 1; }
 	public int AmtY
 	{
 		get => _amtY;
@@ -58,5 +58,13 @@ public sealed class FactoryCurs : FactoryStep
 			p.MoveCursorY( AmtY, SetY ? Painting.CursorMoveMode.Set : Painting.CursorMoveMode.Wrap );
 
 		return (-1, 1, 0);
+	}
+
+	public override void Randomize( Random rng )
+	{
+		SetX = rng.NextDouble() < 0.5;
+		SetY = rng.NextDouble() < 0.5;
+		AmtX = rng.Next(-TargetPaint.width + 1, TargetPaint.width);
+		AmtX = rng.Next(-TargetPaint.height + 1, TargetPaint.height);
 	}
 }

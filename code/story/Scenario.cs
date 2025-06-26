@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 
 namespace Reprint;
@@ -44,11 +45,15 @@ public sealed class Scenario
 
 	public bool IsEmpty { get => paint is null || paint == ""; }
 
-	public Scenario( string t = "MISSING_TITLE", string d = "MISSING_DESCRIPTION", string p = "" )
+	public Scenario( string t = "NO NAME", string d = "NO DESC", string p = "" )
 	{
 		title = t;
 		desc = d;
 		paint = p;
+		useBurnSponge = true;
+		useConfigurator = true;
+		useBreakpoints = true;
+		toolbox = "all";
 	}
 
 	public Scenario( ScenarioData data )
@@ -115,5 +120,13 @@ public sealed class Scenario
 			desc = "NO DESC";
 			paint = WebUtility.UrlDecode( imp );
 		}
+	}
+
+	public void CreateDaily( int year, int month, int day )
+	{
+		Import( DailyGenerator.Generate(year, month, day) );
+		var dt = new DateTime( year, month, day );
+		title = dt.ToLongDateString();
+		desc = "Hello! I'm looking for something with a bit more... refined taste.";
 	}
 }

@@ -44,5 +44,10 @@ public abstract class FactoryStepStroke : FactoryStep
 		CurrentStroke.InkPixel( pxl );
 		return 1;
 	}
+
+	public override void Randomize( Random rng )
+	{
+		strokeMain.Randomize( rng );
+	}
 }
 

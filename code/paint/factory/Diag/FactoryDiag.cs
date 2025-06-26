@@ -7,7 +7,7 @@ public sealed class FactoryDiag : FactoryStepStroke
 		var inkCost = 0;
 		var startY = p.cursorX + p.cursorY;
 		for ( var x = 0; x < p.width; x++ )
-			inkCost += InkPixel(p, x, startY - x);
+			inkCost += InkPixel( p, x, startY - x );
 		return (-1, 1, inkCost);
 	}
 }

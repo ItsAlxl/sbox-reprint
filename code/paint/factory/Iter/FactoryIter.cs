@@ -33,9 +33,10 @@ public sealed class FactoryIter : FactoryStep
 
 	private FactoryPanel anchorPanel = null;
 	private FactoryAnchor Anchor { get => anchorPanel?.factory as FactoryAnchor; }
-	public int AnchorIdx { get => Anchor?.idx ?? -1; }
+	public int AnchorIdx { get => anchorIdxOverride >= 0 ? anchorIdxOverride : (Anchor?.idx ?? -1); }
 	public string AnchorLabel { get => Anchor?.Label ?? "__"; }
 	public GameObject AnchorGo { get => anchorPanel?.GameObject; }
+	public int anchorIdxOverride = -1;
 
 	override public (int next, int timeCost, int inkCost) ApplyTo( Painting p )
 	{
@@ -62,5 +63,11 @@ public sealed class FactoryIter : FactoryStep
 	{
 		if ( anchorPanel is not null )
 			Workspace.RemoveFromSquence( anchorPanel, false );
+	}
+
+	public override void Randomize( Random rng )
+	{
+		MaxCount = rng.Next( 8 );
+		ResetOnContinue = rng.NextDouble() < 0.5;
 	}
 }
