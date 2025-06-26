@@ -12,9 +12,10 @@
 				<div class="subtitle">a game by alxl</div>
 				<div class="gap"></div>
 				<div class="menu-list">
-					<button class="stealth" @onclick=@ClickLevelSelect>Level Select</button>
-					<button class="stealth" @onclick=@ClickDesigner>Puzzle Designer</button>
-					<button class="stealth" @onclick=@ClickCredit>Credits</button>
+					<button class="stealth" @onclick=@ClickLevelSelect>level select</button>
+					<button class="stealth" @onclick=@ClickImport>import puzzle</button>
+					<button class="stealth" @onclick=@ClickDesigner>puzzle designer</button>
+					<button class="stealth" @onclick=@ClickCredit>credits</button>
 				</div>
 			</div>
 			break;
@@ -32,7 +33,7 @@
 				</div>
 				<div class="gap"></div>
 				<div class="menu-list">
-					<button class="stealth" @onclick=@ClickMenu>Back</button>
+					<button class="stealth" @onclick=@ClickMenu>back</button>
 				</div>
 			</div>
 			break;
@@ -47,8 +48,8 @@
 							var idx = 1;
 							foreach (var scene in order)
 							{
-								if (idx == 1 && hoveredScene == null)
-									hoveredScene = scene;
+								if (idx == 1 && (hoveredScene == null || hoverIsImported))
+									ClickLevelInfo(scene);
 								<button class="roundy @(hoveredScene == scene ? "pressed" : "")" @onclick=@(() =>
 					ClickLevelInfo(scene))> #@idx @(scene.Title)</button>
 								idx++;
@@ -83,7 +84,55 @@
 					</div>
 				</div>
 				<div class="gutter">
-					<button class="stealth" @onclick=@ClickMenu>Back</button>
+					<button class="stealth" @onclick=@ClickMenu>back</button>
+				</div>
+			</div>
+			break;
+
+		case "import":
+			<div class="import view">
+				<div class="subtitle">import a puzzle</div>
+				<div class="sidebars">
+					<div class="importer">
+						<div class="explainer">
+							<p>Using the puzzle designer, players can make their own puzzles and challenge others to them.</p>
+							<p>Be warned that puzzles made this way are not guaranteed to be solvable!</p>
+						</div>
+						<TextEntry class="io" Value:bind=@ImportCode />
+						<button class="stealth" @onclick=@ClickImportData>import</button>
+					</div>
+					<div class="brief wide">
+						@if (hoveredScene is not null && !importedScene.IsEmpty)
+						{
+							<div class="title">@(hoveredScene.Title)</div>
+							<PaintCanvas @cursor=@false @paintSource=@(() => hoveredScene.Paint) @size=@(300.0f)>
+							</PaintCanvas>
+							<div class="leader">
+								@foreach (var data in Score.DataFor(hoveredScene))
+								{
+									<div class="col">
+										<div class="head">@(data.name)</div>
+										<div><span class="name">You</span><span class="score">@(data.me.Min)</span></div>
+										<div class="divider-h"></div>
+										@foreach (var entry in data.friends.Entries)
+										{
+											<div>
+												<span class="name">@(entry.DisplayName)</span>
+												<span class="score">@(GetCurrentScore(data, entry))</span>
+											</div>
+										}
+										<div class="divider-h"></div>
+										<div><span class="name">World Best</span><span class="score">@(data.WorldBest)</span></div>
+										<div><span class="name">World Avg</span><span class="score">@(data.WorldAvg)</span></div>
+									</div>
+								}
+							</div>
+							<button style="margin-bottom: 16px" class="roundy" @onclick=@ClickPlayHovered>Play</button>
+						}
+					</div>
+				</div>
+				<div class="gutter">
+					<button class="stealth" @onclick=@ClickMenu>back</button>
 				</div>
 			</div>
 			break;
@@ -233,9 +282,10 @@
 				<div class="design-up">
 					<div class="brief">
 						<TextEntry Value:bind=@DesignerTitle />
-						<TextEntry class="taller" Multiline=@true Value:bind=@DesignerDesc />
+						<TextEntry class="tall" Multiline=@true Value:bind=@DesignerDesc />
 						<div class="controls">
-							<span style="font-size: 32px; padding: 5px 24px 0px 8px; width:40%;">size</span>
+							<div class="gap"></div>
+							<span style="font-size: 32px; padding: 5px 0px 0px 8px">size</span>
 							<TextEntry numeric=@true Value:bind=@DesignerSize @onchange=@UpdateDesignerSize />
 						</div>
 						<div class="controls">
@@ -243,7 +293,7 @@
 							<button class="roundy" @onclick=@DesignerExport>Export</button>
 							<button class="roundy" @onclick=@DesignerExportPaint>Exp. Paint</button>
 						</div>
-						<TextEntry class="tall" Multiline=@true Value:bind=@DesignerIO />
+						<TextEntry class="io" Value:bind=@DesignerIO />
 					</div>
 					<div class="design-work">
 						<PaintCanvas @listener=@designer class="big" @cursor=@false @paintSource=@(designer.PaintSource)
@@ -302,8 +352,12 @@
 
 	private Workspace workspace;
 	private string view = "main";
+	private string launcher = "";
 
+	private string ImportCode { get; set; } = "import code";
+	private Scenario importedScene = new();
 	private ScenarioData hoveredScene = null;
+	private bool hoverIsImported = false;
 
 	private string DesignerTitle { get; set; } = "Title";
 	private string DesignerDesc { get; set; } = "Description";
@@ -349,6 +403,12 @@
 		view = "main";
 	}
 
+	private void ClickImport()
+	{
+		view = "import";
+		hoveredScene = null;
+	}
+
 	private void ClickLevelSelect()
 	{
 		view = "levels";
@@ -357,6 +417,15 @@
 	private void ClickLevelInfo(ScenarioData scene)
 	{
 		hoveredScene = scene;
+		hoverIsImported = false;
+	}
+
+	private void ClickImportData()
+	{
+		importedScene.Import(ImportCode);
+		hoveredScene = new();
+		importedScene.CopyTo(hoveredScene);
+		hoverIsImported = true;
 	}
 
 	private void ClickPlayHovered()
@@ -366,6 +435,7 @@
 
 	private void BeginScenario(ScenarioData sceneData)
 	{
+		launcher = view;
 		workspace.BeginScenario(sceneData);
 		SetIngameBriefSize(2);
 		view = "ingame";
@@ -373,9 +443,8 @@
 
 	private void ClickQuitLevel()
 	{
-
 		workspace.ResetLevel();
-		view = "levels";
+		view = launcher;
 	}
 
 	private void ClickNextLevel()

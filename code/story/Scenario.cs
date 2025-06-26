@@ -42,6 +42,8 @@ public sealed class Scenario
 	}
 	private IEnumerable<ToolData> _tools = null;
 
+	public bool IsEmpty { get => paint is null || paint == ""; }
+
 	public Scenario( string t = "MISSING_TITLE", string d = "MISSING_DESCRIPTION", string p = "" )
 	{
 		title = t;
@@ -67,6 +69,17 @@ public sealed class Scenario
 	public Scenario( string import )
 	{
 		Import( import );
+	}
+
+	public void CopyTo( ScenarioData data )
+	{
+		data.Title = title;
+		data.Desc = desc;
+		data.Paint = paint;
+		data.UseSpongeBurn = useBurnSponge;
+		data.UseConfigurator = useConfigurator;
+		data.UseBreakpoints = useBreakpoints;
+		data.Toolbox = toolbox;
 	}
 
 	public void BakePainting( Painting p )

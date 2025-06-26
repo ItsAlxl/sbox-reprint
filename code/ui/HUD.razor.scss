@@ -48,6 +48,37 @@ HUD {
 		}
 	}
 
+	.view.import {
+		background-color: #124;
+
+		.importer {
+			flex-direction: column;
+			pointer-events: all;
+
+			.explainer {
+				flex-direction: column;
+				align-self: stretch;
+				text-align: center;
+				justify-content: center;
+				align-items: center;
+				align-content: center;
+				p {
+					justify-content: center;
+					margin-bottom: 8px;
+				}
+			}
+
+			button.stealth {
+				align-self: center;
+			}
+
+			TextEntry {
+				border: 1px solid #aaa;
+				background-color: #000;
+			}
+		}
+	}
+
 	.view.mousewatch {
 		pointer-events: all;
 	}
@@ -81,6 +112,7 @@ HUD {
 	button.stealth {
 		color: #ba8;
 		padding: 2px;
+		justify-content: center;
 	}
 
 	button.stealth:hover {
@@ -120,16 +152,12 @@ HUD {
 		padding: 0 15px;
 
 		TextEntry {
-			width: 100%;
+			align-self: stretch;
 			border: 1px solid #aaa;
 		}
 
 		TextEntry.tall {
 			flex-grow: 1;
-		}
-
-		TextEntry.taller {
-			flex-grow: 3;
 		}
 
 		button {
@@ -316,12 +344,11 @@ HUD {
 	.sidebars {
 		flex-direction: row;
 		flex-grow: 1;
-		align-self: flex-start;
-		width: 100%;
+		align-self: stretch;
+		max-width: 100%;
 
 		.brief {
 			background-color: #000c;
-			height: 100%;
 		}
 
 		.right {
@@ -366,7 +393,7 @@ HUD {
 		font-size: 24px;
 
 		.group {
-			gap: 10px;
+			gap: 5px;
 		}
 
 		.group.right {
@@ -398,5 +425,11 @@ HUD {
 				margin-top: -2px;
 			}
 		}
+	}
+
+	TextEntry.io {
+		align-items: flex-start;
+		white-space: normal;
+		caret-color: transparent;
 	}
 }
