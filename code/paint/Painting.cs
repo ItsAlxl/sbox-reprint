@@ -232,4 +232,23 @@ public sealed class Painting
 			DeserializePixels( comps[2] );
 		}
 	}
+
+	public static bool ValidSerial( string serial )
+	{
+		var comps = serial.Split( SERIAL_DELIMITER );
+		if ( comps.Length == 3 &&
+			int.Parse( comps[0] ).ToString() == comps[0] &&
+			int.Parse( comps[1] ).ToString() == comps[1] &&
+			comps[0] == comps[1] && comps[2].Length % 2 == 0 )
+		{
+			var pxSerial = comps[2];
+			for ( var i = 0; i < pxSerial.Length; i += 2 )
+			{
+				if ( !Pixel.ValidSerial( pxSerial.Substring( i, 2 ) ) )
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
 }

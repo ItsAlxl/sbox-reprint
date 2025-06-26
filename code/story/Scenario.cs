@@ -104,29 +104,43 @@ public sealed class Scenario
 		return StringCompressor.Compress( ExportRaw() );
 	}
 
-	public void Import( string imp )
+	public bool Import( string imp )
 	{
 		var isRaw = imp.Contains( SERIAL_DELIMITER );
 		if ( isRaw || imp.StartsWith( GZIP_BASE64_PREFIX ) )
 		{
 			var comps = (isRaw ? imp : StringCompressor.Decompress( imp )).Split( SERIAL_DELIMITER );
-			title = WebUtility.UrlDecode( comps[0] );
-			desc = WebUtility.UrlDecode( comps[1] );
-			paint = WebUtility.UrlDecode( comps[2] );
+			var paintSerial = comps.Length == 3 ? WebUtility.UrlDecode( comps[2] ) : "";
+			if ( Painting.ValidSerial( paintSerial ) )
+			{
+				title = WebUtility.UrlDecode( comps[0] );
+				desc = WebUtility.UrlDecode( comps[1] );
+				paint = paintSerial;
+				return true;
+			}
 		}
 		else
 		{
-			title = "NO NAME";
-			desc = "NO DESC";
-			paint = WebUtility.UrlDecode( imp );
+			if ( Painting.ValidSerial( imp ) )
+			{
+				title = "NO NAME";
+				desc = "NO DESC";
+				paint = WebUtility.UrlDecode( imp );
+				return true;
+			}
 		}
+		return false;
 	}
 
-	public void CreateDaily( int year, int month, int day )
+	public bool CreateDaily( int year, int month, int day )
 	{
-		Import( DailyGenerator.Generate(year, month, day) );
-		var dt = new DateTime( year, month, day );
-		title = dt.ToLongDateString();
-		desc = "Hello! I'm looking for something with a bit more... refined taste.";
+		if ( Import( DailyGenerator.Generate( year, month, day ) ) )
+		{
+			var dt = new DateTime( year, month, day );
+			title = dt.ToLongDateString();
+			desc = "'Ah finally, something to cater to my refined tastes!'";
+			return true;
+		}
+		return false;
 	}
 }

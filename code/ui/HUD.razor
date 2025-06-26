@@ -491,18 +491,22 @@
 
 	private void ClickImportData()
 	{
-		importedScene.Import(ImportCode);
-		hoveredScene = new();
-		importedScene.CopyTo(hoveredScene);
-		hoverIsImported = true;
+		if (importedScene.Import(ImportCode))
+		{
+			hoveredScene = new();
+			importedScene.CopyTo(hoveredScene);
+			hoverIsImported = true;
+		}
 	}
 
 	private void ImportDaily()
 	{
-		importedScene.CreateDaily(DailyYear, DailyMonth, DailyDay);
-		hoveredScene = new();
-		importedScene.CopyTo(hoveredScene);
-		hoverIsImported = true;
+		if (importedScene.CreateDaily(DailyYear, DailyMonth, DailyDay))
+		{
+			hoveredScene = new();
+			importedScene.CopyTo(hoveredScene);
+			hoverIsImported = true;
+		}
 	}
 
 	private void ClickImportDaily()

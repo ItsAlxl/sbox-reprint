@@ -19,10 +19,17 @@ public sealed class StringCompressor
 
 	public static string Decompress( string s )
 	{
-		var source = Convert.FromBase64String( s );
-		using var inStream = new MemoryStream( source );
-		using var gzip = new GZipStream( inStream, CompressionMode.Decompress );
-		using var reader = new StreamReader( gzip );
-		return reader.ReadToEnd();
+		try
+		{
+			var source = Convert.FromBase64String( s );
+			using var inStream = new MemoryStream( source );
+			using var gzip = new GZipStream( inStream, CompressionMode.Decompress );
+			using var reader = new StreamReader( gzip );
+			return reader.ReadToEnd();
+		}
+		catch ( FormatException )
+		{
+			return "";
+		}
 	}
 }

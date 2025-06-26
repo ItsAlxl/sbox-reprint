@@ -126,6 +126,18 @@ public sealed class Pixel
 		DesatLevel = levels - (4 * rawDarken);
 	}
 
+	public static bool ValidSerial( string serial )
+	{
+		int clr = serial[0] - '0';
+		int levels = serial[1] - 'a';
+		int rawDarken = levels / 4;
+		int dark = rawDarken;
+		int desat = levels - (4 * rawDarken);
+		return clr >= 0 && clr < Enum.GetValues<ColorLookup>().Length &&
+			dark >= 0 && dark <= MAX_LEVEL &&
+			desat >= 0 && desat <= MAX_LEVEL;
+	}
+
 	public static ColorLookup AddColor( ColorLookup a, int b )
 	{
 		var numVals = Enum.GetValues<ColorLookup>().Length;
@@ -133,8 +145,8 @@ public sealed class Pixel
 		return (ColorLookup)(result < 0 ? result + numVals : result);
 	}
 
-	public static ColorLookup RandomColor(Random rng)
+	public static ColorLookup RandomColor( Random rng )
 	{
-		return (ColorLookup)rng.Next(Enum.GetValues<ColorLookup>().Length);
+		return (ColorLookup)rng.Next( Enum.GetValues<ColorLookup>().Length );
 	}
 }
