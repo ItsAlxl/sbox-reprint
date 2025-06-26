@@ -1,5 +1,5 @@
 {
-  "Title": "Configurator",
+  "Title": "Memory",
   "Prefab": "prefabs/stepfig.prefab",
   "ImagePath": "tools/fig.svg",
   "__references": [],

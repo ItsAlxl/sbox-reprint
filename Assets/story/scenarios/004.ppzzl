@@ -1,6 +1,6 @@
 {
   "Title": "this game was made in june",
-  "Desc": "You know what, let's forget about money for just a moment. It's Pride! Let's celebrate!\nWe got a new tool now, the Configurator. You can set it to paint, burn, or sponge, then have other tools use it. Combined with Gotos, this should let you re-use certain tools and shorten your sequence even further!\nIt can be pretty easy to get lost in the sequence now, so I recommend setting a breakpoint by clicking the circle in the bottom-left of a tool. It'll pause your result right before that tool would be applied, letting you more easily see what earlier parts of your sequence are doing.",
+  "Desc": "You know what, let's forget about money for just a moment. It's Pride! Let's celebrate!\nWe got a new tool, Memory. This one is very powerful. You can set Memory to paint, burn, or sponge mode, then have other tools use it. Because Memory's, well, remembered, you can also increment its values - like shifting its brush color, instead of setting it. Combined with Gotos, this should let you re-use certain tools and shorten your sequence even further!\nIf you ever get lost in your sequence, try setting a breakpoint by clicking the circle in the bottom-left of a tool. It'll pause your displayed result right before that tool would be applied, letting you more easily see what specific parts of your sequence are doing.",
   "Paint": "6:6:0a0a0a0a0a0a1a1a1a1a1a1a2a2a2a2a2a2a3f3f3f3f3f3f5e5e5e5e5e5e6i6i6i6i6i6i",
   "Toolbox": null,
   "UseSpongeBurn": true,

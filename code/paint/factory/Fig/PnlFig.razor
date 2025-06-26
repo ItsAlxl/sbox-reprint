@@ -5,16 +5,79 @@
 
 <root>
 	<FactoryStepPanel Fact=@(this)>
-		<Name>Edit Configurator</Name>
+		<Name>Modify Memory</Name>
 		<Config>
-			<FactoryStrokeSelection @ShowConfigurator=@false @ShowBurnSponge=@(workspace.currentScene.useBurnSponge)
-				@StrokeStep=@Fact></FactoryStrokeSelection>
+			@if (workspace.useBurnSponge)
+			{
+				<div class="row">
+					@foreach (FactoryStroke.Mode mode in System.Enum.GetValues<FactoryStroke.Mode>())
+					{
+						var svg = "";
+						if (mode == FactoryStroke.Mode.Burn)
+							svg = "icons/burn.svg";
+						else if (mode == FactoryStroke.Mode.Sponge)
+							svg = "icons/sponge.svg";
+						else
+							svg = "icons/brush.svg";
+
+						<button @onclick=@(() => Fact.StrokeMode = mode)
+							class="selmode @((StrokeMode == mode) ? "pressed " : "")">
+							<svg src="@svg"></svg>
+						</button>
+					}
+					<div class="divider-h"></div>
+					<button @onclick=@(() => Fact.AddMode = false) class="selmode @(Fact.AddMode ? " " : "pressed")">
+						drag_handle
+					</button>
+					<button @onclick=@(() => Fact.AddMode = true) class="selmode @(Fact.AddMode ? "pressed " : "")">
+						multiple_stop
+					</button>
+				</div>
+				<div class="divider-v"></div>
+			}
+			<div class="row strokecfg">
+				@if (Fact.AddMode || StrokeMode == FactoryStroke.Mode.Burn || StrokeMode == FactoryStroke.Mode.Sponge)
+				{
+					var range = Pixel.MAX_LEVEL;
+					for (var i = -range; i <= range; i++)
+					{
+						var unqI = i;
+						if (unqI != 0)
+						{
+							<button @onclick=@(() => Fact.Modif = unqI) class="sm @(Fact.Modif == unqI ? "pressed" : "")">
+								<span class="lvlset">@(FormatLevelText(unqI))</span>
+							</button>
+						}
+					}
+				}
+				else
+				{
+					foreach (Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>())
+					{
+						var sel = Fact.Modif == (int)clr;
+						var color = Pixel.GetColor(clr);
+						<button @onclick=@(() => Fact.Modif = (int)clr) class="clr sm @(sel ? "pressed" : "")"
+							style="color: @color.color.Hex"><span>radio_button_@(sel ? "" : "un")checked</span><span
+								class="lbl">@(color.Initial)</span></button>
+					}
+				}
+			</div>
 		</Config>
 	</FactoryStepPanel>
 </root>
 
 @code
 {
+	private FactoryStroke.Mode StrokeMode { get => Fact.StrokeMode; }
 	private FactoryFig Fact { get => factory as FactoryFig; }
+
+	private string FormatLevelText(int level)
+	{
+		return Fact.AddMode ?
+			((level > 0 ? ">>" : "<<") + System.Math.Abs(level)) :
+			((level > 0 ? "+" : "") + level);
+	}
+
 	protected override FactoryStep CreateFactory() => new FactoryFig();
+	protected override int BuildHash() => System.HashCode.Combine(Fact.AddMode, Fact.StrokeMode, base.BuildHash());
 }

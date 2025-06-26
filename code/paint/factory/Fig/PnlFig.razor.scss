@@ -3,4 +3,28 @@ PnlFig {
 	left: 0;
 	right: 0;
 	bottom: 0;
+
+	.row {
+		.selmode {
+			align-items: center;
+			font-family: Material Icons;
+			font-size: 24px;
+
+			svg {
+				width: 24px;
+				height: 24px;
+			}
+		}
+
+		.strokecfg {
+			height: 34px;
+		}
+
+		.lvlset {
+			font-family: Poppins;
+			font-size: 15px;
+			width: 25px;
+			justify-content: center;
+		}
+	}
 }

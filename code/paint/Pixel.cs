@@ -125,4 +125,11 @@ public sealed class Pixel
 		DarkenLevel = rawDarken;
 		DesatLevel = levels - (4 * rawDarken);
 	}
+
+	public static ColorLookup AddColor( ColorLookup a, int b )
+	{
+		var numVals = Enum.GetValues<ColorLookup>().Length;
+		var result = ((int)a + b) % numVals;
+		return (ColorLookup)(result < 0 ? result + numVals : result);
+	}
 }

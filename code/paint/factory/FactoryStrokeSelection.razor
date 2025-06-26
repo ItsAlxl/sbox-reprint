@@ -5,38 +5,38 @@
 	{
 		<div class="row">
 			<button @onclick=@(() => StrokeStep.MainMode = FactoryStroke.Mode.Paint)
-				class="@(!StrokeStep.useFig && StrokeStep.MainMode == FactoryStroke.Mode.Paint ? "pressed " : "")">
+				class="@(!StrokeStep.UseFig && StrokeStep.MainMode == FactoryStroke.Mode.Paint ? "pressed " : "")">
 				<svg src="icons/brush.svg"></svg>
 			</button>
 			<button @onclick=@(() => StrokeStep.MainMode = FactoryStroke.Mode.Burn)
-				class="@(!StrokeStep.useFig && StrokeStep.MainMode == FactoryStroke.Mode.Burn ? "pressed " : "")">
+				class="@(!StrokeStep.UseFig && StrokeStep.MainMode == FactoryStroke.Mode.Burn ? "pressed " : "")">
 				<svg src="icons/burn.svg"></svg>
 			</button>
 			<button @onclick=@(() => StrokeStep.MainMode = FactoryStroke.Mode.Sponge)
-				class="@(!StrokeStep.useFig && StrokeStep.MainMode == FactoryStroke.Mode.Sponge ? "pressed " : "")">
+				class="@(!StrokeStep.UseFig && StrokeStep.MainMode == FactoryStroke.Mode.Sponge ? "pressed " : "")">
 				<svg src="icons/sponge.svg"></svg>
 			</button>
 			@if (ShowConfigurator)
 			{
-				<button @onclick=@(() => StrokeStep.useFig = true) class="@(StrokeStep.useFig ? "pressed " : "")">
-					<svg src="icons/cog.svg"></svg>
+				<button @onclick=@(() => StrokeStep.UseFig = true) class="@(StrokeStep.UseFig ? "pressed " : "")">
+					<svg src="icons/brain.svg"></svg>
 				</button>
 			}
 		</div>
-		<div style="margin-top: 8px"></div>
+		<div class="divider-v"></div>
 	}
 	<div class="row strokecfg">
 		@{
-			var isMain = !StrokeStep.useFig;
+			var isMain = !StrokeStep.UseFig;
 			var stroke = StrokeStep.CurrentStroke;
 			if (stroke.StrokeMode == FactoryStroke.Mode.Burn)
 			{
-				@if (isMain)
+				if (isMain)
 				{
 					<button class="sm" @onclick=@(() => stroke.DarkenAmt++)>remove</button>
 				}
 				<span class="fixed-num">@(FormatLevelText(stroke.DarkenAmt))</span>
-				@if (isMain)
+				if (isMain)
 				{
 					<button class="sm" @onclick=@(() => stroke.DarkenAmt--)>add</button>
 				}
@@ -48,12 +48,12 @@
 			}
 			else if (stroke.StrokeMode == FactoryStroke.Mode.Sponge)
 			{
-				@if (isMain)
+				if (isMain)
 				{
 					<button class="sm" @onclick=@(() => stroke.DesatAmt++)>remove</button>
 				}
 				<span class="fixed-num">@(FormatLevelText(stroke.DesatAmt))</span>
-				@if (isMain)
+				if (isMain)
 				{
 					<button class="sm" @onclick=@(() => stroke.DesatAmt--)>add</button>
 				}
@@ -65,7 +65,7 @@
 			}
 			else
 			{
-				@if (isMain)
+				if (isMain)
 				{
 					foreach (Pixel.ColorLookup clr in System.Enum.GetValues<Pixel.ColorLookup>())
 					{

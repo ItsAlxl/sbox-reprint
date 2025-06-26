@@ -73,6 +73,20 @@ public class FactoryStroke
 		return to == 0 ? (from > 0 ? -1 : 1) : to.Clamp( -Pixel.MAX_LEVEL, Pixel.MAX_LEVEL );
 	}
 
+	private static int WrapLevelValue( int from, int add )
+	{
+		var max = Pixel.MAX_LEVEL + 1;
+		var min = -max;
+		var result = from + add;
+		if (result > min && result < max)
+			return result;
+		if (result == max)
+			return min + 1;
+		if (result == min)
+			return max - 1;
+		return (result > max ? min : max) + (max + result) % (2 * max);
+	}
+
 	private void StrokePaint( Pixel pxl )
 	{
 		pxl.PaintOver( Color );
@@ -107,5 +121,31 @@ public class FactoryStroke
 		Color = Pixel.ColorLookup.Red;
 		DarkenAmt = 1;
 		DesatAmt = 1;
+	}
+
+	public void Modify( Mode mode, bool add, int modif )
+	{
+		StrokeMode = mode;
+		switch ( mode )
+		{
+			case Mode.Burn:
+				if ( add )
+					DarkenAmt = WrapLevelValue(DarkenAmt, -modif);
+				else
+					DarkenAmt = -modif;
+				break;
+			case Mode.Sponge:
+				if ( add )
+					DesatAmt = WrapLevelValue(DesatAmt, -modif);
+				else
+					DesatAmt = -modif;
+				break;
+			default:
+				if ( add )
+					Color = Pixel.AddColor( Color, modif );
+				else
+					Color = (Pixel.ColorLookup)modif;
+				break;
+		}
 	}
 }

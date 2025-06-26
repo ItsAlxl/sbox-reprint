@@ -6,19 +6,28 @@ public abstract class FactoryStepStroke : FactoryStep
 {
 	public FactoryStroke strokeMain = new();
 	public FactoryStroke StrokeFig { get => Workspace.figStroke; }
-	public bool useFig = false;
+	private bool _useFig = false;
+	public bool UseFig
+	{
+		get => _useFig;
+		set
+		{
+			_useFig = value;
+			ConfigUpdated();
+		}
+	}
 
 	public FactoryStroke.Mode MainMode
 	{
 		set
 		{
-			useFig = false;
+			UseFig = false;
 			strokeMain.StrokeMode = value;
 			ConfigUpdated();
 		}
 		get => strokeMain.StrokeMode;
 	}
-	public FactoryStroke CurrentStroke { get => useFig ? StrokeFig : strokeMain; }
+	public FactoryStroke CurrentStroke { get => UseFig ? StrokeFig : strokeMain; }
 
 	public override void OnStart()
 	{
