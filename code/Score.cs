@@ -1,13 +1,15 @@
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using Sandbox.Services;
 
 namespace Reprint;
 
 public sealed class Score
 {
-	const string KEY_INK_COST = "_ink";
-	const string KEY_TIME_COST = "_time";
-	const string KEY_SIZE_COST = "_size";
+	const string KEY_TIME_COST = "t";
+	const string KEY_INK_COST = "i";
+	const string KEY_SIZE_COST = "s";
 
 	public class Data( string key, string title = "" )
 	{
@@ -103,15 +105,28 @@ public sealed class Score
 		return toolbox.Substring( start, len );
 	}
 
-	public static string GetLeaderboardKey( string paintSerial, string toolbox = null )
+	public static string ReducePaintSerial( string paint )
 	{
-		return ReduceToolboxName( toolbox ) + "_" + paintSerial;
+		return paint.Split( ':' )[2];
 	}
 
-	public static void Send( string key, (int ink, int time, int size) scores )
+	public static string Hash( string ascii )
 	{
-		Stats.SetValue( key + KEY_INK_COST, scores.ink );
+		return Convert.ToBase64String( MD5.HashData( Encoding.ASCII.GetBytes( ascii ) ) )
+			.Replace( "=", "" )
+			.Replace( "+", "-" )
+			.Replace( "/", "_" );
+	}
+
+	public static string GetLeaderboardKey( string paintSerial, string toolbox = null )
+	{
+		return Hash( ReduceToolboxName( toolbox ) + ReducePaintSerial( paintSerial ) ).ToLower();
+	}
+
+	public static void Send( string key, (int time, int ink, int size) scores )
+	{
 		Stats.SetValue( key + KEY_TIME_COST, scores.time );
+		Stats.SetValue( key + KEY_INK_COST, scores.ink );
 		Stats.SetValue( key + KEY_SIZE_COST, scores.size );
 	}
 
@@ -136,4 +151,6 @@ public sealed class Score
 	{
 		return Fetch( GetLeaderboardKey( sceneData ) ).Data;
 	}
+
+	public static int BuildHash() => HashCode.Combine( levelData.GetHashCode() );
 }

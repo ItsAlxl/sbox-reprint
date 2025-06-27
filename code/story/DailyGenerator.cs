@@ -9,7 +9,7 @@ public sealed class DailyGenerator
 
 	public static string Generate( int year, int month, int day )
 	{
-		Random rng = new( (year.ToString() + month.ToString() + day.ToString()).GetHashCode() );
+		Random rng = new( int.Parse(year.ToString() + month.ToString() + day.ToString()) );
 		List<FactoryStep> seq = [];
 
 		var p = new Painting( rng.Next( 4, 10 ) );
