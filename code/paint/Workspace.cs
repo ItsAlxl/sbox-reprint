@@ -78,11 +78,11 @@ public sealed class Workspace : Component
 
 	public void BeginScenario( ScenarioData scene )
 	{
-		FactoryStep.TargetPaint = targetPaint;
 		ResetLevel();
 		currentSceneData = scene;
 		currentScene = new( scene );
 		targetPaint = new( currentScene.paint );
+		FactoryStep.TargetPaint = targetPaint;
 		scratchPaint = new( targetPaint.width, targetPaint.height );
 		AdjustSequenceLayout();
 	}

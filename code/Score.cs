@@ -152,5 +152,10 @@ public sealed class Score
 		return Fetch( GetLeaderboardKey( sceneData ) ).Data;
 	}
 
+	public static Data[] DataFor( Scenario scene )
+	{
+		return Fetch( scene.LeaderboardKey ).Data;
+	}
+
 	public static int BuildHash() => HashCode.Combine( levelData.GetHashCode() );
 }

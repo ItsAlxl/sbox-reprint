@@ -206,7 +206,7 @@
 							<div class="divider-v"></div>
 							<div class="divider-v"></div>
 							<div class="leader big">
-								@foreach (var data in Score.DataFor(hoveredScene))
+								@foreach (var data in Score.DataFor(workspace.currentScene))
 								{
 									<div class="col">
 										<div class="head">@(data.name)</div>
