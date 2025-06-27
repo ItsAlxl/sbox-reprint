@@ -9,6 +9,7 @@ public sealed class Workspace : Component
 	const float CHILD_SPACING = 30.0f / 512.0f;
 	const float QUICK_ADD_TIME = 0.1f;
 	const float COSMETIC_ROT_MULT = -1.0f;
+	const float ANIM_STEP_TIME = 0.65f;
 
 	public static float TopBound { get => 0.0f; }
 	public float BotBound { get => _botBound; }
@@ -30,9 +31,12 @@ public sealed class Workspace : Component
 	private readonly List<GameObject> sequence = [];
 	public float sequenceScore = float.NaN;
 	public (int time, int ink, int size) finalScores = (-1, -1, -1);
-	public bool IsCompleted { get => sequenceScore.AlmostEqual( 1.0f ); }
-	public bool IsSubmitted { get; set; }
+	public bool Completed { get => sequenceScore.AlmostEqual( 1.0f ); }
+	public bool Submitted { get; set; }
 	public string LeaderboardKey { get => currentScene?.LeaderboardKey ?? Score.GetLeaderboardKey( targetPaint.Serialize() ); }
+
+	private int animRecapStep = -1;
+	private TimeUntil animRecapAdvance;
 
 	public Painting scratchPaint;
 	public FactoryStroke figStroke = new();
@@ -71,7 +75,7 @@ public sealed class Workspace : Component
 		targetPaint = null;
 		scratchPaint = null;
 
-		IsSubmitted = false;
+		Submitted = false;
 		sequenceScore = float.NaN;
 		finalScores = (-1, -1, -1);
 	}
@@ -218,6 +222,13 @@ public sealed class Workspace : Component
 			camCont.PutInView( go );
 	}
 
+	public static (int next, int time, int ink) AdvanceSequence( int stepIdx, FactoryStep step, Painting p )
+	{
+		var result = step?.ApplyTo( p ) ?? (-1, 0, 0);
+		result.next = result.next == -1 ? (stepIdx + 1) : result.next;
+		return result;
+	}
+
 	public static (int time, int ink, int size) ApplySequence( List<FactoryStep> seq, Painting p, FactoryStep breakpoint = null )
 	{
 		var stepIdx = 0;
@@ -228,10 +239,10 @@ public sealed class Workspace : Component
 			if ( step == breakpoint )
 				break;
 
-			var (next, timeCost, inkCost) = step?.ApplyTo( p ) ?? (-1, 0, 0);
+			var (next, timeCost, inkCost) = AdvanceSequence( stepIdx, step, p );
 			finalScores.time += timeCost;
 			finalScores.ink += inkCost;
-			stepIdx = next == -1 ? stepIdx + 1 : next;
+			stepIdx = next;
 		}
 		return finalScores;
 	}
@@ -249,9 +260,9 @@ public sealed class Workspace : Component
 			Breakpoint
 		);
 
-		var wasCompleted = IsCompleted;
+		var wasCompleted = Completed;
 		sequenceScore = scratchPaint.ScoreAgainst( targetPaint );
-		if ( alert && IsCompleted != wasCompleted )
+		if ( alert && Completed != wasCompleted )
 		{
 			Sound.Play( wasCompleted ? "failure" : "success" );
 		}
@@ -289,6 +300,34 @@ public sealed class Workspace : Component
 				}
 			}
 		}
+
+		if ( Submitted && animRecapAdvance )
+		{
+			StepAnimRecap();
+		}
+	}
+
+	private void StepAnimRecap()
+	{
+		if ( animRecapStep == sequence.Count )
+		{
+			scratchPaint.Copy( targetPaint );
+			animRecapStep = -1;
+			animRecapAdvance = 4 * ANIM_STEP_TIME;
+		}
+		else
+		{
+			if ( animRecapStep == -1 )
+			{
+				scratchPaint.Reset();
+				animRecapStep++;
+			}
+			else
+			{
+				(animRecapStep, _, _) = AdvanceSequence( animRecapStep, GetFactoryStep( sequence[animRecapStep] ), scratchPaint );
+			}
+			animRecapAdvance = ANIM_STEP_TIME;
+		}
 	}
 
 	private void ApplyCosmeticRotation( GameObject go, float factor = 1.0f )
@@ -304,10 +343,12 @@ public sealed class Workspace : Component
 	public void SubmitSequence()
 	{
 		UpdateResult();
-		IsSubmitted = IsCompleted;
-		if ( IsCompleted )
+		Submitted = Completed;
+		if ( Completed )
 		{
 			Score.Send( LeaderboardKey, finalScores );
+			animRecapStep = -1;
+			StepAnimRecap();
 			Sound.Play( "submit" );
 		}
 	}
@@ -315,7 +356,7 @@ public sealed class Workspace : Component
 	public void BeginRetry()
 	{
 		sequenceScore = float.NaN;
-		IsSubmitted = false;
+		Submitted = false;
 		UpdateResult( false );
 	}
 }

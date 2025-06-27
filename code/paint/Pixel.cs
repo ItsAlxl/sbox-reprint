@@ -74,6 +74,13 @@ public sealed class Pixel
 		DarkenLevel = 0;
 	}
 
+	public void Copy( Pixel p )
+	{
+		_baseColor = p._baseColor;
+		DesatLevel = p.DesatLevel;
+		DarkenLevel = p.DarkenLevel;
+	}
+
 	public void PaintOver( ColorLookup clr )
 	{
 		DesatLevel = 0;

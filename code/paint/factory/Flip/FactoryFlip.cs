@@ -4,7 +4,7 @@ namespace Reprint;
 
 public sealed class FactoryFlip : FactoryStep
 {
-	private bool _vertical = false;
+	private bool _vertical = true;
 	public bool Vertical
 	{
 		get => _vertical;

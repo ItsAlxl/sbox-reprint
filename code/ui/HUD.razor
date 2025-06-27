@@ -198,7 +198,7 @@
 
 		case "ingame":
 			<div class="view @(workspace.Dragging ? "mousewatch" : "")" @onmouseup=@EndDrag>
-				@if (workspace.IsSubmitted)
+				@if (workspace.Submitted)
 				{
 					<div class="view score">
 						<div class="subtitle">Nice work!</div>
@@ -235,7 +235,7 @@
 								}
 							</div>
 							<div class="finishmenu">
-								<PaintCanvas class="large" @cursor=@false @paint=@(workspace.targetPaint) @size=@(400.0f)>
+								<PaintCanvas class="large" @cursor=@false @paint=@(workspace.scratchPaint) @size=@(400.0f)>
 								</PaintCanvas>
 								<div class="divider-h"></div>
 								<div class="menu-list">
@@ -329,7 +329,7 @@
 						</div>
 						<div class="gap"></div>
 						<div class="group">
-							<button @onclick=@SubmitSequence class="@(workspace.IsCompleted ? "" : "disabled")">Submit</button>
+							<button @onclick=@SubmitSequence class="@(workspace.Completed ? "" : "disabled")">Submit</button>
 						</div>
 					</div>
 				}

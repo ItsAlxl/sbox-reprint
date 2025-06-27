@@ -59,7 +59,7 @@ public sealed class Painting
 		for ( var i = 0; i < transform2D.Length; i++ )
 			transform2D[i] = p.transform2D[i];
 		for ( var i = 0; i < width * height; i++ )
-			pixels[i] = new Pixel( p.pixels[i] );
+			pixels[i].Copy(p.pixels[i]);
 	}
 
 	private void MoveCursor( bool isX, int amt, CursorMoveMode mode )
