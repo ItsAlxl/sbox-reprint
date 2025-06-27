@@ -15,20 +15,18 @@ public sealed class Score
 	{
 		public string id = key;
 		public string name = title;
-		public Stats.GlobalStat world;
-		public Stats.PlayerStat me;
 		public Leaderboards.Board2 friends;
 		public bool fetched = false;
 
-		public int MyBest { get => (int)me.Min; }
-		public int WorldBest { get => (int)world.Min; }
-		public string WorldAvg { get => world.Avg.ToString( "0.00" ); }
+		public Stats.GlobalStat World { get => Stats.Global.Get( id ); }
+		public Stats.PlayerStat Me { get => Stats.LocalPlayer.Get( id ); }
+
+		public int MyBest { get => (int)Me.Min; }
+		public int WorldBest { get => (int)World.Min; }
+		public string WorldAvg { get => World.Avg.ToString( "0.00" ); }
 
 		public async void Fetch( Action cb )
 		{
-			world = Stats.Global.Get( id );
-			me = Stats.LocalPlayer.Get( id );
-
 			friends = Leaderboards.GetFromStat( id );
 			friends.SetAggregationMin();
 			friends.SetSortAscending();

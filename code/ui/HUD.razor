@@ -459,6 +459,10 @@
 	protected override void OnStart()
 	{
 		workspace = Scene.Get<Workspace>();
+		foreach (var sceneData in Scenario.Order)
+		{
+			Score.Fetch(Score.GetLeaderboardKey(sceneData));
+		}
 	}
 
 	private void ClickMenu()
